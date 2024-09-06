@@ -1,0 +1,7 @@
+version: '3.9'
+services:
+  django:
+    image: ubongpr7/vlc_maker
+    build: .
+    ports:
+      -"0000:8000"
