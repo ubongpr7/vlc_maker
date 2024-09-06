@@ -23,6 +23,7 @@ RUN python3.10 -m pip install moviepy
 RUN python3.10 -m pip install pathlib
 RUN python3.10 -m pip install pysrt
 RUN python3.10 -m pip install Django 
+RUN python3.10 -m pip install gunicorn 
 RUN python3.10 -m pip install Pillow==9.5.0 
 RUN python3.10 -m pip install matplotlib
 
