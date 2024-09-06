@@ -5,7 +5,7 @@ FROM ubuntu:22.04
 
 RUN apt update
 RUN apt install wget build-essential libssl*  -y
-RUN apt-get install libffi-dev nano -y
+
 
 RUN wget https://www.python.org/ftp/python/3.10.14/Python-3.10.14.tgz
 RUN tar -xzvf Python-3.10.14.tgz
@@ -26,7 +26,7 @@ RUN python3.10 -m pip install Django
 RUN python3.10 -m pip install gunicorn 
 RUN python3.10 -m pip install Pillow==9.5.0 
 RUN python3.10 -m pip install matplotlib
-RUN python3.19 -m pip inatall django-htmx
+RUN python3.10 -m pip install django-htmx
 RUN python3.10 -m pip install django-bootstrap-v5
 
 # Ensure pip is upgraded

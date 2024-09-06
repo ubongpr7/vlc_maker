@@ -29,8 +29,7 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
 ]
 THIRD_PARTY_APPS=[
-    "widget_tweaks",
-    "bootstrap5",,
+    "bootstrap5",
     "django_htmx",
     
 ]
