@@ -47,7 +47,6 @@ WORKDIR /app
 
 # Your entrypoint or CMD here, for example:
 # ENTRYPOINT ["entrypoint.sh"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
 # CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ["sh", "-c", "python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:8000"]
 
