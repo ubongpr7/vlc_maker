@@ -4,4 +4,4 @@ services:
     image: ubongpr7/vlc_maker
     build: .
     ports:
-      -"0000:8000"
+      -"8000:8000"
