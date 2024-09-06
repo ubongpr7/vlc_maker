@@ -36,6 +36,6 @@ WORKDIR /app
 
 # Expose the port Django will run on (8000 by default)
 EXPOSE 8000
-
+CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
 # Your entrypoint or CMD here, for example using Gunicorn as the web server:
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
