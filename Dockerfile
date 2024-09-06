@@ -46,5 +46,7 @@ ENV IMAGEMAGICK_BINARY=/usr/bin/convert
 WORKDIR /app
 
 # Your entrypoint or CMD here, for example:
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
+# ENTRYPOINT ["entrypoint.sh"]
+# CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:8000"]
+
