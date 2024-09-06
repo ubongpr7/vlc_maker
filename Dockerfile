@@ -1,0 +1,41 @@
+# Pull the base image
+FROM ubuntu:22.04
+
+# Install necessary packages
+RUN apt update
+RUN apt install wget build-essential libssl* -y
+RUN apt-get install libffi-dev nano -y
+
+# Download and build Python 3.10.14 from source
+RUN wget https://www.python.org/ftp/python/3.10.14/Python-3.10.14.tgz
+RUN tar -xzvf Python-3.10.14.tgz
+WORKDIR Python-3.10.14
+RUN ./configure --enable-optimizations --with-system-ffi
+RUN make -j 16
+RUN apt install libespeak-dev zlib1g-dev libmupdf-dev libfreetype6-dev ffmpeg espeak imagemagick git -y
+RUN make altinstall
+
+# Install necessary Python packages
+RUN python3.10 -m pip install opencv-python numpy aeneas moviepy pathlib pysrt Pillow==9.5.0 matplotlib Django gunicorn
+
+# Ensure pip is upgraded
+RUN python3.10 -m pip install --upgrade pip
+
+# Install additional Python packages from requirements.txt (if needed)
+COPY requirements.txt .
+RUN python3.10 -m pip install -r requirements.txt
+
+# Copy the rest of your application files
+COPY . /app
+
+# Set environment variable for ImageMagick
+ENV IMAGEMAGICK_BINARY=/usr/bin/convert
+
+# Set the working directory
+WORKDIR /app
+
+# Expose the port Django will run on (8000 by default)
+EXPOSE 8000
+
+# Your entrypoint or CMD here, for example using Gunicorn as the web server:
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
