@@ -46,7 +46,5 @@ ENV IMAGEMAGICK_BINARY=/usr/bin/convert
 WORKDIR /app
 
 # Your entrypoint or CMD here, for example:
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
