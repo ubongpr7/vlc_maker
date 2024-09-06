@@ -26,10 +26,12 @@ RUN python3.10 -m pip install Django
 RUN python3.10 -m pip install gunicorn 
 RUN python3.10 -m pip install Pillow==9.5.0 
 RUN python3.10 -m pip install matplotlib
-
+RUN python3.19 -m pip inatall django-htmx
+RUN python3.10 -m pip install django-bootstrap-v5
 
 # Ensure pip is upgraded
 RUN python3.10 -m pip install --upgrade pip
+
 
 # Install the required Python packages
 COPY requirements.txt .
@@ -47,6 +49,7 @@ WORKDIR /app
 
 # Your entrypoint or CMD here, for example:
 # ENTRYPOINT ["entrypoint.sh"]
+EXPOSE 8000
 # CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
 CMD ["sh", "-c", "python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:8000"]
 

@@ -30,9 +30,7 @@ DEFAULT_APPS = [
 ]
 THIRD_PARTY_APPS=[
     "widget_tweaks",
-    "bootstrap5",
-    "cities_light",
-    'django_extensions',
+    "bootstrap5",,
     "django_htmx",
     
 ]
