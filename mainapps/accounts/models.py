@@ -20,7 +20,6 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, null=False, blank=False)
-    subscription_plan = models.ForeignKey('subscriptions.SubscriptionPlan', on_delete=models.SET_NULL, null=True, blank=True)
     api_key = models.CharField(max_length=255, blank=True, null=True)
     allowed_videos = models.IntegerField(default=0)  # Number of videos allowed based on subscription
     generated_videos = models.IntegerField(default=0)  # Track how many videos the user has generated
