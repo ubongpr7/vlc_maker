@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Scenes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            width: 66%; /* Start at 50% for the first section */
+            height: 20px;
+            background-color: #9370DB; /* Light purple color */
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .center-button button {
+            background-color: #9370DB; /* Light purple color */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .center-button button:hover {
+            background-color: #8A2BE2;
+        }
+
+        input[type="file"],
+        select,
+        input[type="number"],
+        input[type="color"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #000000;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            border: 1px solid springgreen;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #000000;
+        }
+
+        th {
+            background-color: #9370DB; /* Light purple color */
+            color: #fff;
+        }
+
+        #subtitleDesignForm {
+            display: none; /* Hidden by default */
+        }
+
+        #subtitleDesignForm {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .subtitle-design-form-group {
+            margin-bottom: 10px;
+        }
+
+        .subtitle-design-form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .subtitle-design-form-group button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .subtitle-design-form-group button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+    <script>
+
+        function fetchVideos(topic, index) {
+            fetch(`/get_videos/${topic}`)
+            .then(response => response.json())
+            .then(data => {
+                let videoSelect = document.getElementById(`videoSelect_${index}`);
+                videoSelect.innerHTML = '';
+                data.videos.forEach(video => {
+                    let option = document.createElement('option');
+                    option.value = video;
+                    option.textContent = video;
+
+                    videoSelect.appendChild(option);
+                    const videoPreview = document.getElementById('videoPreview');
+                const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+
+                videoPreview.src =`data/${topic}/${video}`
+                videoPreviewContainer.style.display = 'block'; // Show the preview container
+                videoPreview.load();
+
+                });
+
+                document.getElementById(`topicFolder_${index}`).value = topic;
+            });
+        }
+
+        function toggleForms() {
+            const subtitleForm = document.getElementById('subtitleDesignForm');
+            const formSection = document.getElementById('formSection');
+            const progressBarFill = document.querySelector('.progress-bar-fill');
+
+
+            subtitleForm.style.display = 'block';
+            formSection.style.display = 'none';
+            progressBarFill.style.width = '100%'; // Complete the progress bar
+        }
+    </script>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar">
+        <div class="progress-bar-fill"></div>
+    </div>
+    <div class="container">
+
+        <!-- Form Section -->
+        <form method="POST" action="/process" enctype="multipart/form-data">
+            <!-- Section 1: Scene Selection -->
+            <div id="formSection">
+                <h1>Select Your Scenes</h1>
+                
+                <!-- Hidden fields for API keys -->
+                <input type="hidden" name="voiceid" value="{{ request.form.get('voiceid') }}">
+                <input type="hidden" name="elevenlabs_apikey" value="{{ request.form.get('elevenlabs_apikey') }}">
+                <input type="hidden" name="uploaded_file" value="{{ uploaded_file }}">
+                
+                <!-- Table for scene selection -->
+                <table border="1">
+                    <tr>
+                        <th>Slide</th>
+                        <th>Description</th>
+                        <th>Upload Clip</th>
+                        <th>Select Topic Folder and Clip</th>
+                    </tr>
+                    {% for line in lines %}
+                    <tr>
+                        <td>Slide {{ loop.index }}</td>
+                        <td>
+                            {{ line }}
+                            <input  type="hidden" name="line_{{ loop.index0 }}" value="{{ line }}">
+                        </td>
+                        <td>
+                            
+                            <!-- {{ loop.index0 }} -->
+                            <input type="file"   name="uploaded_video_{{ loop.index0 }}">
+                        </td>
+                        <td>
+                            <select name="topic_folder_{{ loop.index0 }}" onchange="fetchVideos(this.value, '{{ loop.index0 }}')">
+                                <option value="">Select Topic</option>
+                                {% for topic in topic_folders %}
+                                <option value="{{ topic }}">{{ topic }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="selected_video_{{ loop.index0 }}" id="videoSelect_{{ loop.index0 }}">
+                                <option value="">Select a video</option>
+                            </select>
+                            <input type="hidden" name="topic_folder_selected_{{ loop.index0 }}" id="topicFolder_{{ loop.index0 }}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <!-- Button to show the next section -->
+                 <br>
+                 <br>
+                <div class="center-button">
+                    <button type="button" onclick="toggleForms()">Customize Background music</button>
+                </div>
+            </div>
+
+
+                <input type="color" name="font_color" hidden id="font_color" value="{{ font_color }}">
+                <input type="text" name="font_file"hidden id="font_file"value="{{font_file}}">
+                
+                <input type="color" hidden name="subtitle_box_color" id="subtitle_box_color" value="{{ subtitle_box_color }}">
+                <input type="number" hidden name="font_size" id="font_size" min="1" max="100" value="{{ font_size }}">
+                <input type="number" hidden name="margin" id="margin" min="0" max="100" value="{{ margin }}">
+
+            <!-- Section 2: Subtitle Design -->
+            <div id="subtitleDesignForm">
+
+                <div id="videoPreviewContainer" >
+                    <h2>Video Preview:</h2>
+                    <video id="videoPreview" width="320" height="240" controls>
+                        <!-- Your browser does not support the video tag. -->
+                    </video>
+                </div>
+                <br>
+                <br>
+                <div class="music-form-group">
+                    <label for="bg_music">Background Music:</label>
+                    <input type="file" name="bg_music" accept="audio/*" required>
+                <!-- Submit button for the form -->
+                <div class="center-button">
+                    <button type="submit">Process Video</button>
+                </div>
+            </div>
+
+
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function previewVideo(event) {
+            const file = event.target.file; // Get the selected file
+
+            if (file) {
+                console.log(file)
+                const videoPreview = document.getElementById('videoPreview');
+                const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+
+                // Create a URL for the video file and set it as the video source
+                videoPreview.src = URL.createObjectURL(file);
+                videoPreviewContainer.style.display = 'block'; // Show the preview container
+                videoPreview.load(); // Load the new video source
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Processed Video</title>
+</head>
+<body>
+    <h1>Your Processed Video is Ready!</h1>
+    <video width="600" controls>
+        <source src="{{ url_for('static', filename='final/output_variation1.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <br>
+    <a href="{{ url_for('home') }}">Go Back</a>
+</body>
+</html>
