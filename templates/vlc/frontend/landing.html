@@ -5,6 +5,10 @@
 {% block extra_style %}
 <link rel="stylesheet" href="{% static  'landing/style.css'%}">
     {% endblock extra_style %}
+          
+    {% block content %}
+  
+
     <div class="hero">
         <img src="{% static  'assets/background/Ellipse 2.svg'%}" alt="" class="ellipse2 heroellipse">
         <img src="{% static  'assets/background/Ellipse 2.svg'%}" alt="" class="ellipse1">
@@ -311,6 +315,8 @@
         </div>
     </footer>
    </div>
+   {% endblock content %}
+
    {% block extra_script %}
    <script src="{% static  'landing/script.js'%}"></script>
     {% endblock  %}
