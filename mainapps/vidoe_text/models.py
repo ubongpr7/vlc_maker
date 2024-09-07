@@ -22,7 +22,7 @@ class TextFile(models.Model):
     resolution = models.CharField(max_length=50, default='1:1')  # Video resolution
     font_file = models.FileField(upload_to=font_file_upload_path, null=True, blank=True)  # Custom font file (optional)
     font_color = models.CharField(max_length=7, default='#FFFFFF')  # Font color (hex code)
-    subtitle_box_color = models.CharField(max_length=7, default='#000000')  # Subtitle box color (hex code)
+    subtitle_box_color = models.CharField(max_length=7, default='#000000',blank=True,null=True)  # Subtitle box color (hex code)
     font_size = models.IntegerField(default=24)  # Font size for subtitles
     processed = models.BooleanField(default=False,editable=False)
 

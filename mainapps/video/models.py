@@ -30,3 +30,4 @@ class VideoProcessingTask(models.Model):
 
     def __str__(self):
         return f'Task {self.task_id} for video {self.video.title}'
+

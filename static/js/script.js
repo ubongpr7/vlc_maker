@@ -88,7 +88,7 @@ const slider = document.getElementById("mySlider");
 const marginSlider = document.getElementById("marginSlider");
 const sliderValue = document.getElementById("SliderValue");
 const marginSliderValue = document.getElementById("marginSliderValue");
-
+const previewText= document.getElementById("previewText");
 slider.addEventListener('input', function() {
     sliderValue.textContent = slider.value;
     previewText.style.fontSize = `${slider.value}px`;
@@ -126,7 +126,6 @@ const color1 = document.getElementById('color1');
 const colorPicker1 = document.getElementById('colorPicker1');
 const colortext1 = document.getElementById('colortext1');
 let colorvalue1 = '#FFFFFF';
-const previewText = document.getElementById('previewText');
 
     colorPicker1.addEventListener('input', function() {
          // Update the background color of the div in real-time
