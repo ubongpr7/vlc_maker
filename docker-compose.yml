@@ -12,7 +12,12 @@ services:
 
   web:
     image: ubongpr7/vlc_maker:latest  # Use the local vlc_maker image
-    command: python3.10 manage.py runserver 0.0.0.0:8000  # Adjust this as needed
+    command: >
+      sh -c "
+        python3.10 manage.py makemigrations &&
+        python3.10 manage.py migrate &&
+        python3.10 manage.py runserver 0.0.0.0:8000
+      "
     volumes:
       - .:/app  # Mount current directory to /code in the container
     ports:
