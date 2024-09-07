@@ -27,8 +27,15 @@ RUN python3.10 -m pip install gunicorn
 RUN python3.10 -m pip install Pillow==9.5.0 
 RUN python3.10 -m pip install matplotlib
 RUN python3.10 -m pip install django-htmx
-RUN python3.10 -m pip install django-bootstrap-v5
 
+RUN python3.10 -m pip install django-bootstrap-v5
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y postgresql postgresql-contrib
+ENV DEBIAN_FRONTEND=noninteractive
+# Configure PostgreSQL (basic setup)
+
+
+ENV DEBIAN_FRONTEND=noninteractive
 # Ensure pip is upgraded
 RUN python3.10 -m pip install --upgrade pip
 
@@ -51,5 +58,5 @@ WORKDIR /app
 # ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 8000
 # CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
-CMD ["sh", "-c", "python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:8000"]
+CMD [ "python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:8000"]
 

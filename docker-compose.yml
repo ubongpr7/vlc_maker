@@ -1,7 +1,22 @@
-version: '3.9'
+version: "3.2"
+
 services:
-  django:
-    image: ubongpr7/vlc_maker
-    build: .
+  db:
+    image: postgres:14  # Use the local postgres image with tag 14
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     ports:
-      -"8000:8000"
+      - "5432:5432"  # Expose port for PostgreSQL
+
+  web:
+    image: ubongpr7/vlc_maker:latest  # Use the local vlc_maker image
+    command: python3.10 manage.py runserver 0.0.0.0:8000  # Adjust this as needed
+    volumes:
+      - .:/app  # Mount current directory to /code in the container
+    ports:
+      - "8000:8000"  # Expose port for your web service
+    depends_on:
+      - db
+
