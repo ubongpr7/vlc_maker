@@ -36,7 +36,7 @@ THIRD_PARTY_APPS=[
 MAIN_APPS=[
     'mainapps.video',
     'mainapps.home',
-    'mainapps.accounts'
+    'mainapps.accounts',
     'mainapps.vidoe_text'
 ]
 INSTALLED_APPS=[
