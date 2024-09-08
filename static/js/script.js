@@ -85,9 +85,7 @@ font_file.addEventListener('change', (event) => {
 });
 
 const slider = document.getElementById("mySlider");
-const marginSlider = document.getElementById("marginSlider");
 const sliderValue = document.getElementById("SliderValue");
-const marginSliderValue = document.getElementById("marginSliderValue");
 const previewText= document.getElementById("previewText");
 slider.addEventListener('input', function() {
     sliderValue.textContent = slider.value;
@@ -95,32 +93,16 @@ slider.addEventListener('input', function() {
     
 });
 
-marginSlider.addEventListener('input', function() {
-    marginSliderValue.textContent = marginSlider.value;
-    previewText.style.margin = `${slider.value}px`;
 
-});
-
-marginSlider.addEventListener('input', function() {
-    const value = (marginSlider.value - marginSlider.min) / (marginSlider.max - marginSlider.min) * 100;
-    marginSlider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${value}%, #D9D9D9 ${value}%, #D9D9D9 100%)`;
-    marginSlider.style.background.border = ``;
-});
 
 slider.addEventListener('input', function() {
     const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
     slider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${value}%, #D9D9D9 ${value}%, #D9D9D9 100%)`;
     slider.style.background.border = ``;
 });
-marginSlider.addEventListener('input', function() {
-    const value = (marginSlider.value - marginSlider.min) / (marginSlider.max - marginSlider.min) * 100;
-    marginSlider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${value}%, #D9D9D9 ${value}%, #D9D9D9 100%)`;
-    marginSlider.style.background.border = ``;
-});
 
 // Initialize the background on page load
 slider.dispatchEvent(new Event('input'));
-marginSlider.dispatchEvent(new Event('input'));
 
 const color1 = document.getElementById('color1');
 const colorPicker1 = document.getElementById('colorPicker1');

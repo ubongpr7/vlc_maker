@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +8,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Scene Selection</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='sceneselection/style.css') }}">
-    <script src="{{ url_for('static', filename='sceneselection/script.js') }}"></script>
+    <link rel="stylesheet" href="{% static 'sceneselection/style.css'%}">
+    <script src="{% static 'sceneselection/script.js'%}"></script>
 
 </head>
 <body style="position: relative; overflow-x: hidden;">
@@ -86,7 +87,7 @@
                             <div style="position: absolute; top: -50px; left: 594px;">Download</div>
                         </div>
                     </div>
-                    <form method="POST" action="/process" enctype="multipart/form-data">
+                    <form method="POST" action="." enctype="multipart/form-data">
             
                     <div class="scene-container" style="display: flex; justify-content: center; align-items: center;">
                         <div class="Scene" style="width: fit-content; height: 703px; margin-bottom: 40px; border: 1px solid #0000004D; box-sizing: border-box; border-radius: 8px; padding: 40px 24px;  background: white;">
@@ -103,10 +104,10 @@
                                         <div class="grid-item title"><span>Slide Text</span></div>
                                         <div class="grid-item title"><span>Upload Scene</span></div>
                                         <div class="grid-item title right"><span>Upload Scene From Asset Folder</span></div>
-                                        {% for line in lines %}
-                                        <div class="grid-item"><span>Slide {{ loop.index }}</span></div>
-                                        <div class="grid-item"><span>{{ line }}
-                                            <input  type="hidden" name="line_{{ loop.index0 }}" value="{{ line }}">
+                                        {% for data in form_data %}
+                                        <div class="grid-item"><span>Slide {{ data.line_number }}</span></div>
+                                        <div class="grid-item"><span>{{ data.line }}
+                                            <input  type="hidden" name="line_{{ forloop.counter0 }}" value="{{ line }}">
                                         </span></div>
                                         
                                         
@@ -119,7 +120,7 @@
                                                 Choose File
                                             </div>
                                             <!-- File input for selecting video -->
-                                            <input type="file" class="uploaded_file" name="uploaded_video_{{ loop.index0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
+                                            <input type="file" class="uploaded_file" name="uploaded_video_{{ forloop.counter0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
                                             </div>
                                         </div>
                                         
@@ -128,12 +129,16 @@
                                             <div style="display: flex; width: 100%; height: fit-content; gap: 10px; align-items: center; flex-direction: column;">
                                             <!-- Topic Folder Selection -->
                                             <div style="width: 100%; position: relative;">
-                                                <select name="topic_folder_{{ loop.index0 }}" 
-                                                        onchange="fetchVideos(this.value, '{{ loop.index0 }}')" 
+                                                <select name="topic_folder_{{ forloop.counter0 }}"
+                                                 hx-get="{% url 'video:get_clip' 0 %}"
+                                                  hx-target="videoSelect_{{ forloop.counter0 }}"
+                                                  hx-target="#videoSelect_{{ forloop.counter0 }}" 
+                                                    hx-vals='{"cat_id": this.value}' 
+                                                    hx-swap="innerHTML"
                                                         style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
                                                 <option value="">Select Topic</option>
-                                                {% for topic in topic_folders %}
-                                                    <option value="{{ topic }}">{{ topic }}</option>
+                                                {% for video_category in video_categories %}
+                                                    <option value="{{ video_category.id }}">{{ video_category }}</option>
                                                 {% endfor %}
                                                 </select>
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
@@ -143,8 +148,8 @@
                                         
                                             <!-- Video Selection -->
                                             <div style="width: 100%; position: relative;">
-                                                <select name="selected_video_{{ loop.index0 }}" 
-                                                        id="videoSelect_{{ loop.index0 }}" 
+                                                <select name="selected_video_{{ forloop.counter0 }}" 
+                                                        id="videoSelect_{{ forloop.counter0 }}" 
                                                         style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
                                                 <option value="">Select a video</option>
                                                 </select>
@@ -154,22 +159,12 @@
                                             </div>
                                         
                                             <!-- Hidden Input -->
-                                            <input type="hidden" name="topic_folder_selected_{{ loop.index0 }}" id="topicFolder_{{ loop.index0 }}">
+                                            <input type="hidden" name="topic_folder_selected_{{ forloop.counter0 }}" id="topicFolder_{{ forloop.counter0 }}">
                                             </div>
                                         </div>
                                         {% endfor %}
                                     </div>
                                     
-                                    <!-- Hidden fields for API keys -->
-                                    <input type="hidden" name="voiceid" value="{{ request.form.get('voiceid') }}">
-                                    <input type="hidden" name="elevenlabs_apikey" value="{{ request.form.get('elevenlabs_apikey') }}">
-                                    <input type="hidden" name="uploaded_file" value="{{ uploaded_file }}">
-                                    <input type="color" name="font_color" hidden id="font_color" value="{{ font_color }}">
-                                    <input type="text" name="font_file"hidden id="font_file"value="{{font_file}}">
-                                    
-                                    <input type="color" hidden name="subtitle_box_color" id="subtitle_box_color" value="{{ subtitle_box_color }}">
-                                    <input type="number" hidden name="font_size" id="font_size" min="1" max="100" value="{{ font_size }}">
-                                    <input type="number" hidden name="margin" id="margin" min="0" max="100" value="{{ margin }}">
                     
                                 </div>
                                 <div class="button" style="width: 40%;position:absolute;right:0%; display: flex; justify-content: flex-end; align-items: center;">

@@ -1,49 +1,46 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from mainapps.vidoe_text.models import TextFile, TextLineVideoClip
+from django.http import HttpResponse
+from django.forms import modelformset_factory
+from django.views.decorators.csrf import csrf_exempt
+from .models import VideoClip,ClipCategory
 
-# Create your views here.
-def make_video(request):
-    # if request.method == 'POST':
-    #     textfile = request.files.get('textfile')
-    #     voice_id = request.form.get('voiceid')
-    #     api_key = request.form.get('elevenlabs_apikey')
-    #     api_key = request.form.get('elevenlabs_apikey')
+@csrf_exempt
+def add_video_clips(request, textfile_id):
+    text_file = get_object_or_404(TextFile, id=textfile_id)
+    video_categories=ClipCategory.objects.all()
+    if request.method == 'POST':
+        lines = text_file.process_text_file()
+        video_clips_data = []
 
-
-    #     resoulution = request.form.get('resolution')
-
+        for index, line in enumerate(lines):
+            video_file = request.FILES.get(f'video_file_{index}')
+            timestamp_start = request.POST.get(f'timestamp_start_{index}')
+            timestamp_end = request.POST.get(f'timestamp_end_{index}')
             
-    #     font_color = request.form.get('font_color')
-    #     subtitle_box_color = request.form.get('subtitle_box_color')
-    #     # subtitle_box_color = (0,0,0)
-    #     font_size = request.form.get('font_size')
-    #     margin = request.form.get('margin')
+            if video_file:
+                video_clips_data.append(
+                    TextLineVideoClip(
+                        text_file=text_file,
+                        video_file_path=video_file,
+                        line_number=index + 1,
+                        timestamp_start=timestamp_start,
+                        timestamp_end=timestamp_end
+                    )
+                )
 
-    #     session['resoulution']=resoulution
-    #     font_file = request.files.get('font_file')
-    #     if font_file:
-    #         font_file_path = os.path.join(app.config['UPLOAD_FOLDER'], font_file.filename)
-    #         font_file.save(font_file_path)
-    #         print(font_file)
-    #     else:
-    #         font_file_path = os.path.join(os.getcwd(), 'data', "Montserrat-SemiBold.ttf")
-                
-    #     # Validate inputs
-    #     if textfile and voice_id and api_key:
-    #         # Save the uploaded text file
-    #         filepath = os.path.join(app.config['UPLOAD_FOLDER'], textfile.filename)
-    #         textfile.save(filepath)
-            
-    #         # Read the file and split by lines
-    #         with open(filepath, 'r') as f:
-    #             lines = f.readlines()
-    #         lines = [line.strip() for line in lines]
-            
-    #         # Render the slide creation page
-    #         topic_folders = [f for f in os.listdir(app.config['ASSET_FOLDER']) if os.path.isdir(os.path.join(app.config['ASSET_FOLDER'], f))]
-    #         # return render_template('slides.html',font_file=font_file.filename,margin=margin,font_color=font_color,font_size=font_size,subtitle_box_color=subtitle_box_color, lines=lines, topic_folders=topic_folders, uploaded_file=filepath)
-    #         return render('vlc/frontend/VLSMaker/sceneselection/index.html',)
+
+        TextLineVideoClip.objects.bulk_create(video_clips_data)
+        return redirect('/')  # Redirect to a success page or another appropriate view
     
-    # return render_template('index.html')
 
-    return render(request,'vlc/frontend/VLSMaker/index.html')
-    
+    else:
+        lines = text_file.process_text_file()
+        # Create a list of dictionaries with line numbers for the form
+        form_data = [{'line_number': i + 1,'line':lines[i],'i':i} for i in range(len(lines))]
+        return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'text_file': text_file,'video_categories':video_categories, 'form_data': form_data})
+
+def get_clip(request,cat_id):
+    category=get_object_or_404(ClipCategory,id=cat_id)
+    videos=VideoClip.objects.filter(category=category)
+    return render(request,'partials/model_options.html', {'items':videos})

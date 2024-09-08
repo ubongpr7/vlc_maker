@@ -15,19 +15,88 @@ def font_file_upload_path(instance, filename):
     filename = f'{uuid.uuid4()}.{ext}'
     return os.path.join('fonts', filename)
 
+
+class AudioClip(models.Model):
+    audio_file = models.FileField(upload_to='audio_clips/')
+    duration = models.FloatField(null=True, blank=True)  # Duration in seconds
+    voice_id = models.CharField(max_length=255)
+
 class TextFile(models.Model):
-    text_file = models.FileField(upload_to=text_file_upload_path, null=False, blank=False)
-    voice_id = models.CharField(max_length=255, null=False, blank=False)  # ElevenLabs voice ID
-    api_key = models.CharField(max_length=255, null=False, blank=False)  # ElevenLabs API key
-    resolution = models.CharField(max_length=50, default='1:1')  # Video resolution
-    font_file = models.FileField(upload_to=font_file_upload_path, null=True, blank=True)  # Custom font file (optional)
-    font_color = models.CharField(max_length=7, default='#FFFFFF')  # Font color (hex code)
-    subtitle_box_color = models.CharField(max_length=7, default='#000000',blank=True,null=True)  # Subtitle box color (hex code)
-    font_size = models.IntegerField(default=24)  # Font size for subtitles
-    processed = models.BooleanField(default=False,editable=False)
+    user = models.ForeignKey('accounts.User', on_delete=models.SET_NULL,null=True,editable=False)
+
+    text_file = models.FileField(upload_to=text_file_upload_path)
+    voice_id = models.CharField(max_length=100)
+    api_key = models.CharField(max_length=200)
+    resolution = models.CharField(max_length=50)
+    font_file = models.FileField(upload_to='fonts/', blank=True, null=True)
+    font_color = models.CharField(max_length=7)  # e.g., hex code: #ffffff
+    subtitle_box_color = models.CharField(max_length=7, blank=True, null=True)
+    font_size = models.IntegerField()
+    audio_file = models.FileField(upload_to=font_file_upload_path, blank=True, null=True)
 
     def __str__(self):
-        return self
+        return f"TextFile: {self.text_file.name}"
+    def process_text_file(self):
+        """Process the uploaded text file and return lines stripped of extra spaces."""
+        if not self.text_file:
+            raise FileNotFoundError("No text file has been uploaded.")
+        
+        try:
+            with self.text_file.open() as f:
+                lines = f.readlines()
+            return [line.strip() for line in lines]
+        except IOError as e:
+            raise IOError(f"Error processing file: {e}")
+    # def convert_text_to_speech(self):
+    #     """
+    #     Converts the entire text file to speech and saves the audio file.
+    #     """
+    #     import requests
+
+    #     # Set ElevenLabs API key
+    #     os.environ['ELEVENLABS_API_KEY'] = self.api_key
+
+    #     # Read the text from the uploaded file
+    #     with open(self.text_file.path, 'r') as file:
+    #         text_data = file.read().strip()
+
+    #     # Generate the audio using ElevenLabs
+    #     try:
+    #         audio = generate(
+    #             text=text_data,
+    #             voice=Voice(
+    #                 voice_id=self.voice_id,
+    #                 settings=VoiceSettings(
+    #                     stability=0.71,
+    #                     similarity_boost=0.5,
+    #                     style=0.0,
+    #                     use_speaker_boost=True
+    #                 )
+    #             )
+    #         )
+    #     except Exception as e:
+    #         print(f"Error generating audio: {e}")
+    #         return None
+
+    #     # Save the audio file locally
+    #     audio_filename = f"audio_{self.id}.mp3"
+    #     audio_path = os.path.join(settings.MEDIA_ROOT, 'text_audio_files', audio_filename)
+        
+    #     # Ensure the directory exists
+    #     os.makedirs(os.path.dirname(audio_path), exist_ok=True)
+
+    #     try:
+    #         eleven_save(audio, audio_path)
+    #     except Exception as e:
+    #         print(f"Error saving audio file: {e}")
+    #         return None
+
+    #     # Update the model's audio_file field
+    #     self.audio_file = f"text_audio_files/{audio_filename}"
+    #     self.save()
+
+    #     return self.audio_file
+
 
     def clean(self):
         """Validate color fields and font size during model validation."""
@@ -49,17 +118,7 @@ class TextFile(models.Model):
         except ValueError:
             return False
 
-    def process_text_file(self):
-        """Process the uploaded text file and return lines stripped of extra spaces."""
-        if not self.text_file:
-            raise FileNotFoundError("No text file has been uploaded.")
-        
-        try:
-            with self.text_file.open() as f:
-                lines = f.readlines()
-            return [line.strip() for line in lines]
-        except IOError as e:
-            raise IOError(f"Error processing file: {e}")
+  
 
     def save_font_file(self, font_file=None):
         """Save the uploaded font file or assign a default one."""
@@ -86,3 +145,15 @@ class TextFile(models.Model):
             }
         except Exception as e:
             raise RuntimeError(f"Error rendering scenes: {e}")
+        
+
+class TextLineVideoClip(models.Model):
+
+    text_file = models.ForeignKey(TextFile, on_delete=models.CASCADE, related_name='video_clips')
+    video_file = models.ForeignKey('video.VideoClip', on_delete=models.SET_NULL, null=True, related_name='usage')
+    video_file_path = models.FileField(upload_to='text_video_clips/')
+    line_number = models.IntegerField()  # Corresponds to the line number in the text file
+    timestamp_start = models.FloatField(null=True,blank=True)  # Start time for where this clip begins in the final video
+    timestamp_end = models.FloatField(null=True,blank=True)  # End time for where this clip ends in the final video
+    def __str__(self):
+        return f"VideoClip for line {self.line_number} of {self.text_file}"

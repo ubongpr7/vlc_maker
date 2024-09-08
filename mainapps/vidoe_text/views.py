@@ -13,7 +13,7 @@ def add_text(request):
         font_size = request.POST.get('font_size')
 
         if textfile and voice_id and api_key:
-            TextFile.objects.create(
+            text_obj=TextFile.objects.create(
                 text_file=textfile,
                 voice_id=voice_id,
                 api_key=api_key,
@@ -23,7 +23,7 @@ def add_text(request):
                 font_size=font_size,
                 font_color=font_color
             )
-            return redirect('/')  # Redirect to a success page or another URL
+            return redirect(f'/video/add-scene/{text_obj.id}')  # Redirect to a success page or another URL
         else:
             return render(request, 'vlc/frontend/VLSMaker/index.html', {
                 'error': 'Please provide all required fields.'
