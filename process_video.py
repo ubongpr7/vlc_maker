@@ -757,22 +757,47 @@ def main():
         clip= load_video_from_file(video_file)
         replacement_video_clips.append(clip)
     logging.info('Done Clipping replacements')
-    final_video_segments = replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip,font_customization,resolution,subtitle_box_color)
-    concatenated_video = concatenate_clips(final_video_segments,target_resolution=RESOLUTIONS[resolution],target_fps=30)
+    # final_video_segments = replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip,font_customization,resolution,subtitle_box_color)
+    # concatenated_video = concatenate_clips(final_video_segments,target_resolution=RESOLUTIONS[resolution],target_fps=30)
 
+    # original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
+    # final_video_with_audio = concatenated_video.set_audio(original_audio)
+    # final_video = final_video_with_audio.set_audio(final__blank_audio)
+    # final_video_speeded_up = os.path.join(base_path, 'tmp', f"output_variation{textfile_id}_speed-up.mp4")
+    # final_video_speeded_up = speed_up_video_with_audio(final_video, final_video_speeded_up, speed_factor=1)
+    # output_file = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
+    # if os.path.exists(output_file):
+    #     os.remove(output_file)
+
+    #     # Create the necessary directories if they do not exist
+    # os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        
+    # final_video_speeded_up.write_videofile(os.path.normpath(output_file), codec="libx264", audio_codec="aac")
+    # Process video segments and concatenate
+    final_video_segments = replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip, font_customization, resolution, subtitle_box_color)
+    concatenated_video = concatenate_clips(final_video_segments, target_resolution=RESOLUTIONS[resolution], target_fps=30)
+
+    # Extract original audio from the blank video clip
     original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
-    final_video_with_audio = concatenated_video.set_audio(original_audio)
-    final_video = final_video_with_audio.set_audio(final__blank_audio)
+
+    # Set audio to concatenated video
+    final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
+
+    # Speed up the video and save
     final_video_speeded_up = os.path.join(base_path, 'tmp', f"output_variation{textfile_id}_speed-up.mp4")
     final_video_speeded_up = speed_up_video_with_audio(final_video, final_video_speeded_up, speed_factor=1)
+
+    # Output file
     output_file = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
     if os.path.exists(output_file):
         os.remove(output_file)
 
-        # Create the necessary directories if they do not exist
+    # Create the necessary directories if they do not exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        
-    final_video_speeded_up.write_videofile(os.path.normpath(output_file), codec="libx264", audio_codec="aac")
+
+    # Write the final video file with audio
+    final_video_speeded_up.write_videofile(os.path.normpath(output_file), codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
+
 
 if __name__ == "__main__":
     main()
