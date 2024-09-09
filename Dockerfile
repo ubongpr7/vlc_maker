@@ -33,6 +33,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y postgresql postgresql-contrib
 ENV DEBIAN_FRONTEND=noninteractive
 # Configure PostgreSQL (basic setup)
+RUN apt-get install libffi-dev nano -y
 
 
 ENV DEBIAN_FRONTEND=noninteractive

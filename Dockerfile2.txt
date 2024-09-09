@@ -1,6 +1,13 @@
 # Pull the base image
 FROM ubuntu:22.04
 
+
+
+python3.10 manage.py makemigrations &&
+        python3.10 manage.py migrate &&
+        python3.10 manage.py createsuperuser &&
+        python3.10 manage.py runserver 0.0.0.0:8000
+        
 # Install necessary packages
 RUN apt update
 RUN apt install wget build-essential libssl* -y

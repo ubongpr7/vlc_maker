@@ -130,11 +130,7 @@
                                             <!-- Topic Folder Selection -->
                                             <div style="width: 100%; position: relative;">
                                                 <select name="topic_folder_{{ forloop.counter0 }}"
-                                                 hx-get="{% url 'video:get_clip' 0 %}"
-                                                  hx-target="videoSelect_{{ forloop.counter0 }}"
-                                                  hx-target="#videoSelect_{{ forloop.counter0 }}" 
-                                                    hx-vals='{"cat_id": this.value}' 
-                                                    hx-swap="innerHTML"
+                                                 onchange="fetchVideoClips(this.value, '{{ forloop.counter0 }}')"
                                                         style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
                                                 <option value="">Select Topic</option>
                                                 {% for video_category in video_categories %}
@@ -183,8 +179,17 @@
 
                     </form>
         </div>
-        
     
+        <script>
+            function fetchVideoClips(categoryId, counter) {
+                
+                htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}`)
 
+        
+                
+            }
+        </script>
+        
+<script src="{% static 'htmx.js' %}"></script>
 </body>
 </html>

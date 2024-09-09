@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:14  # Use the local postgres image with tag 14
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres2
+      - POSTGRES_USER=postgres2
+      - POSTGRES_PASSWORD=postgres2
     ports:
       - "5432:5432"  # Expose port for PostgreSQL
 
