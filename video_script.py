@@ -23,6 +23,11 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 import pysrt
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+imagemagick_path = "convert" # Set the path to the ImageMagick executable
+os.environ['IMAGEMAGICK_BINARY'] = imagemagick_path
+change_settings({"IMAGEMAGICK_BINARY": imagemagick_path})
+
 MAINRESOLUTIONS = {
     '1:1': 1/1,
     '16:9': 16/9,

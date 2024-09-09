@@ -45,12 +45,13 @@ RUN python3.10 -m pip install --upgrade pip
 # Install the required Python packages
 COPY requirements.txt .
 RUN python3.10 -m pip install -r requirements.txt
-
 # Copy the rest of your application files
 COPY . /app
 
 # Set environment variable for ImageMagick
 ENV IMAGEMAGICK_BINARY=/usr/bin/convert
+RUN sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy domain="path" rights="none" pattern="@\*"-->/' /etc/ImageMagick-6/policy.xml || true \
+    && sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy domain="path" rights="none" pattern="@\*"-->/' /etc/ImageMagick-7/policy.xml || true
 
 # Set the working directory
 WORKDIR /app

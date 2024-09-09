@@ -15,6 +15,24 @@ import re
 from django.core.files import File
 from django.conf import settings
 
+MAINRESOLUTIONS = {
+    '1:1': 1/1,
+    '16:9': 16/9,
+    '4:5': 4/5,
+    '9:16': 9/16
+}
+
+RESOLUTIONS = {
+    '16:9': (1920, 1080),
+    '4:3': (1440, 1080),
+    '1:1': (1080, 1080),
+    # Add other resolutions if needed
+}
+
+
+allow_population_by_field_name = True
+populate_by_name = True
+
 
 def text_file_upload_path(instance, filename):
     """Generate a unique file path for each uploaded text file."""
@@ -36,9 +54,6 @@ def audio_file_upload_path(instance, filename):
     return os.path.join('audio', filename)
 
 
-def load_subtitles_from_file(srt_file: Path) -> pysrt.SubRipFile:
-    
-    return pysrt.open(srt_file)
 
 
 def subriptime_to_seconds(srt_time: pysrt.SubRipTime) -> float:
@@ -62,7 +77,7 @@ class TextFile(models.Model):
     font_color = models.CharField(max_length=7)  # e.g., hex code: #ffffff
     subtitle_box_color = models.CharField(max_length=7, blank=True, null=True)
     font_size = models.IntegerField()
-    audio_file = models.FileField(upload_to=audio_file_upload_path, blank=True, null=True)
+    audio_file = models.FileField(upload_to='audio_files', blank=True, null=True)
     srt_file = models.FileField(upload_to='srt_files/', blank=True, null=True)  # SRT file for subtitles
     blank_video = models.FileField(upload_to='blank_video/', blank=True, null=True) 
     subtitle_file = models.FileField(upload_to='subtitles/', blank=True, null=True)
@@ -86,7 +101,6 @@ class TextFile(models.Model):
             return True
         except ValueError:
             return False
-
     
     def process_text_file(self):
         """Process the uploaded text file and return lines stripped of extra spaces."""
@@ -100,30 +114,6 @@ class TextFile(models.Model):
         except IOError as e:
             raise IOError(f"Error processing file: {e}")
 
-    def save_font_file(self, font_file=None):
-        """Save the uploaded font file or assign a default one."""
-        if font_file:
-            self.font_file.save(font_file.name, font_file)
-        elif not self.font_file:
-            default_font_path = os.path.join(os.getcwd(), 'data', 'Montserrat-SemiBold.ttf')
-            self.font_file.save('Montserrat-SemiBold.ttf', open(default_font_path, 'rb'))
-        
-        self.save()
-
-    def render_scenes(self):
-        """Generate scene rendering data based on processed text and formatting options."""
-        try:
-            lines = self.process_text_file()
-            return {
-                'font_file': self.font_file.path if self.font_file else 'Montserrat-SemiBold.ttf',
-                'font_color': self.font_color,
-                'font_size': self.font_size,
-                'subtitle_box_color': self.subtitle_box_color,
-                'lines': lines,
-                'resolution': self.resolution,
-            }
-        except Exception as e:
-            raise RuntimeError(f"Error rendering scenes: {e}")
         
 def text_clip_upload_path(instance, filename):
     """Generate a unique file path for each uploaded text file."""
@@ -140,7 +130,19 @@ class TextLineVideoClip(models.Model):
     line_number = models.IntegerField()  # Corresponds to the line number in the text file
     timestamp_start = models.FloatField(null=True, blank=True)  # Start time for where this clip begins in the final video
     timestamp_end = models.FloatField(null=True, blank=True)  # End time for where this clip ends in the final video
+    
+    def to_dict(self):
+        if self.video_file:
+            video_path=self.video_file.video_file
+        else:
+            video_path = self.video_file_path if self.video_file_path else ''  # Fallback to empty string if not available
 
+        return {
+            "line_number": self.line_number,
+            "video_path": video_path.path,
+            "timestamp_start": self.timestamp_start,
+            "timestamp_end": self.timestamp_end
+        }
     def __str__(self):
         return f"VideoClip for line {self.line_number} of {self.text_file}"
 
