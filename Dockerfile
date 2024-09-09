@@ -6,6 +6,7 @@ FROM ubuntu:22.04
 RUN apt update
 RUN apt install wget build-essential libssl*  -y
 
+RUN apt-get install libffi-dev nano -y
 
 RUN wget https://www.python.org/ftp/python/3.10.14/Python-3.10.14.tgz
 RUN tar -xzvf Python-3.10.14.tgz
@@ -33,18 +34,17 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y postgresql postgresql-contrib
 ENV DEBIAN_FRONTEND=noninteractive
 # Configure PostgreSQL (basic setup)
-RUN apt-get install libffi-dev nano -y
 
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Ensure pip is upgraded
 RUN python3.10 -m pip install --upgrade pip
+# RUN  python3.10 -m pip install moviepy[optional]
 
 
 # Install the required Python packages
 COPY requirements.txt .
 RUN python3.10 -m pip install -r requirements.txt
-
 
 # Copy the rest of your application files
 COPY . /app

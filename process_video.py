@@ -8,11 +8,13 @@ import uuid
 import os
 import logging
 from elevenlabs.client  import ElevenLabs, Voice, VoiceSettings
+from moviepy.config import change_settings
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 imagemagick_path = "convert" # Set the path to the ImageMagick executable
 os.environ['IMAGEMAGICK_BINARY'] = imagemagick_path
+change_settings({"IMAGEMAGICK_BINARY": imagemagick_path})
 
 def generate_srt_file(audio_file_path, text_file_path, output_srt_file_path):
     """
@@ -120,7 +122,7 @@ def main():
     #     video_path = video_clip['video_path']
     #     timestamp_start = video_clip['timestamp_start']
     #     timestamp_end = video_clip['timestamp_end']
-    print(f"Video paths string received: {video_paths_str}")
+    # print(f"Video paths string received: {video_paths_str}")
 
     # try:
     #     video_paths = json.loads(video_paths_str)
