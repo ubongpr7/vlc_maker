@@ -132,17 +132,18 @@ def main():
         # Process each video clip here (add logic for MoviePy/Aeneas)
     output_audio_file=os.path.join(base_path,f'{textfile_id}_converted_audio.mp3')
     audio_file = convert_text_to_speech(text_file, voice_id, api_key,output_audio_file)
+    logging.info('done with audio file ')
     # Save the final video at output_video path
     output_srt_file_path = os.path.join(base_path, 'srt_files', f'{textfile_id}_generated_srt_output.srt')
     srt_file_path = generate_srt_file(audio_file, text_file, output_srt_file_path)
 
 
-    # Read and parse the output file
-    with open(srt_file_path, 'r') as f:
-        sync_map = json.load(f)
-    # Additional processing with Aeneas or any other operations
-    # ...
-    print(sync_map)
+    # # Read and parse the output file
+    # with open(srt_file_path, 'r') as f:
+    #     sync_map = json.load(f)
+    # # Additional processing with Aeneas or any other operations
+    # # ...
+    # print(sync_map)
 
     
 if __name__ == "__main__":
