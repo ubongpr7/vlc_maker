@@ -25,11 +25,11 @@ def is_api_key_valid(api_key):
     Returns:
         bool: True if the API key is valid, False otherwise.
     """
-    endpoint_url = "https://api.elevenlabs.io/v1/voices"  # Replace with actual endpoint
+    endpoint_url = "https://api.elevenlabs.io/v1/validate" 
     headers = {
         "Authorization": f"Bearer {api_key}"
     }
-
+# response = requests.get("https://api.elevenlabs.io/validate", headers={"Authorization": f"Bearer {api_key}"})  
     try:
         response = requests.get(endpoint_url, headers=headers)
         response.raise_for_status()  # Raises an HTTPError for bad responses (4xx and 5xx)
