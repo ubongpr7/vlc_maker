@@ -266,6 +266,11 @@ RESOLUTIONS = {
     '9:16': (1080, 1920)
 }
 
+def update_progress(progress,dir_s):
+    with open(dir_s, 'w') as f:
+        f.write(str(progress))
+
+
 def get_video_duration_from_srt(srt_file):
     with open(srt_file, 'r') as file:
         content = file.read()
@@ -662,7 +667,7 @@ def main():
     font_size=sys.argv[12]
     font_customization=[font_file_path,font_color,font_size,subtitle_box_color,28]
 
-    
+    dir_s=os.path.join(base_path,f'{textfile_id}_progress.txt')
         
     # Convert video_paths_str back to Python objects
     # video_paths = json.loads(video_paths_str)
@@ -670,6 +675,7 @@ def main():
     # Example: Read the text file
     with open(text_file, 'r') as file:
         text = file.read()
+    update_progress(10,dir_s)
 
         # Process each video clip here (add logic for MoviePy/Aeneas)
     replacement_base_folder = os.path.join(base_path,'downloads') # path of a base directory where videos will be downloaded
@@ -693,6 +699,7 @@ def main():
         minutes, seconds = divmod(int(seconds), 60)
         hours, minutes = divmod(minutes, 60)
         return f"{hours:02}:{minutes:02}:{seconds:02},{milliseconds:03}"
+    update_progress(20,dir_s)
 
     aligned_output = []
     for index, fragment in enumerate(sync_map['fragments']):
@@ -721,6 +728,7 @@ def main():
     subtitles=load_subtitles_from_json_to_srt(srt_file_path)
     print(subtitles)
     blank_video_segments, subtitle_segments = get_segments_using_srt(blank_vide_clip, subtitles)
+    update_progress(30,dir_s)
 
     output_video_segments = []
     start = 0
@@ -736,6 +744,8 @@ def main():
 
     replacement_video_files=extract_video_paths(video_paths_str)
     replacement_videos_per_combination=[]
+    update_progress(40,dir_s)
+    
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
             cropped_replacement_video = resize_to_aspect_ratio(replacement_video, MAINRESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
@@ -752,33 +762,22 @@ def main():
         logging.error(f"Error loading background music: {e}")
         return
         # final__blank_audio = final_blank_video.audio
+    update_progress(50,dir_s)
+    
     replacement_video_clips=[]
     for video_file in replacement_video_files:
         clip= load_video_from_file(video_file)
         replacement_video_clips.append(clip)
     logging.info('Done Clipping replacements')
-    # final_video_segments = replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip,font_customization,resolution,subtitle_box_color)
-    # concatenated_video = concatenate_clips(final_video_segments,target_resolution=RESOLUTIONS[resolution],target_fps=30)
-
-    # original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
-    # final_video_with_audio = concatenated_video.set_audio(original_audio)
-    # final_video = final_video_with_audio.set_audio(final__blank_audio)
-    # final_video_speeded_up = os.path.join(base_path, 'tmp', f"output_variation{textfile_id}_speed-up.mp4")
-    # final_video_speeded_up = speed_up_video_with_audio(final_video, final_video_speeded_up, speed_factor=1)
-    # output_file = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
-    # if os.path.exists(output_file):
-    #     os.remove(output_file)
-
-    #     # Create the necessary directories if they do not exist
-    # os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        
-    # final_video_speeded_up.write_videofile(os.path.normpath(output_file), codec="libx264", audio_codec="aac")
-    # Process video segments and concatenate
+    update_progress(55,dir_s)
+    
     final_video_segments = replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip, font_customization, resolution, subtitle_box_color)
     concatenated_video = concatenate_clips(final_video_segments, target_resolution=RESOLUTIONS[resolution], target_fps=30)
+    update_progress(60,dir_s)
 
     # Extract original audio from the blank video clip
     original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
+    update_progress(65,dir_s)
 
     # Set audio to concatenated video
     final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
@@ -786,18 +785,21 @@ def main():
     # Speed up the video and save
     final_video_speeded_up = os.path.join(base_path, 'tmp', f"output_variation{textfile_id}_speed-up.mp4")
     final_video_speeded_up = speed_up_video_with_audio(final_video, final_video_speeded_up, speed_factor=1)
+    update_progress(70,dir_s)
 
     # Output file
     output_file = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
     if os.path.exists(output_file):
         os.remove(output_file)
+    update_progress(75,dir_s)
 
     # Create the necessary directories if they do not exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     # Write the final video file with audio
+    
     final_video_speeded_up.write_videofile(os.path.normpath(output_file), codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
 
-
+    update_progress(100,dir_s)
 if __name__ == "__main__":
     main()

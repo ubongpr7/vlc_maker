@@ -37,7 +37,8 @@ MAIN_APPS=[
     'mainapps.video',
     'mainapps.home',
     'mainapps.accounts',
-    'mainapps.vidoe_text'
+    'mainapps.vidoe_text',
+    'mainapps.audio',
 ]
 INSTALLED_APPS=[
 

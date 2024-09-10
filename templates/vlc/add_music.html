@@ -1,4 +1,4 @@
-
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +9,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Background Music</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/music.css') }}">
+    <link rel="stylesheet" href="{% static 'css/music.css' %}">
     
 </head>
 <body class="bg" style="position: relative; overflow-x: hidden;">
@@ -97,15 +97,16 @@
                 <div style="display: flex; background-color: #D9D9D9; width: 100%; height: 376px; border-radius: 8px; align-items: center; justify-content: center;">
                     <div id="videoPreviewContainer" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                         <video style="max-width: 100%; max-height: 100%;" controls>
-                            <source src="{{ url_for('static', filename='final/output_variation1.mp4') }}" type="video/mp4">
+                            <source src="{% url 'video_text:serve_file' file_name='final/final_output_'|add:textfile_id|add:'.mp4' %}" type="video/mp4">
+
                             Your browser does not support the video tag.
                         </video>
                     </div>
                 </div>
                 
             </div>
-        <form method="POST" action="upload_bg_music" enctype="multipart/form-data">
-            
+        <form method="POST" action="{% url 'video_text:process_background_music' textfile_id %}" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="file-upload-container" id="targetDiv" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 48px; flex-direction: column;">
                 <div id="musicContainer" style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
 
@@ -190,7 +191,7 @@
     
 
     <script>
-        document.getElementById('videoInput').value = "{{ url_for('static', filename='final/output_variation1.mp4') }}";
+        document.getElementById('videoInput').value = "{% static 'final/output_variation1.mp4' %}";
        let  currentNumber=2
         document.getElementById('addMusicBtn').addEventListener('click', function() {
     // Increment the number

@@ -38,7 +38,7 @@ def add_video_clips(request, textfile_id):
 
 
         TextLineVideoClip.objects.bulk_create(video_clips_data)
-        return redirect('/')  # Redirect to a success page or another appropriate view
+        return redirect(f'/text/process-textfile/{textfile_id}')  # Redirect to a success page or another appropriate view
     
 
     else:

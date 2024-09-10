@@ -1,25 +1,131 @@
 import json
 from django.shortcuts import render, redirect
 
+from mainapps.audio.models import BackgroundMusic
 from mainapps.vidoe_text.color_converter import convert_color_input_to_normalized_rgb
 from .models import TextFile
 import subprocess
 import os
 import uuid
-from django.http import JsonResponse, Http404
+from django.http import HttpResponse, JsonResponse, Http404
 from django.conf import settings
 from .models import TextFile, TextLineVideoClip
-def process_video(request, textfile_id):
-    try:
-        # Fetch the TextFile instance
-        textfile = TextFile.objects.get(pk=textfile_id)
-    except TextFile.DoesNotExist:
-        return Http404("Text file not found")
-    data=textfile.create_video()
-    audio=textfile.convert_text_to_speech()
-    print(data)
-    return JsonResponse({"success": f"Ok video clips found for this TextFile.{audio}"}, status=200)
+from threading import Timer
 
+
+
+def convert_to_seconds(time_str):
+    try:
+        minutes, seconds = map(float, time_str.split(':'))
+        return minutes * 60 + seconds
+    except ValueError:
+        return 0.0  # Return 0 or handle error as needed
+
+
+def format_seconds_to_mm_ss(seconds):
+    """Convert seconds to mm:ss format."""
+    minutes = int(seconds // 60)
+    secs = int(seconds % 60)
+    return f"{minutes:02}:{secs:02}"
+def serve_file(request, file_name):
+    file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+
+    if not os.path.exists(file_path):
+        raise Http404("File does not exist")
+
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+        return response
+    
+def process_background_music(request, textfile_id):
+    context = {
+        'media_url': settings.MEDIA_URL,
+    }
+    if request.method == 'POST':
+        try:
+            # Fetch the TextFile instance
+            textfile = TextFile.objects.get(pk=textfile_id)
+        except TextFile.DoesNotExist:
+            return Http404("Text file not found")
+        no_of_mp3 = int(request.POST.get('no_of_mp3', 0))  # Number of MP3 files
+    
+        # Check if the necessary fields are present in TextFile
+        if not textfile.text_file:
+            return JsonResponse({"error": "Text file is missing."}, status=400)
+        music_files = [request.FILES.get(f'bg_music_{i}') for i in range(1, no_of_mp3 +1)]  # Adjust based on your inputs
+        start_times_str = {f'bg_music_{i}': request.POST.get(f'from_when_{i}') for i in range(1, no_of_mp3 +1)}
+        end_times_str = {f'bg_music_{i}': request.POST.get(f'to_when_{i}') for i in range(1, no_of_mp3+1)}
+        start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
+        end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
+
+        # Save music files and their paths
+        music_paths = []
+        bg_musics=[]
+        for i, music_file in enumerate(music_files, start=1):
+            if music_file:
+                bg_music=BackgroundMusic(
+                        text_file=textfile,
+                        music_file=music_file,
+                        start_time=start_times[i-1],
+                        end_time=end_times[i-1],
+                    )
+                
+                bg_musics.append(bg_music)
+                # Perform bulk creation
+        if bg_musics:
+            BackgroundMusic.objects.bulk_create(bg_musics)
+
+        lines = []
+        for bg_music in bg_musics:
+            start_time_str = bg_music.start_time
+            end_time_str = bg_music.end_time
+            lines.append(f"{bg_music.music_file.path} {start_time_str} {end_time_str}")
+
+        content = "\n".join(lines)
+        
+        # Save the content to a text file
+        file_name = f'background_music_info_{textfile_id}.txt'
+        base_path = settings.MEDIA_ROOT
+        output_video_file_ = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
+        
+        music_info_path = os.path.join(base_path,'bg_music', file_name)  # Adjust path as needed
+            
+        if os.path.exists(music_info_path):
+            os.remove(music_info_path)
+
+        # Create the necessary directories if they do not exist
+        os.makedirs(os.path.dirname(music_info_path), exist_ok=True)
+        with open(music_info_path, 'w') as file:
+            file.write(content)
+        cmd = f'python3.10 music_processor.py "{output_video_file_}" "{music_info_path}" "{str(textfile_id)}" "{base_path}"'
+        process = subprocess.Popen(cmd, shell=True)
+
+
+
+
+
+        return redirect(f'/text/progress_page/bg_music/{textfile_id}')
+    return render(request,'vlc/add_music.html',{'textfile_id':textfile_id})
+def clean_progress_file(text_file_id):
+    """Deletes the progress file after 3 seconds when progress is 100%."""
+    if os.path.exists(settings.MEDIA_ROOT,f'{text_file_id}_progress.txt'):
+        os.remove('progress.txt')
+
+def progress(request,text_file_id):
+    base_path = settings.MEDIA_ROOT
+
+    try:
+        with open(f'{base_path}/{text_file_id}_progress.txt', 'r') as f:
+            progress = f.read()
+            if progress == '100':
+                # Start a timer to clean up the file after 3 seconds
+                Timer(3.0, clean_progress_file,args=(text_file_id,)).start()
+        return JsonResponse({'progress': progress})
+    except FileNotFoundError:
+        return JsonResponse({'progress': 0})
+def progress_page(request,al_the_way,text_file_id):
+    return render(request,'vlc/progress.html',{"al_the_way":al_the_way,'text_file_id':text_file_id})
 
 def process_textfile(request, textfile_id):
     try:
@@ -98,7 +204,7 @@ def process_textfile(request, textfile_id):
         return JsonResponse({"error": f"Error running subprocess: {str(e)}"}, status=500)
 
     # Return success message
-    return JsonResponse({'status': 'Processing started', 'textfile_id': textfile_id, 'output_video': output_video_path})
+    return redirect(f'/text/progress_page/build/{textfile_id}')
 
 def add_text(request):
     if request.method == 'POST':
@@ -128,3 +234,9 @@ def add_text(request):
                 'error': 'Please provide all required fields.'
             })
     return render(request, 'vlc/frontend/VLSMaker/index.html')
+
+
+
+def download_video(request,textfile_id,):
+    
+    return render(request,'vlc/download.html',{'textfile_id':textfile_id},)

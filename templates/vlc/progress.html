@@ -1,3 +1,4 @@
+{%load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Loading</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='loading.css') }}">
+    <link rel="stylesheet" href="{% static 'loading.css' %}">
 
 </head>
 <body  style="position: relative; overflow-x: hidden;">
@@ -116,7 +117,7 @@
     
     <script>
         function fetchProgress() {
-            fetch('/progress')
+            fetch('/text/progress/{{text_file_id}}')
                 .then(response => response.json())
                 .then(data => {
                     let progress = data.progress;
@@ -128,11 +129,11 @@
                     else {
                         if ("{{al_the_way }}" =='bg_music'){
 
-                            window.location.href = '/download_video';  // Redirect to view video page
+                            window.location.href = '/text/download_video/{{text_file_id}}';  // Redirect to view video page
                         }
                         else {
 
-                            window.location.href = '/view_video';  // Redirect to view video page
+                            window.location.href = '/text/process-background-music/{{text_file_id}}';  // Redirect to view video page
                         }
                     }
                 });
@@ -143,7 +144,7 @@
             fetchProgress();
         };
     </script>
-    <script src="{{ url_for('static', filename='loading.js') }}"></script>
+    <script src="{% static 'loading.js' %}"></script>
 
 </body>
 </html>
