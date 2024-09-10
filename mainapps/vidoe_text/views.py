@@ -25,7 +25,7 @@ def is_api_key_valid(api_key):
     Returns:
         bool: True if the API key is valid, False otherwise.
     """
-    endpoint_url = "https://api.elevenlabs.io/v1/validate" 
+    endpoint_url = "https://api.elevenlabs.io/validate" 
     headers = {
         "Authorization": f"Bearer {api_key}"
     }
