@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 from mainapps.audio.models import BackgroundMusic
 from mainapps.vidoe_text.color_converter import convert_color_input_to_normalized_rgb
@@ -259,9 +260,11 @@ def add_text(request):
                 )
                 return redirect(f'/video/add-scene/{text_obj.id}')  # Redirect to a success page or another URL
             else:
+                messages.error(request,'Please provide all required fields.')
                 return render(request, 'vlc/frontend/VLSMaker/index.html', {
                     'error': 'Please provide all required fields.'
                 })
+            messages.error(request,'Please provide valid API key')
             return render(request, 'vlc/frontend/VLSMaker/index.html', {
                 'error': 'Please provide valid API key'
             })
