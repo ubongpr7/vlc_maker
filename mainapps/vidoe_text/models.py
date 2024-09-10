@@ -108,7 +108,8 @@ class TextFile(models.Model):
             raise FileNotFoundError("No text file has been uploaded.")
         
         try:
-            with self.text_file.open() as f:
+            # with self.text_file.open() as f:
+            with open(self.text_file.path, 'r') as f:
                 lines = f.readlines()
             return [line.strip() for line in lines]
         except IOError as e:
