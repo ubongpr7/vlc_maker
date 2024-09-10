@@ -25,7 +25,7 @@ def is_api_key_valid(api_key):
     Returns:
         bool: True if the API key is valid, False otherwise.
     """
-    endpoint_url = "https://api.elevenlabs.io/validate" 
+    endpoint_url = "https://api.elevenlabs.io/" 
     headers = {
         "Authorization": f"Bearer {api_key}"
     }
@@ -264,7 +264,7 @@ def add_text(request):
                 return render(request, 'vlc/frontend/VLSMaker/index.html', {
                     'error': 'Please provide all required fields.'
                 })
-        else:
+        
             messages.error(request,'Please provide valid API key')
             return render(request, 'vlc/frontend/VLSMaker/index.html', {
                 'error': 'Please provide valid API key'
