@@ -12,6 +12,34 @@ from django.conf import settings
 from .models import TextFile, TextLineVideoClip
 from threading import Timer
 
+import requests
+
+def is_api_key_valid(api_key):
+    """
+    Checks if the given ElevenLabs API key is valid.
+
+    Args:
+        api_key (str): The ElevenLabs API key to check.
+
+    Returns:
+        bool: True if the API key is valid, False otherwise.
+    """
+    endpoint_url = "https://api.elevenlabs.io/v1/check"  # Replace with actual endpoint
+    headers = {
+        "Authorization": f"Bearer {api_key}"
+    }
+
+    try:
+        response = requests.get(endpoint_url, headers=headers)
+        response.raise_for_status()  # Raises an HTTPError for bad responses (4xx and 5xx)
+        # Check the response content or status code to determine validity
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    except requests.RequestException as e:
+        print(f"Error checking API key: {e}")
+        return False
 
 
 def convert_to_seconds(time_str):
@@ -216,22 +244,26 @@ def add_text(request):
         subtitle_box_color = request.POST.get('subtitle_box_color')
         font_file = request.FILES.get('font_file')  # Assuming this is a different file field
         font_size = request.POST.get('font_size')
-
-        if textfile and voice_id and api_key:
-            text_obj=TextFile.objects.create(
-                text_file=textfile,
-                voice_id=voice_id,
-                api_key=api_key,
-                resolution=resolution,
-                font_file=font_file,
-                subtitle_box_color=subtitle_box_color,
-                font_size=font_size,
-                font_color=font_color
-            )
-            return redirect(f'/video/add-scene/{text_obj.id}')  # Redirect to a success page or another URL
-        else:
+        if is_api_key_valid(api_key):
+                
+            if textfile and voice_id and api_key:
+                text_obj=TextFile.objects.create(
+                    text_file=textfile,
+                    voice_id=voice_id,
+                    api_key=api_key,
+                    resolution=resolution,
+                    font_file=font_file,
+                    subtitle_box_color=subtitle_box_color,
+                    font_size=font_size,
+                    font_color=font_color
+                )
+                return redirect(f'/video/add-scene/{text_obj.id}')  # Redirect to a success page or another URL
+            else:
+                return render(request, 'vlc/frontend/VLSMaker/index.html', {
+                    'error': 'Please provide all required fields.'
+                })
             return render(request, 'vlc/frontend/VLSMaker/index.html', {
-                'error': 'Please provide all required fields.'
+                'error': 'Please provide valid API key'
             })
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
