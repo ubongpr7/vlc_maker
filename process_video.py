@@ -177,6 +177,33 @@ def convert_text_to_speech(text_file_path, voice_id, api_key, output_audio_file=
     return None  # Return None if an error occurred
 
 
+def crop_to_aspect_ratio(clip, target_resolution):
+    # Get the current video width and height
+    video_width, video_height = clip.size
+    target_width, target_height = target_resolution
+
+    # Calculate aspect ratios
+    video_aspect_ratio = video_width / video_height
+    target_aspect_ratio = target_width / target_height
+
+    # Check if the aspect ratios match
+    if video_aspect_ratio == target_aspect_ratio:
+        # If the aspect ratio matches, return the original clip
+        return clip
+    else:
+        # Crop the video to the target resolution, centering the crop on the video
+        if video_aspect_ratio > target_aspect_ratio:
+            # Video is wider than the target, so crop width
+            new_width = int(target_aspect_ratio * video_height)
+            cropped_clip = crop(clip, width=new_width, height=video_height,
+                                x_center=video_width / 2, y_center=video_height / 2)
+        else:
+            # Video is taller than the target, so crop height
+            new_height = int(video_width / target_aspect_ratio)
+            cropped_clip = crop(clip, width=video_width, height=new_height,
+                                x_center=video_width / 2, y_center=video_height / 2)
+
+        return cropped_clip
 from moviepy.editor import VideoFileClip, ColorClip, CompositeVideoClip
 
 def resize_to_aspect_ratio(videoclip, target_resolution):
@@ -807,7 +834,7 @@ def main():
     
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
-            cropped_replacement_video = resize_to_aspect_ratio(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
+            cropped_replacement_video = crop_to_aspect_ratio(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
             
             logging.info(f"Replacement video {replacement_video_file} cropped to desired aspect ratio")
             if len(replacement_videos_per_combination) < len(replacement_video_files):
