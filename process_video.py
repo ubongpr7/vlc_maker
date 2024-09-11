@@ -2,7 +2,7 @@
 from pathlib import Path
 from moviepy.editor import (
     AudioFileClip, ColorClip, CompositeVideoClip, concatenate_videoclips, CompositeAudioClip,
-    TextClip, VideoFileClip,ImageClip
+    TextClip, VideoFileClip
 )
 import moviepy.video.fx.resize as rz
 from moviepy.video.fx.crop import crop
@@ -178,7 +178,7 @@ def convert_text_to_speech(text_file_path, voice_id, api_key, output_audio_file=
 
 def resize_to_aspect_ratio(videoclip, target_resolution):
     # Create a blank background image (black background in this case)
-    background = ImageClip(color=(0, 0, 0), size=target_resolution, duration=videoclip.duration)
+    background = ColorClip(color=(0, 0, 0), size=target_resolution, duration=videoclip.duration)
     
     # Calculate position to center the video within the target resolution
     video_width, video_height = videoclip.size
