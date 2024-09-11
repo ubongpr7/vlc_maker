@@ -144,8 +144,8 @@ def process_background_music(request, textfile_id):
     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id})
 def clean_progress_file(text_file_id):
     """Deletes the progress file after 3 seconds when progress is 100%."""
-    if os.path.exists(settings.MEDIA_ROOT,f'{text_file_id}_progress.txt'):
-        os.remove('progress.txt')
+    if os.path.exists(f'{settings.MEDIA_ROOT}/{text_file_id}_progress.txt'):
+        os.remove(f'{settings.MEDIA_ROOT}/{text_file_id}_progress.txt')
 
 def progress(request,text_file_id):
     base_path = settings.MEDIA_ROOT
