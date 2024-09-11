@@ -175,7 +175,11 @@ def convert_text_to_speech(text_file_path, voice_id, api_key, output_audio_file=
         logging.error(f"An unexpected error occurred: {e}")
     
     return None  # Return None if an error occurred
-
+def resize_video(clip, target_resolution):
+    width,height=target_resolution
+    clip=clip.subclip(0,clip.duration)
+    final_clip=clip.fx(vfx.resize,width=width,height=height)
+    return final_clip
 
 def crop_to_aspect_ratio(clip, target_resolution):
     # Get the current video width and height
@@ -865,7 +869,7 @@ def main():
     
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
-            cropped_replacement_video = embed_in_background_with_margin(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
+            cropped_replacement_video = clip, resize_video(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
             
             logging.info(f"Replacement video {replacement_video_file} cropped to desired aspect ratio")
             if len(replacement_videos_per_combination) < len(replacement_video_files):
