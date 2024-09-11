@@ -118,10 +118,12 @@
             <div style="position: absolute; top: -50px; left: 594px;">Download</div>
         </div>
     </div>
+    {% if messages %}
     <div id="django-messages">
     {% for message in messages %}
         <div class="message {{ message.tags }}">{{ message }}</div>
     {% endfor %}
+        {% endif %}
 </div>
 
     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px; z-index: 99;">
