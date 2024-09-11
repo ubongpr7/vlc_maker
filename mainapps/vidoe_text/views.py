@@ -271,10 +271,10 @@ def add_text(request):
                     'error': 'Please provide all required fields.'
                 })
         
-            messages.error(request,'Please provide valid API key')
-            return render(request, 'vlc/frontend/VLSMaker/index.html', {
-                'error': 'Please provide valid API key'
-            })
+        messages.error(request,'Please provide valid API key')
+        return render(request, 'vlc/frontend/VLSMaker/index.html', {
+            'error': 'Please provide valid API key'
+        })
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
 
