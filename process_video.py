@@ -204,7 +204,38 @@ def crop_to_aspect_ratio(clip, target_resolution):
                                 x_center=video_width / 2, y_center=video_height / 2)
 
         return cropped_clip
-from moviepy.editor import VideoFileClip, ColorClip, CompositeVideoClip
+
+def embed_in_background_with_margin(videoclip, target_resolution):
+    # Get the current video width and height
+    video_width, video_height = videoclip.size
+    target_width, target_height = target_resolution
+
+    # Calculate aspect ratios
+    video_aspect_ratio = video_width / video_height
+    target_aspect_ratio = target_width / target_height
+
+    # If the aspect ratio matches, return the original video
+    if video_aspect_ratio == target_aspect_ratio:
+        return videoclip
+
+    # Scaling the video based on the target resolution while keeping the aspect ratio
+    if video_aspect_ratio > target_aspect_ratio:
+        # Video is wider than target: scale down based on the width
+        scale_factor = target_width / video_width
+        new_video_height = int(video_height * scale_factor)
+        margin_value = (target_height - new_video_height) // 2  # Margin applied to top and bottom
+    else:
+        # Video is taller than target: scale down based on the height
+        scale_factor = target_height / video_height
+        new_video_width = int(video_width * scale_factor)
+        margin_value = (target_width - new_video_width) // 2  # Margin applied to left and right
+
+    # Apply the margin to center the video inside the target resolution
+    final_clip = videoclip.margin(margin_value, color=(0, 0, 0))
+
+    return final_clip.resize(target_resolution)
+
+
 
 def resize_to_aspect_ratio(videoclip, target_resolution):
     # Get video dimensions
@@ -834,7 +865,7 @@ def main():
     
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
-            cropped_replacement_video = crop_to_aspect_ratio(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
+            cropped_replacement_video = embed_in_background_with_margin(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
             
             logging.info(f"Replacement video {replacement_video_file} cropped to desired aspect ratio")
             if len(replacement_videos_per_combination) < len(replacement_video_files):
