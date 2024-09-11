@@ -176,20 +176,65 @@ def convert_text_to_speech(text_file_path, voice_id, api_key, output_audio_file=
     
     return None  # Return None if an error occurred
 
+
+from moviepy.editor import VideoFileClip, ColorClip, CompositeVideoClip
+
 def resize_to_aspect_ratio(videoclip, target_resolution):
-    # Create a blank background image (black background in this case)
-    background = ColorClip(color=(0, 0, 0), size=target_resolution, duration=videoclip.duration)
-    
-    # Calculate position to center the video within the target resolution
+    # Get video dimensions
     video_width, video_height = videoclip.size
     target_width, target_height = target_resolution
-    x_pos = (target_width - video_width) // 2
-    y_pos = (target_height - video_height) // 2
-    
-    # Position the video on top of the background
-    final_clip = CompositeVideoClip([background, videoclip.set_position((x_pos, y_pos))])
-    
+
+    # Calculate aspect ratios
+    video_aspect_ratio = video_width / video_height
+    target_aspect_ratio = target_width / target_height
+
+    # If the aspect ratio of the target matches the video, and the resolution is not larger, return the original video
+    if target_aspect_ratio == video_aspect_ratio and target_width <= video_width and target_height <= video_height:
+        return videoclip
+
+    # Otherwise, we need to embed the video in a background
+    # Maintain aspect ratio and determine whether padding is needed on width or height
+
+    if target_aspect_ratio > video_aspect_ratio:
+        # The target is wider relative to its height than the video
+        # We will need padding on the left and right
+        new_video_height = target_height
+        new_video_width = int(new_video_height * video_aspect_ratio)
+    else:
+        # The target is taller relative to its width than the video
+        # We will need padding on the top and bottom
+        new_video_width = target_width
+        new_video_height = int(new_video_width / video_aspect_ratio)
+
+    # Resize the video to the new dimensions (preserving aspect ratio)
+    resized_video = videoclip.resize((new_video_width, new_video_height))
+
+    # Calculate position to center the resized video
+    x_pos = (target_width - new_video_width) // 2
+    y_pos = (target_height - new_video_height) // 2
+
+    # Create a background
+    background = ColorClip(size=target_resolution, color=(0, 0, 0), duration=videoclip.duration)
+
+    # Position the resized video on top of the background
+    final_clip = CompositeVideoClip([background, resized_video.set_position((x_pos, y_pos))])
+
     return final_clip
+
+
+# def resize_to_aspect_ratio(videoclip, target_resolution):
+#     background = ColorClip(color=(0, 0, 0), size=target_resolution, duration=videoclip.duration)
+    
+#     # Calculate position to center the video within the target resolution
+#     video_width, video_height = videoclip.size
+#     target_width, target_height = target_resolution
+#     x_pos = (target_width - video_width) // 2
+#     y_pos = (target_height - video_height) // 2
+    
+#     # Position the video on top of the background
+#     final_clip = CompositeVideoClip([background, videoclip.set_position((x_pos, y_pos))])
+    
+#     return final_clip
 
 
 # def resize_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
