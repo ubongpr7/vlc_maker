@@ -176,36 +176,50 @@ def convert_text_to_speech(text_file_path, voice_id, api_key, output_audio_file=
     
     return None  # Return None if an error occurred
 
+def resize_to_aspect_ratio(videoclip, target_resolution):
+    # Create a blank background image (black background in this case)
+    background = ImageClip(color=(0, 0, 0), size=target_resolution, duration=videoclip.duration)
+    
+    # Calculate position to center the video within the target resolution
+    video_width, video_height = videoclip.size
+    target_width, target_height = target_resolution
+    x_pos = (target_width - video_width) // 2
+    y_pos = (target_height - video_height) // 2
+    
+    # Position the video on top of the background
+    final_clip = CompositeVideoClip([background, videoclip.set_position((x_pos, y_pos))])
+    
+    return final_clip
 
 
-def resize_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
-    """
-    Resize the video while maintaining its original aspect ratio to fit within the desired aspect ratio.
+# def resize_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
+#     """
+#     Resize the video while maintaining its original aspect ratio to fit within the desired aspect ratio.
 
-    Args:
-        video (VideoFileClip): The original video clip.
-        desired_aspect_ratio (float): The desired aspect ratio (width/height).
+#     Args:
+#         video (VideoFileClip): The original video clip.
+#         desired_aspect_ratio (float): The desired aspect ratio (width/height).
 
-    Returns:
-        VideoFileClip: The resized video clip.
-    """
-    # Calculate the current aspect ratio of the video
-    video_aspect_ratio = video.w / video.h
+#     Returns:
+#         VideoFileClip: The resized video clip.
+#     """
+#     # Calculate the current aspect ratio of the video
+#     video_aspect_ratio = video.w / video.h
 
-    # Determine how to scale the video based on the desired aspect ratio
-    if video_aspect_ratio > desired_aspect_ratio:
-        # Video is wider than desired aspect ratio, fit to width
-        new_width = video.w
-        new_height = int(video.w / desired_aspect_ratio)
-    else:
-        # Video is taller than desired aspect ratio, fit to height
-        new_width = int(video.h * desired_aspect_ratio)
-        new_height = video.h
+#     # Determine how to scale the video based on the desired aspect ratio
+#     if video_aspect_ratio > desired_aspect_ratio:
+#         # Video is wider than desired aspect ratio, fit to width
+#         new_width = video.w
+#         new_height = int(video.w / desired_aspect_ratio)
+#     else:
+#         # Video is taller than desired aspect ratio, fit to height
+#         new_width = int(video.h * desired_aspect_ratio)
+#         new_height = video.h
 
-    # Resize the video to the new dimensions while preserving the original aspect ratio
-    resized_video = video.resize(newsize=(new_width, new_height))
+#     # Resize the video to the new dimensions while preserving the original aspect ratio
+#     resized_video = video.resize(newsize=(new_width, new_height))
 
-    return resized_video
+#     return resized_video
 
 def embed_in_background(video: VideoFileClip, target_resolution: tuple) -> VideoFileClip:
     """
