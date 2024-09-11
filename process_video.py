@@ -2,7 +2,7 @@
 from pathlib import Path
 from moviepy.editor import (
     AudioFileClip, ColorClip, CompositeVideoClip, concatenate_videoclips, CompositeAudioClip,
-    TextClip, VideoFileClip
+    TextClip, VideoFileClip,ImageClip
 )
 import moviepy.video.fx.resize as rz
 from moviepy.video.fx.crop import crop
