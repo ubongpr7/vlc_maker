@@ -188,7 +188,37 @@ def crop_video_on_resolution(clip,resolution):
     crop_y = center_y - height/ 2
     video = clip.crop(x1=crop_x, y1=crop_y, width=width, height=height)
     return video
-    
+
+def adjust_video_aspect_ratio(video_clip, target_aspect_ratio):
+    # Get the original video dimensions
+    original_width, original_height = video_clip.size
+    original_aspect_ratio = original_width / original_height
+
+    # If the aspect ratios match, return the original video
+    if original_aspect_ratio == target_aspect_ratio:
+        return video_clip
+
+    # Calculate target dimensions based on the target aspect ratio
+    # Maintain the resolution of the original video, but adjust the other dimension
+    if original_aspect_ratio > target_aspect_ratio:
+        # Original video is wider than target aspect ratio
+        # We need to increase the height to match the target aspect ratio
+        target_width = original_width
+        target_height = int(target_width / target_aspect_ratio)
+    else:
+        # Original video is taller than target aspect ratio
+        # We need to increase the width to match the target aspect ratio
+        target_height = original_height
+        target_width = int(target_height * target_aspect_ratio)
+
+    # Create a blank (black) video with the target dimensions
+    blank_clip = ColorClip(size=(target_width, target_height), color=(0, 0, 0), duration=video_clip.duration)
+
+    # Composite the original video onto the center of the blank clip
+    final_clip = CompositeVideoClip([blank_clip, video_clip.set_position("center")])
+
+    return final_clip
+
 def crop_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
     video_aspect_ratio = video.w / video.h
     if video_aspect_ratio > desired_aspect_ratio:
@@ -868,7 +898,7 @@ def main():
     
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
-            cropped_replacement_video =  crop_video_on_resolution(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
+            cropped_replacement_video =  adjust_video_aspect_ratio(replacement_video, MAINRESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
             
             logging.info(f"Replacement video {replacement_video_file} cropped to desired aspect ratio")
             if len(replacement_videos_per_combination) < len(replacement_video_files):
