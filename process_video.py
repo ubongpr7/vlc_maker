@@ -746,8 +746,8 @@ def concatenate_clips(clips, target_resolution=None, target_fps=None):
     processed_clips = []
 
     for clip in clips:
-        if target_resolution:
-            clip = clip.resize(newsize=target_resolution)  # Resize to target resolution
+        # if target_resolution:
+            # clip = clip.resize(newsize=target_resolution)  # Resize to target resolution
         if target_fps:
             clip = clip.set_fps(target_fps)  # Set frame rate to target fps
         processed_clips.append(clip)
