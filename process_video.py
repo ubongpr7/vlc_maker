@@ -181,7 +181,7 @@ def resize_video(clip, target_resolution):
     final_clip=clip.fx(vfx.resize,width=width,height=height)
     return final_clip
 def crop_video_on_resolution(clip,resolution):
-    width,height=resoltion
+    width,height=resolution
     center_x= clip.w/2
     center_y= clip.h/2
     crop_x = center_x - width/ 2
