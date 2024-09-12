@@ -180,7 +180,15 @@ def resize_video(clip, target_resolution):
     clip=clip.subclip(0,clip.duration)
     final_clip=clip.fx(vfx.resize,width=width,height=height)
     return final_clip
-
+def crop_video_on_resolution(clip,resolution):
+    width,height=resoltion
+    center_x= clip.w/2
+    center_y= clip.h/2
+    crop_x = center_x - width/ 2
+    crop_y = center_y - height/ 2
+    video = clip.crop(x1=crop_x, y1=crop_y, width=width, height=height)
+    return video
+    
 def crop_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
     video_aspect_ratio = video.w / video.h
     if video_aspect_ratio > desired_aspect_ratio:
@@ -860,7 +868,7 @@ def main():
     
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
-            cropped_replacement_video =  crop_to_aspect_ratio(replacement_video, MAINRESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
+            cropped_replacement_video =  crop_video_on_resolution(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
             
             logging.info(f"Replacement video {replacement_video_file} cropped to desired aspect ratio")
             if len(replacement_videos_per_combination) < len(replacement_video_files):
