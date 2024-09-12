@@ -181,34 +181,25 @@ def resize_video(clip, target_resolution):
     final_clip=clip.fx(vfx.resize,width=width,height=height)
     return final_clip
 
-def crop_to_aspect_ratio(clip, target_resolution):
-    # Get the current video width and height
-    video_width, video_height = clip.size
-    target_width, target_height = target_resolution
-
-    # Calculate aspect ratios
-    video_aspect_ratio = video_width / video_height
-    target_aspect_ratio = target_width / target_height
-
-    # Check if the aspect ratios match
-    if video_aspect_ratio == target_aspect_ratio:
-        # If the aspect ratio matches, return the original clip
-        return clip
+def crop_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
+    video_aspect_ratio = video.w / video.h
+    if video_aspect_ratio > desired_aspect_ratio:
+        new_width = int(desired_aspect_ratio * video.h)
+        new_height = video.h
+        x1 = (video.w - new_width) // 2
+        y1 = 0
     else:
-        # Crop the video to the target resolution, centering the crop on the video
-        if video_aspect_ratio > target_aspect_ratio:
-            # Video is wider than the target, so crop width
-            new_width = int(target_aspect_ratio * video_height)
-            cropped_clip = crop(clip, width=new_width, height=video_height,
-                                x_center=video_width / 2, y_center=video_height / 2)
-        else:
-            # Video is taller than the target, so crop height
-            new_height = int(video_width / target_aspect_ratio)
-            cropped_clip = crop(clip, width=video_width, height=new_height,
-                                x_center=video_width / 2, y_center=video_height / 2)
+        new_width = video.w
+        new_height = int(video.w / desired_aspect_ratio)
+        x1 = 0
+        y1 = (video.h - new_height) // 2
+    x2 = x1 + new_width
+    y2 = y1 + new_height
+    return crop(video, x1=x1, y1=y1, x2=x2, y2=y2)
 
-        return cropped_clip
 
+
+#
 def embed_in_background_with_margin(videoclip, target_resolution):
     # Get the current video width and height
     video_width, video_height = videoclip.size
@@ -869,7 +860,7 @@ def main():
     
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
-            cropped_replacement_video =  resize_video(replacement_video, RESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
+            cropped_replacement_video =  crop_to_aspect_ratio(replacement_video, MAINRESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
             
             logging.info(f"Replacement video {replacement_video_file} cropped to desired aspect ratio")
             if len(replacement_videos_per_combination) < len(replacement_video_files):
