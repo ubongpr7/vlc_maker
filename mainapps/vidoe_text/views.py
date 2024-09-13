@@ -225,7 +225,7 @@ def process_textfile(request, textfile_id):
         textfile_id,
         resolution,
         textfile.font_color,
-        str(convert_color_input_to_normalized_rgb(textfile.subtitle_box_color)),
+        textfile.subtitle_box_color,
         textfile.font_file.path,
         str(textfile.font_size),
         
