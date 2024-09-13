@@ -597,25 +597,13 @@ def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pys
     logging.info(f"Adding subtitle: {subtitle.text}")
     if margin is None:
         # Set default margin or handle the case when margin is None
-        margin = 20
+        margin = 30
         print('PR7 subtitle_box_color: ',subtitle_box_color)
     if subtitle_box_color is None:
         subtitle_box_color = (1, .3, .5)
     elif subtitle_box_color:
-        # Your string
-
-        # Step 1: Strip the parentheses and whitespace
-        subtitle_box_color = subtitle_box_color.strip(' ()')
-
-        print(' Step 2: Split the string by commas')
-        values = subtitle_box_color.split(',')
-
-        # Step 3: Convert the split values to floats
-        x, y, z = map(float, values)
-
-        # Now x, y, z hold the values 0.9, 0.7, 0.4
-
-        subtitle_box_color=(x,y,z)
+        import matplotlib.colors as mcolors
+        subtitle_box_color=mcolors.to_rgb(subtitle_box_color)
     # font_path = os.path.join(os.getcwd(), 'data', "Montserrat-SemiBold.ttf") # Update this path to where the font file is located
 
     # Calculate the scaling factor based on the resolution of the clip
