@@ -43,9 +43,9 @@ def is_api_key_valid(api_key,voice_id):
         if response.status_code == 200:
             voices = response.json()["voices"]
             for voice in voices:
-            if voice["voice_id"] == voice_id:
-                return True  # Voice ID is valid
-            return False  
+                if voice["voice_id"] == voice_id:
+                    return True  # Voice ID is valid
+                return False  
         else:
             return False
     except requests.RequestException as e:
