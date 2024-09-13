@@ -11,7 +11,7 @@ services:
       - "5432:5432"  # Expose port for PostgreSQL
 
   web:
-    image: ubongpr7/vlc_maker:latest  # Use the local vlc_maker image
+    image: nas415/vlc_maker:latest  # Use the local vlc_maker image
     command: >
       sh -c "
         python3.10 manage.py makemigrations &&
