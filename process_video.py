@@ -668,6 +668,7 @@ def main():
         output_video_segments.append(new_video_segment.without_audio())
         start = end
     logging.info('output_video_segments has stopped')
+    
 
     replacement_video_files=extract_video_paths(video_paths_str)
     replacement_videos_per_combination=[]
