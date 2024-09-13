@@ -599,7 +599,8 @@ def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pys
         # Set default margin or handle the case when margin is None
         margin = 30
     import matplotlib.colors as mcolors
-    subtitle_box_color=mcolors.to_rgb(subtitle_box_color)
+    x,y,z =mcolors.to_rgb(subtitle_box_color)
+    subtitle_box_color=(x*255,y*255,z*255)
     print('subtitle_box_color', subtitle_box_color)
     print('subtitle_box_color', subtitle_box_color)
     print('subtitle_box_color', subtitle_box_color)
