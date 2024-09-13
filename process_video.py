@@ -177,20 +177,6 @@ def convert_text_to_speech(text_file_path, voice_id, api_key, output_audio_file=
         logging.error(f"An unexpected error occurred: {e}")
     
     return None  # Return None if an error occurred
-def resize_video(clip, target_resolution):
-    width,height=target_resolution
-    clip=clip.subclip(0,clip.duration)
-    final_clip=clip.fx(vfx.resize,width=width,height=height)
-    return final_clip
-def crop_video_on_resolution(clip,resolution):
-    width,height=resolution
-    center_x= clip.w/2
-    center_y= clip.h/2
-    crop_x = center_x - width/ 2
-    crop_y = center_y - height/ 2
-    video = clip.crop(x1=crop_x, y1=crop_y, width=width, height=height)
-    return video
-from moviepy.video.fx.all import crop
 
 def crop_to_aspect_ratio_(clip, desired_aspect_ratio):
     # Get the original clip dimensions
@@ -222,219 +208,6 @@ def crop_to_aspect_ratio_(clip, desired_aspect_ratio):
     
     # Crop the clip to the new dimensions
     return crop(clip, x1=x1, y1=y1, x2=x2, y2=y2)
-
-
-def adjust_video_aspect_ratio(video_clip, target_aspect_ratio):
-    # Get the original video dimensions
-    original_width, original_height = video_clip.size
-    original_aspect_ratio = original_width / original_height
-
-    # If the aspect ratios match, return the original video
-    if original_aspect_ratio == target_aspect_ratio:
-        return video_clip
-
-    # Calculate target dimensions based on the target aspect ratio
-    # Maintain the resolution of the original video, but adjust the other dimension
-    if original_aspect_ratio > target_aspect_ratio:
-        # Original video is wider than target aspect ratio
-        # We need to increase the height to match the target aspect ratio
-        target_width = original_width
-        target_height = int(target_width / target_aspect_ratio)
-    else:
-        # Original video is taller than target aspect ratio
-        # We need to increase the width to match the target aspect ratio
-        target_height = original_height
-        target_width = int(target_height * target_aspect_ratio)
-
-    # Create a blank (black) video with the target dimensions
-    blank_clip = ColorClip(size=(target_width, target_height), color=(0, 0, 0), duration=video_clip.duration)
-
-    # Composite the original video onto the center of the blank clip
-    final_clip = CompositeVideoClip([blank_clip, video_clip.set_position("center")])
-
-    return final_clip
-
-def crop_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
-    video_aspect_ratio = video.w / video.h
-    if video_aspect_ratio > desired_aspect_ratio:
-        new_width = int(desired_aspect_ratio * video.h)
-        new_height = video.h
-        x1 = (video.w - new_width) // 2
-        y1 = 0
-    else:
-        new_width = video.w
-        new_height = int(video.w / desired_aspect_ratio)
-        x1 = 0
-        y1 = (video.h - new_height) // 2
-    x2 = x1 + new_width
-    y2 = y1 + new_height
-    return crop(video, x1=x1, y1=y1, x2=x2, y2=y2)
-
-
-
-#
-def embed_in_background_with_margin(videoclip, target_resolution):
-    # Get the current video width and height
-    video_width, video_height = videoclip.size
-    target_width, target_height = target_resolution
-
-    # Calculate aspect ratios
-    video_aspect_ratio = video_width / video_height
-    target_aspect_ratio = target_width / target_height
-
-    # If the aspect ratio matches, return the original video
-    if video_aspect_ratio == target_aspect_ratio:
-        return videoclip
-
-    # Scaling the video based on the target resolution while keeping the aspect ratio
-    if video_aspect_ratio > target_aspect_ratio:
-        # Video is wider than target: scale down based on the width
-        scale_factor = target_width / video_width
-        new_video_height = int(video_height * scale_factor)
-        margin_value = (target_height - new_video_height) // 2  # Margin applied to top and bottom
-    else:
-        # Video is taller than target: scale down based on the height
-        scale_factor = target_height / video_height
-        new_video_width = int(video_width * scale_factor)
-        margin_value = (target_width - new_video_width) // 2  # Margin applied to left and right
-
-    # Apply the margin to center the video inside the target resolution
-    final_clip = videoclip.margin(margin_value, color=(0, 0, 0))
-
-    return final_clip.resize(target_resolution)
-
-
-
-def resize_to_aspect_ratio(videoclip, target_resolution):
-    # Get video dimensions
-    video_width, video_height = videoclip.size
-    target_width, target_height = target_resolution
-
-    # Calculate aspect ratios
-    video_aspect_ratio = video_width / video_height
-    target_aspect_ratio = target_width / target_height
-
-    # If the aspect ratio of the target matches the video, and the resolution is not larger, return the original video
-    if target_aspect_ratio == video_aspect_ratio and target_width <= video_width and target_height <= video_height:
-        return videoclip
-
-    # Otherwise, we need to embed the video in a background
-    # Maintain aspect ratio and determine whether padding is needed on width or height
-
-    if target_aspect_ratio > video_aspect_ratio:
-        # The target is wider relative to its height than the video
-        # We will need padding on the left and right
-        new_video_height = target_height
-        new_video_width = int(new_video_height * video_aspect_ratio)
-    else:
-        # The target is taller relative to its width than the video
-        # We will need padding on the top and bottom
-        new_video_width = target_width
-        new_video_height = int(new_video_width / video_aspect_ratio)
-
-    # Resize the video to the new dimensions (preserving aspect ratio)
-    resized_video = videoclip.resize((new_video_width, new_video_height))
-
-    # Calculate position to center the resized video
-    x_pos = (target_width - new_video_width) // 2
-    y_pos = (target_height - new_video_height) // 2
-
-    # Create a background
-    background = ColorClip(size=target_resolution, color=(0, 0, 0), duration=videoclip.duration)
-
-    # Position the resized video on top of the background
-    final_clip = CompositeVideoClip([background, resized_video.set_position((x_pos, y_pos))])
-
-    return final_clip
-
-
-# def resize_to_aspect_ratio(videoclip, target_resolution):
-#     background = ColorClip(color=(0, 0, 0), size=target_resolution, duration=videoclip.duration)
-    
-#     # Calculate position to center the video within the target resolution
-#     video_width, video_height = videoclip.size
-#     target_width, target_height = target_resolution
-#     x_pos = (target_width - video_width) // 2
-#     y_pos = (target_height - video_height) // 2
-    
-#     # Position the video on top of the background
-#     final_clip = CompositeVideoClip([background, videoclip.set_position((x_pos, y_pos))])
-    
-#     return final_clip
-
-
-# def resize_to_aspect_ratio(video: VideoFileClip, desired_aspect_ratio: float) -> VideoFileClip:
-#     """
-#     Resize the video while maintaining its original aspect ratio to fit within the desired aspect ratio.
-
-#     Args:
-#         video (VideoFileClip): The original video clip.
-#         desired_aspect_ratio (float): The desired aspect ratio (width/height).
-
-#     Returns:
-#         VideoFileClip: The resized video clip.
-#     """
-#     # Calculate the current aspect ratio of the video
-#     video_aspect_ratio = video.w / video.h
-
-#     # Determine how to scale the video based on the desired aspect ratio
-#     if video_aspect_ratio > desired_aspect_ratio:
-#         # Video is wider than desired aspect ratio, fit to width
-#         new_width = video.w
-#         new_height = int(video.w / desired_aspect_ratio)
-#     else:
-#         # Video is taller than desired aspect ratio, fit to height
-#         new_width = int(video.h * desired_aspect_ratio)
-#         new_height = video.h
-
-#     # Resize the video to the new dimensions while preserving the original aspect ratio
-#     resized_video = video.resize(newsize=(new_width, new_height))
-
-#     return resized_video
-
-def embed_in_background(video: VideoFileClip, target_resolution: tuple) -> VideoFileClip:
-    """
-    Embed a video in a black background of the target resolution.
-
-    Args:
-        video (VideoFileClip): The input video clip.
-        target_resolution (tuple): The target resolution (width, height) to fit the video into.
-
-    Returns:
-        VideoFileClip: A new video clip with the original video centered on a black background.
-    """
-    # Target resolution and aspect ratio
-    target_width, target_height = target_resolution
-    target_aspect_ratio = target_width / target_height
-
-    # Original video aspect ratio
-    video_aspect_ratio = video.w / video.h
-
-    # Determine the size of the background
-    if video_aspect_ratio > target_aspect_ratio:
-        # The video is wider than the target aspect ratio
-        new_width = target_width
-        new_height = int(target_width / video_aspect_ratio)
-    else:
-        # The video is taller than the target aspect ratio
-        new_width = int(target_height * video_aspect_ratio)
-        new_height = target_height
-
-    # Create a black background clip with the target resolution
-    background = ColorClip(size=(target_width, target_height), color=(0, 0, 0))
-
-    # Resize the video to fit within the target resolution, maintaining aspect ratio
-    resized_video = video.resize(newsize=(new_width, new_height))
-
-    # Calculate position to center the resized video
-    x_center = (target_width - new_width) // 2
-    y_center = (target_height - new_height) // 2
-
-    # Overlay the resized video on the black background
-    final_clip = CompositeVideoClip([background, resized_video.set_position((x_center, y_center))])
-    final_clip.write_videofile(os.path.join(os.getcwd(),'cropped','video.mp4'), codec='libx264', audio_codec='aac')
-
-    return final_clip
 
 
 
@@ -482,7 +255,7 @@ def get_video_duration_from_json(json_file):
 
 # Example usage
 
-def generate_blank_video_with_audio(audio_file, srt_file, output_file, resolution='16:9'):
+def generate_blank_video_with_audio(audio_file, srt_file, output_file, resolution):
     # Get the duration from the SRT file
     srt_duration = get_video_duration_from_json(srt_file)
 
@@ -545,9 +318,6 @@ def convert_seconds_to_subrip_time(seconds):
 def speed_up_video_with_audio(input_video, output_video_path, speed_factor):
     # Speed up the video and audio using speedx
     sped_up_video = input_video.fx(vfx.speedx, speed_factor)
-
-    # Write the sped-up video to the output path
-    # sped_up_video.write_videofile(output_video_path, codec='libx264', audio_codec='aac')
 
     # Return the sped-up video as a VideoClip object
     return sped_up_video
@@ -762,23 +532,6 @@ def replace_video_segments(
             # add_subtitles_to_clip(subtitle_box_color=subtitle_box_color,clip=adjusted_segment,subtitle=subtitles[replace_index],base_font_size=font_customization[2],color=int(font_customization[1]),margin=font_customization[])
             adjusted_segment_with_subtitles = add_subtitles_to_clip(subtitle_box_color,adjusted_segment, subtitles[replace_index],font_customization[2],font_customization[1],int(font_customization[4]),font_customization[0])
             combined_segments[replace_index] = adjusted_segment_with_subtitles
-    # for replace_index, replacement_video in replacement_videos.items():
-    #     if 0 <= replace_index < len(combined_segments):
-    #         target_duration = combined_segments[replace_index].duration
-    #         start = subriptime_to_seconds(subtitles[replace_index].start)
-    #         end = subriptime_to_seconds(subtitles[replace_index].end)
-
-    #         # Adjust replacement video duration to match target duration
-
-    #         if replacement_video.duration < target_duration:
-    #             replacement_segment = loop(replacement_video, duration=target_duration)
-    #         else:
-    #             replacement_segment = replacement_video.subclip(0, target_duration)
-
-    #         adjusted_segment = adjust_segment_properties(replacement_segment, original_video,)
-    #         # add_subtitles_to_clip(subtitle_box_color=subtitle_box_color,clip=adjusted_segment,subtitle=subtitles[replace_index],base_font_size=font_customization[2],color=int(font_customization[1]),margin=font_customization[])
-    #         adjusted_segment_with_subtitles = add_subtitles_to_clip(subtitle_box_color,adjusted_segment, subtitles[replace_index],font_customization[2],font_customization[1],int(font_customization[4]),font_customization[0])
-    #         combined_segments[replace_index] = adjusted_segment_with_subtitles
 
     return combined_segments
 
@@ -808,9 +561,9 @@ def concatenate_clips(clips, target_resolution=None, target_fps=None):
     processed_clips = []
 
     for clip in clips:
-        # if target_resolution:
-            # clip = clip.resize(newsize=target_resolution)  # Resize to target resolution
+        clip =crop_to_aspect_ratio_(clip,target_resolution)
         if target_fps:
+            
             clip = clip.set_fps(target_fps)  # Set frame rate to target fps
         processed_clips.append(clip)
 
@@ -946,7 +699,7 @@ def main():
     update_progress(55,dir_s)
     
     final_video_segments = replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip, font_customization, resolution, subtitle_box_color)
-    concatenated_video = concatenate_clips(final_video_segments, target_resolution=RESOLUTIONS[resolution], target_fps=30)
+    concatenated_video = concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
     update_progress(60,dir_s)
 
     # Extract original audio from the blank video clip
@@ -973,7 +726,9 @@ def main():
     # Write the final video file with audio
     
     final_video_speeded_up.write_videofile(os.path.normpath(output_file), codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
-
+    update_progress(88,dir_s)
+    from time import time
+    time.sleep(8)
     update_progress(100,dir_s)
 if __name__ == "__main__":
     main()
