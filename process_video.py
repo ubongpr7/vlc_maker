@@ -1,4 +1,4 @@
-
+`
 from pathlib import Path
 from moviepy.editor import (
     AudioFileClip, ColorClip, CompositeVideoClip, concatenate_videoclips, CompositeAudioClip,
@@ -728,7 +728,7 @@ def main():
     
     final_video_speeded_up.write_videofile(os.path.normpath(output_file), codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
     update_progress(88,dir_s)
-    from time import time
+    import  time
     time.sleep(8)
     update_progress(100,dir_s)
 if __name__ == "__main__":
