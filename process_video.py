@@ -190,6 +190,39 @@ def crop_video_on_resolution(clip,resolution):
     crop_y = center_y - height/ 2
     video = clip.crop(x1=crop_x, y1=crop_y, width=width, height=height)
     return video
+from moviepy.video.fx.all import crop
+
+def crop_to_aspect_ratio_(clip, desired_aspect_ratio):
+    # Get the original clip dimensions
+    original_width, original_height = clip.size
+    
+    # Calculate the current aspect ratio
+    original_aspect_ratio = original_width / original_height
+    
+    # If the aspect ratio is already correct, return the original clip
+    if abs(original_aspect_ratio - desired_aspect_ratio) < 0.01:  # Allow small rounding errors
+        return clip
+    
+    # Calculate the new width and height to match the desired aspect ratio
+    if original_aspect_ratio > desired_aspect_ratio:
+        # The clip is too wide, we need to reduce the width
+        new_width = int(original_height * desired_aspect_ratio)
+        new_height = original_height
+        x1 = (original_width - new_width) // 2  # Center the crop horizontally
+        y1 = 0
+    else:
+        # The clip is too tall, we need to reduce the height
+        new_width = original_width
+        new_height = int(original_width / desired_aspect_ratio)
+        x1 = 0
+        y1 = (original_height - new_height) // 2  # Center the crop vertically
+    
+    x2 = x1 + new_width
+    y2 = y1 + new_height
+    
+    # Crop the clip to the new dimensions
+    return crop(clip, x1=x1, y1=y1, x2=x2, y2=y2)
+
 
 def adjust_video_aspect_ratio(video_clip, target_aspect_ratio):
     # Get the original video dimensions
@@ -889,7 +922,7 @@ def main():
     
     for replacement_video_file in replacement_video_files:
             replacement_video = load_video_from_file(replacement_video_file)
-            cropped_replacement_video =  crop_to_aspect_ratio(replacement_video, MAINRESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
+            cropped_replacement_video =  crop_to_aspect_ratio_(replacement_video, MAINRESOLUTIONS[resolution]) #MAINRESOLUTIONS[resolution]
             
             logging.info(f"Replacement video {replacement_video_file} cropped to desired aspect ratio")
             if len(replacement_videos_per_combination) < len(replacement_video_files):
