@@ -25,10 +25,8 @@ def is_api_key_valid(api_key,voice_id):
     Returns:
         bool: True if the API key is valid, False otherwise.
     """
-    endpoint_url =  "https://api.elevenlabs.io/v1/voices"
-    # headers = {
-    #     "Authorization": f"Bearer {api_key}"
-    # }
+    endpoint_url = f"https://api.elevenlabs.io/v1/voices/{voice_id}"
+   
     headers = {
   "Accept": "application/json",
   "xi-api-key": api_key,
@@ -41,11 +39,8 @@ def is_api_key_valid(api_key,voice_id):
         response.raise_for_status()  # Raises an HTTPError for bad responses (4xx and 5xx)
         # Check the response content or status code to determine validity
         if response.status_code == 200:
-            voices = response.json()["voices"]
-            for voice in voices:
-                if voice["voice_id"] == voice_id:
-                    return True  # Voice ID is valid
-                return False  
+            
+            return True
         else:
             return False
     except requests.RequestException as e:
