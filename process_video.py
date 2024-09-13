@@ -681,7 +681,7 @@ def main():
             if len(replacement_videos_per_combination) < len(replacement_video_files):
                 replacement_videos_per_combination.append({})
             # replacement_videos_per_combination[replacement_video_files.index(replacement_video_file)][replace_index] = cropped_replacement_video    
-    final_blank_video = concatenate_clips(blank_video_segments,target_resolution=RESOLUTIONS[resolution],target_fps=30)
+    final_blank_video = concatenate_clips(blank_video_segments,target_resolution=MAINRESOLUTIONS[resolution],target_fps=30)
     logging.info('Concatination Done')
     try:    
         final__blank_audio = final_blank_video.audio
