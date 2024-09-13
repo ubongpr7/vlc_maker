@@ -15,7 +15,7 @@ from threading import Timer
 
 import requests
 
-def is_api_key_valid(api_key):
+def is_api_key_valid(api_key,voice_id):
     """
     Checks if the given ElevenLabs API key is valid.
 
@@ -41,7 +41,11 @@ def is_api_key_valid(api_key):
         response.raise_for_status()  # Raises an HTTPError for bad responses (4xx and 5xx)
         # Check the response content or status code to determine validity
         if response.status_code == 200:
-            return True
+            voices = response.json()["voices"]
+            for voice in voices:
+            if voice["voice_id"] == voice_id:
+                return True  # Voice ID is valid
+            return False  
         else:
             return False
     except requests.RequestException as e:
@@ -251,7 +255,7 @@ def add_text(request):
         subtitle_box_color = request.POST.get('subtitle_box_color')
         font_file = request.FILES.get('font_file')  # Assuming this is a different file field
         font_size = request.POST.get('font_size')
-        if is_api_key_valid(api_key):
+        if is_api_key_valid(api_key,voice_id):
                 
             if textfile and voice_id and api_key:
                 text_obj=TextFile.objects.create(
@@ -271,7 +275,7 @@ def add_text(request):
                     'error': 'Please provide all required fields.'
                 })
         
-        messages.error(request,'Please provide valid API key')
+        messages.error(request,'Please provide valid API  key and voice Id')
         return render(request, 'vlc/frontend/VLSMaker/index.html', {
             'error': 'Please provide valid API key'
         })
