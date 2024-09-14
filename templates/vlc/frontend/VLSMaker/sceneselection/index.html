@@ -12,15 +12,19 @@
     <script src="{% static 'sceneselection/script.js'%}"></script>
 <style>
 #card {
-  width: 100%;
-  max-width: 1200px; /* Limits the card's width so it doesn't stretch too far */
-  height: auto; /* Height will adjust based on content */
+  max-width: 1200px; /* Maximum width of the card */
+  width: 100%; /* The card will take up full width up to max-width */
   background-color: #fff;
-  padding: 20px; /* Space between the content and borders */
-  margin: 20px auto; /* Even margin around the card */
+  padding: 20px; /* Space between content and borders */
+  margin: 20px auto; /* Centers the card and gives vertical margin */
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Elevation effect */
-  box-sizing: border-box; /* Ensures padding is included in the total width/height */
+  box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+#card * {
+  max-width: 100%; /* Ensures all inner elements respect the padding and don't overflow */
+  box-sizing: border-box; /* Makes sure padding is included in the inner elements' size calculations */
 }
 
 </style>
@@ -111,7 +115,7 @@
                             </div>
                             <!-- <form method="POST" action="/process" enctype="multipart/form-data"> -->
 
-                                <div id="card" class="grid-container">
+                                <div  id= "card" class="grid-container">
                                     <div class="grid-items">
                                         <div class="grid-item title"><span>Slide</span></div>
                                         <div class="grid-item title"><span>Slide Text</span></div>
