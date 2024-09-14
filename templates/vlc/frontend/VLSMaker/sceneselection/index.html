@@ -28,7 +28,6 @@
 </style>
 </head>
 <body style="position: relative; overflow-x: hidden;">
-    <div class="bg">
     <header style="padding: 8px 108px; border-bottom: 1px solid rgba(0, 0, 0, 0.171);">
         <div style="display: flex; justify-content: space-between;">
             <div style="display: flex; align-items: center; cursor: pointer; position: relative;">
@@ -105,7 +104,7 @@
                     <form method="POST" action="." enctype="multipart/form-data">
                         {% csrf_token %}
                     <div class="scene-container" style="display: flex;padding:30px 30px; margin:50px 50px; justify-content: center; align-items: center;">
-                        <div class="Scene" style="width: fit-content; height: 703px; margin-bottom: 40px; border: 1px solid #0000004D; box-sizing: border-box; border-radius: 8px; padding: 40px 24px;  background: white;">
+                        <div class="Scene" style="width: 90%; height: 703px; margin-bottom: 40px; border: 1px solid #0000004D; box-sizing: border-box; border-radius: 8px; padding: 40px 24px;  background: white;">
                             <div class="select-scene-text" style="display: flex; justify-content: center; margin-bottom: 48px;">
                                 <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
                                     Select Your Scenes
@@ -113,7 +112,7 @@
                             </div>
                             <!-- <form method="POST" action="/process" enctype="multipart/form-data"> -->
 
-                                <div  id= "card" class="grid-container">
+                                <div  class="grid-container">
                                     <div  class="grid-items">
                                         <div class="grid-item title"><span>Slide</span></div>
                                         <div class="grid-item title"><span>Slide Text</span></div>
