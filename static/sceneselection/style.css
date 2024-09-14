@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-html, body {
+html, body{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -15,96 +15,8 @@ html, body {
     letter-spacing: -0.03em;
 }
 
-.bg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(196, 113, 255, 0.06) 88%, rgba(148, 0, 255, 0) 100%);
-    z-index: -1;
-}
-
-.text {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 21.94px;
-    text-align: left;
-}
-
-.time {
-    font-family: "Montserrat", sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 23.2px;
-    letter-spacing: 0.02em;
-    text-align: left;
-}
-
-.time::placeholder {
-    color: #00000080;
-}
-
-.time:focus {
-    outline: none;
-}
-
-.button {
-    align-items: center;
-    display: flex;
-    gap: 10px;
-    padding: 12px 24px;
-    color: white;
-    background: #864AF9;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 24px;
-    letter-spacing: 0.02em;
-    text-align: left;
-    cursor: pointer;
-    border: none;
-    width: fit-content;
-}
-
-.dropdown,
-.dropdownText,
-#pfpdropdown {
-    font-family: "Plus Jakarta Sans", sans-serif;
-}
-
-.dropdownText {
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 25.2px;
-    letter-spacing: -0.02em;
-    text-align: left;
-}
-
-#pfpdropdown {
-    position: absolute; 
-    border-radius: 8px; 
-    border: 1px solid #00000080; 
-    width: 330px; 
-    background: white; 
-    height: fit-content; 
-    top: 10px;
-    right: -50px;
-    z-index: 1; 
-    transition: 0.05s ease-in;
-    transform: scale(0.7);
-    user-select: none;
-}
-
-.not-present {
-    opacity: 0;
-    transition: 0.05s ease;
-}
-
-.present {
-    opacity: 1;
-    transition: 0.05s ease;
-}
-
 .grid-container {
+    display: flex;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -134,6 +46,16 @@ html, body {
     text-align: left;
 }
 
+.title {
+    background: #864AF9;
+    color: white;
+    border-top: none;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 29.26px;
+    text-align: center;
+}
+
 .grid-item span {
     display: flex;
     width: 100%;
@@ -152,6 +74,7 @@ html, body {
     font-size: 14px;
     font-weight: 400;
     line-height: 24px;
+    text-align: left;
 }
 
 .center {
@@ -160,12 +83,50 @@ html, body {
     align-items: center;
 }
 
-.title {
-    background: #864AF9;
-    color: white;
-    border-top: none;
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 29.26px;
-    text-align: center;
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(196, 113, 255, 0.06) 88%, rgba(148, 0, 255, 0) 100%);
+    z-index: -1;
+}
+
+
+.dropdown {
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.dropdownText {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 25.2px;
+    letter-spacing: -0.02em;
+    text-align: left;
+}
+
+#pfpdropdown {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    position: absolute; 
+    border-radius: 8px; 
+    border: 1px solid #00000080; 
+    width: 330px; 
+    background: white; 
+    height: fit-content; 
+    top: 10px;
+    right: -50px;
+    z-index: 1; 
+    transition: 0.05s ease-in;
+    transform: scale(0.7);
+    user-select: none;
+}
+
+.not-present {
+    opacity: 0;
+    transition: 0.05s ease;
+}
+
+.present {
+    opacity: 1;
+    transition: 0.05s ease;
 }
