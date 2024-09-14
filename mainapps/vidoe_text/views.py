@@ -29,12 +29,11 @@ def is_api_key_valid(api_key,voice_id):
     endpoint_url_2 = f"https://api.elevenlabs.io/v1/voices/{voice_id}"
    
     headers = {
-  "Accept": "application/json",
-  "xi-api-key": api_key,
-  "Content-Type": "application/json"
-}
-x,y=False,False
-# response = requests.get("https://api.elevenlabs.io/validate", headers={"Authorization": f"Bearer {api_key}"})  
+      "Accept": "application/json",
+      "xi-api-key": api_key,
+      "Content-Type": "application/json"
+    }
+    x,y=False,False
     try:
         response = requests.get(endpoint_url, headers=headers)
         response_2 = requests.get(endpoint_url_2)
