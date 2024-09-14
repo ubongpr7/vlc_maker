@@ -36,17 +36,22 @@ def is_api_key_valid(api_key,voice_id):
     x,y=False,False
     try:
         response = requests.get(endpoint_url, headers=headers)
-        response_2 = requests.get(endpoint_url_2)
         response.raise_for_status()  # Raises an HTTPError for bad responses (4xx and 5xx)
         # Check the response content or status code to determine validity
         if response.status_code == 200:
             x=True
             
-        if response_2.status_code ==200:
-          y=True
             
     except requests.RequestException as e:
         print(f"Error checking API key: {e}")
+    try:
+        response_2 = requests.get(endpoint_url_2)
+        if response_2.status_code ==200:
+            y=True
+    
+    except requests.RequestException as e:
+        print(f"Error checking API key: {e}")
+        
     return x,y
 
 
