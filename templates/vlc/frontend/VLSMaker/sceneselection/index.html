@@ -67,115 +67,113 @@
     </header>
     
 
-            
-                    <div class="progressbar" style="display: flex; justify-content: center; align-items: center; margin-top: 84px; margin-bottom: 56px;">
-                        <div style="width: 624px; height: 10px; background: #EEEEEE; position: relative; display: flex; align-items: center;">
-                            <div style="position: absolute; width: 25px; height: 25px; background: #864AF9; border-radius: 90px; left: 0%;"></div>
-                            <div style="position: absolute; width: 25px; height: 25px; background: #864AF9; border-radius: 90px; left: 208px"></div>
-                            <div style="position: absolute; width: 25px; height: 25px; background: #EEEEEE; border-radius: 90px; left: 416px;"></div>
-                            <div style="position: absolute; width: 25px; height: 25px; background: #EEEEEE; border-radius: 90px; left: 100%;"></div>
-            
-            
-                            <div style="position: absolute; width: 220px; height: 10px; background: #864AF9; border-radius: 90px; left: 0;"></div>
-            
-            
-                            <div style="position: absolute; top: -50px; left: -75.96px;">Voice & Subtitle Design</div>
-                            <div style="position: absolute; top: -50px; left: 160px;">Scene Selection</div>
-                            <div style="position: absolute; top: -50px; left: 312px;">Background Music Selection</div>
-                            <div style="position: absolute; top: -50px; left: 594px;">Download</div>
+
+    <div class="progressbar" style="display: flex; justify-content: center; align-items: center; margin-top: 84px; margin-bottom: 56px;">
+        <div style="width: 624px; height: 10px; background: #EEEEEE; position: relative; display: flex; align-items: center;">
+            <div style="position: absolute; width: 25px; height: 25px; background: #864AF9; border-radius: 90px; left: 0%;"></div>
+            <div style="position: absolute; width: 25px; height: 25px; background: #864AF9; border-radius: 90px; left: 208px"></div>
+            <div style="position: absolute; width: 25px; height: 25px; background: #EEEEEE; border-radius: 90px; left: 416px;"></div>
+            <div style="position: absolute; width: 25px; height: 25px; background: #EEEEEE; border-radius: 90px; left: 100%;"></div>
+
+
+            <div style="position: absolute; width: 220px; height: 10px; background: #864AF9; border-radius: 90px; left: 0;"></div>
+
+
+            <div style="position: absolute; top: -50px; left: -75.96px;">Voice & Subtitle Design</div>
+            <div style="position: absolute; top: -50px; left: 160px;">Scene Selection</div>
+            <div style="position: absolute; top: -50px; left: 312px;">Background Music Selection</div>
+            <div style="position: absolute; top: -50px; left: 594px;">Download</div>
+        </div>
+    </div>
+                        
+    <form method="POST" action="." enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="scene-container" style="display: flex;padding:30px 30px; margin:50px 50px; justify-content: center; align-items: center;">
+        <div class="Scene"style="width: fit-content; height: 703px; margin-bottom: 40px; border: 1px solid #0000004D; box-sizing: border-box; border-radius: 8px; padding: 40px 24px;  background: white;">
+            <div class="select-scene-text" style="display: flex; justify-content: center; margin-bottom: 48px;">
+                <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
+                    Select Your Scenes
+                </span>
+            </div>
+
+            <div   class="grid-container"  >
+                <div  class="grid-items" style="grid-template-columns: 0.5fr 1fr 1fr 2fr ;width:100%;">
+                    <div class="grid-item title"><span>Slide</span></div>
+                    <div class="grid-item title"><span>Slide Text</span></div>
+                    <div class="grid-item title"><span>Upload Scene</span></div>
+                    <div class="grid-item title right"><span>Upload Scene From Asset Folder</span></div>
+                    {% for data in form_data %}
+                    <div class="grid-item"><span>Slide {{ data.line_number }}</span></div>
+                    <div class="grid-item"><span>{{ data.line }}
+                        <input  type="hidden" name="line_{{ forloop.counter0 }}" value="{{ line }}">
+                    </span></div>
+                    
+                    
+                    <div class="grid-item center">
+                        <div style="width: 100%; height: fit-content; padding: 16px 24px; border-radius: 8px; border: 1px dashed #19191980; display: flex; align-items: center; position: relative; font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center; gap: 14px;">
+                        <svg id="svg1" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="#191919B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>                                
+                        <div class="uploadText" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
+                            Choose File
+                        </div>
+                        <!-- File input for selecting video -->
+                        <input type="file" class="uploaded_file" name="uploaded_video_{{ forloop.counter0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
                         </div>
                     </div>
-                        
-                    <div class="scene-container" style="display: flex;padding:30px 30px; margin:50px 50px; justify-content: center; align-items: center;">
-                        <div class="Scene"style="width: fit-content; height: 703px; margin-bottom: 40px; border: 1px solid #0000004D; box-sizing: border-box; border-radius: 8px; padding: 40px 24px;  background: white;">
-                            <div class="select-scene-text" style="display: flex; justify-content: center; margin-bottom: 48px;">
-                                <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
-                                    Select Your Scenes
-                                </span>
-                            </div>
-                    <form method="POST" action="." enctype="multipart/form-data">
-                        {% csrf_token %}
-
-                                <div   class="grid-container"  >
-                                    <div  class="grid-items" style="grid-template-columns: 0.5fr 1fr 1fr 2fr ;width:100%;">
-                                        <div class="grid-item title"><span>Slide</span></div>
-                                        <div class="grid-item title"><span>Slide Text</span></div>
-                                        <div class="grid-item title"><span>Upload Scene</span></div>
-                                        <div class="grid-item title right"><span>Upload Scene From Asset Folder</span></div>
-                                        {% for data in form_data %}
-                                        <div class="grid-item"><span>Slide {{ data.line_number }}</span></div>
-                                        <div class="grid-item"><span>{{ data.line }}
-                                            <input  type="hidden" name="line_{{ forloop.counter0 }}" value="{{ line }}">
-                                        </span></div>
-                                        
-                                        
-                                        <div class="grid-item center">
-                                            <div style="width: 100%; height: fit-content; padding: 16px 24px; border-radius: 8px; border: 1px dashed #19191980; display: flex; align-items: center; position: relative; font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center; gap: 14px;">
-                                            <svg id="svg1" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="#191919B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>                                
-                                            <div class="uploadText" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
-                                                Choose File
-                                            </div>
-                                            <!-- File input for selecting video -->
-                                            <input type="file" class="uploaded_file" name="uploaded_video_{{ forloop.counter0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
-                                            </div>
-                                        </div>
-                                        
-            
-                                        <div class="grid-item right" >
-                                            <div style="display: flex; width: 100%; height: fit-content; gap: 10px; align-items: center; flex-direction: column;">
-                                            <!-- Topic Folder Selection -->
-                                            <div style="width: 100%; position: relative;">
-                                                <select name="topic_folder_{{ forloop.counter0 }}"
-                                                 onchange="fetchVideoClips(this.value, '{{ forloop.counter0 }}')"
-                                                        style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
-                                                <option value="">Select Topic</option>
-                                                {% for video_category in video_categories %}
-                                                    <option value="{{ video_category.id }}">{{ video_category }}</option>
-                                                {% endfor %}
-                                                </select>
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
-                                                <path d="M6 9L12 15L18 9" stroke="#050315" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg> 
-                                            </div>
-                                        
-                                            <!-- Video Selection -->
-                                            <div style="width: 100%; position: relative;">
-                                                <select name="selected_video_{{ forloop.counter0 }}" 
-                                                        id="videoSelect_{{ forloop.counter0 }}" 
-                                                        style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
-                                                <option value="">Select a video</option>
-                                                </select>
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
-                                                <path d="M6 9L12 15L18 9" stroke="#050315" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg> 
-                                            </div>
-                                        
-                                            <!-- Hidden Input -->
-                                            <input type="hidden" name="topic_folder_selected_{{ forloop.counter0 }}" id="topicFolder_{{ forloop.counter0 }}">
-                                            </div>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-                                    
                     
-                                </div>
-                                
-                            </div>
-                                <div class="button" style="width: fit-content; height:24px;position:absolute;right:0%; display: flex; justify-content: flex-end; align-items: center;">
-                                    <div style="display: flex; align-items: center; justify-content: center; border-radius: 8px;  background: #864AF9; cursor: pointer;">
-                                        <button type="submit"  style="text-decoration: none; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; margin-right: 10px; background: none; border: none; cursor: pointer;">
-                                            Proceed To Background Music Selection
-                                        </button>
-                                        <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>                        
-                                    </div>
-                                </div>
 
+                    <div class="grid-item right" >
+                        <div style="display: flex; width: 100%; height: fit-content; gap: 10px; align-items: center; flex-direction: column;">
+                        <!-- Topic Folder Selection -->
+                        <div style="width: 100%; position: relative;">
+                            <select name="topic_folder_{{ forloop.counter0 }}"
+                                onchange="fetchVideoClips(this.value, '{{ forloop.counter0 }}')"
+                                    style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
+                            <option value="">Select Topic</option>
+                            {% for video_category in video_categories %}
+                                <option value="{{ video_category.id }}">{{ video_category }}</option>
+                            {% endfor %}
+                            </select>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                            <path d="M6 9L12 15L18 9" stroke="#050315" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg> 
                         </div>
-                    </form>
+                    
+                        <!-- Video Selection -->
+                        <div style="width: 100%; position: relative;">
+                            <select name="selected_video_{{ forloop.counter0 }}" 
+                                    id="videoSelect_{{ forloop.counter0 }}" 
+                                    style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
+                            <option value="">Select a video</option>
+                            </select>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                            <path d="M6 9L12 15L18 9" stroke="#050315" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg> 
+                        </div>
+                    
+                        <!-- Hidden Input -->
+                        <input type="hidden" name="topic_folder_selected_{{ forloop.counter0 }}" id="topicFolder_{{ forloop.counter0 }}">
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+
+            </div>
+            
+            <div class="button" style="width: fit-content; height:24px;position:absolute;right:0%; display: flex; justify-content: flex-end; align-items: center;">
+                <div style="display: flex; align-items: center; justify-content: center; border-radius: 8px;  background: #864AF9; cursor: pointer;">
+                    <button type="submit"  style="text-decoration: none; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; margin-right: 10px; background: none; border: none; cursor: pointer;">
+                        Proceed To Background Music Selection
+                    </button>
+                    <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>                        
+                </div>
+            </div>
+    </div>
+    </form>
         <script>
             function fetchVideoClips(categoryId, counter) {
                 
