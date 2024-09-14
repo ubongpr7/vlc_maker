@@ -131,6 +131,7 @@ const previewText= document.getElementById("previewText");
 slider.addEventListener('input', function() {
     sliderValue.textContent = slider.value;
     previewText.style.fontSize = `${slider.value}px`;
+    document.getElementById('font_size').value=slider.value*2
     
 });
 
