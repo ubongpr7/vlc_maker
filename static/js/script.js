@@ -110,7 +110,7 @@ const font_fileName = document.getElementById('font_file_name');
 fileUpload.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
-        fileName.textContent = `${file.name}`;
+        fileName.textContent = `${file.name.slice(0,15)}`;
     } else {
         fileName.textContent = 'No file selected';
     }
@@ -119,7 +119,7 @@ fileUpload.addEventListener('change', (event) => {
 font_file.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
-        font_fileName.textContent = `${file.name}`;
+        font_fileName.textContent = `${file.name.slice(0,15)}`;
     } else {
         font_fileName.textContent = 'No file selected';
     }
