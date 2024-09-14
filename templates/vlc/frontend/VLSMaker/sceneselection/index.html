@@ -10,7 +10,19 @@
     <title>Scene Selection</title>
     <link rel="stylesheet" href="{% static 'sceneselection/style.css'%}">
     <script src="{% static 'sceneselection/script.js'%}"></script>
+<style>
+    #card {
+  width: 100%;
+  height: auto; /* Height will adjust based on content */
+  background-color: #fff;
+  padding: 20px; /* Space between the content and borders */
+  margin: 20px auto; /* Even margin around the card */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Elevation effect */
+  box-sizing: border-box; /* Ensures padding is included in the total width/height */
+}
 
+</style>
 </head>
 <body style="position: relative; overflow-x: hidden;">
     <div class="bg"></div>
@@ -86,7 +98,6 @@
                             <div style="position: absolute; top: -50px; left: 594px;">Download</div>
                         </div>
                     </div>
-                    <div style="padding:30px 30px; margin:50px 50px">
                         
                     <form method="POST" action="." enctype="multipart/form-data">
                         {% csrf_token %}
@@ -98,7 +109,8 @@
                                 </span>
                             </div>
                             <!-- <form method="POST" action="/process" enctype="multipart/form-data"> -->
-            
+                        <div id="card">
+
                                 <div class="grid-container">
                                     <div class="grid-items">
                                         <div class="grid-item title"><span>Slide</span></div>
@@ -177,9 +189,9 @@
                                 
                             </div>
                         </div>
+                    </div>
 
                     </form>
-                    </div>
     
         <script>
             function fetchVideoClips(categoryId, counter) {
