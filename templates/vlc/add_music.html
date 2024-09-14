@@ -177,7 +177,7 @@
                             </svg>                    
                             Upload More MP3
                         </button>
-                        <div style="width: 100%; display: flex; justify-content: flex-end;">
+                        <div id ="submit_form" style="width: 100%; display: none; justify-content: flex-end;">
                             <button type="submit" class="button" style="text-decoration: none; ">
                                 Create VSL
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -185,7 +185,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <div style="width: 100%; display: flex; justify-content: flex-end;">
+                        <div id="proceed" style="width: 100%; display: flex; justify-content: flex-end;">
                             <a href="{% url 'video_text:download_video' textfile_id %}?bg_music=false" class="button" style="text-decoration: none; ">
                                 Proceed without background music
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -294,7 +294,27 @@ function addInputValidation(number) {
         });
     });
 }
+function checkInputs() {
+            const inputs = document.querySelectorAll('.fileInput');
+            const submitForm = document.getElementById('submit_form');
+            const proceed = document.getElementById('proceed');
 
+            // Check if any file input is not empty
+            let anyFilled = Array.from(inputs).some(input => input.files.length > 0);
+
+            if (anyFilled) {
+                submitForm.style.display = 'flex';
+                proceed.style.display = 'none';
+            } else {
+                submitForm.style.display = 'none';
+                proceed.style.display = 'flex';
+            }
+        }
+
+        // Attach event listeners to all file inputs
+        document.querySelectorAll('.fileInput').forEach(input => {
+            input.addEventListener('change', checkInputs);
+        });
     </script>
 </body>
 </html>
