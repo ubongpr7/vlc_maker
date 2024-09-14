@@ -42,7 +42,7 @@ def is_api_key_valid(api_key,voice_id):
         if response.status_code == 200:
             x=True
             
-        if response_2.status ==200:
+        if response_2.status_code ==200:
           y=True
             
     except requests.RequestException as e:
