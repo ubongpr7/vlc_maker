@@ -11,12 +11,13 @@
     <link rel="stylesheet" href="{% static 'sceneselection/style.css'%}">
     <script src="{% static 'sceneselection/script.js'%}"></script>
 <style>
-    #card {
+#card {
   width: 100%;
+  max-width: 1200px; /* Limits the card's width so it doesn't stretch too far */
   height: auto; /* Height will adjust based on content */
   background-color: #fff;
   padding: 20px; /* Space between the content and borders */
-  margin: 60px auto; /* Even margin around the card */
+  margin: 20px auto; /* Even margin around the card */
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Elevation effect */
   box-sizing: border-box; /* Ensures padding is included in the total width/height */
