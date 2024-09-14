@@ -19,30 +19,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function fetchVideos(topic, index) {
-    fetch(`/get_videos/${topic}`)
-    .then(response => response.json())
-    .then(data => {
-        let videoSelect = document.getElementById(`videoSelect_${index}`);
-        videoSelect.innerHTML = '';
-        data.videos.forEach(video => {
-            let option = document.createElement('option');
-            option.value = video;
-            option.textContent = video;
+// function fetchVideos(topic, index) {
+//     fetch(`/get_videos/${topic}`)
+//     .then(response => response.json())
+//     .then(data => {
+//         let videoSelect = document.getElementById(`videoSelect_${index}`);
+//         videoSelect.innerHTML = '';
+//         data.videos.forEach(video => {
+//             let option = document.createElement('option');
+//             option.value = video;
+//             option.textContent = video;
 
-            videoSelect.appendChild(option);
-        //     const videoPreview = document.getElementById('videoPreview');
-        // const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+//             videoSelect.appendChild(option);
+//         //     const videoPreview = document.getElementById('videoPreview');
+//         // const videoPreviewContainer = document.getElementById('videoPreviewContainer');
 
-        // videoPreview.src =`data/${topic}/${video}`
-        // videoPreviewContainer.style.display = 'block'; // Show the preview container
-        // videoPreview.load();
+//         // videoPreview.src =`data/${topic}/${video}`
+//         // videoPreviewContainer.style.display = 'block'; // Show the preview container
+//         // videoPreview.load();
 
-        });
+//         });
 
-        document.getElementById(`topicFolder_${index}`).value = topic;
-    });
-}
+//         document.getElementById(`topicFolder_${index}`).value = topic;
+//     });
+// }
 
 
 function toggleForms() {
