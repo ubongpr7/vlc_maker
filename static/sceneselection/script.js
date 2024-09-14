@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = event.target.files[0];
             if (file) {
                 uploadTexts[index].textContent = `${file.name.slice(0,10)}`;
-                // svgs[index].style.position = 'absolute';
-                // svgs[index].style.opacity = '0';
+                svgs[index].style.position = 'absolute';
+                svgs[index].style.opacity = '0';
             } else {
                 uploadTexts[index].textContent = 'Choose File';
             }
