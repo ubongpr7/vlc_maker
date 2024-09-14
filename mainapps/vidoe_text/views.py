@@ -25,28 +25,30 @@ def is_api_key_valid(api_key,voice_id):
     Returns:
         bool: True if the API key is valid, False otherwise.
     """
-    endpoint_url = f"https://api.elevenlabs.io/v1/voices/{voice_id}"
+    endpoint_url = f"https://api.elevenlabs.io/v1/voices"
+    endpoint_url_2 = f"https://api.elevenlabs.io/v1/voices/{voice_id}"
    
     headers = {
   "Accept": "application/json",
   "xi-api-key": api_key,
   "Content-Type": "application/json"
 }
-
+x,y=False,False
 # response = requests.get("https://api.elevenlabs.io/validate", headers={"Authorization": f"Bearer {api_key}"})  
     try:
         response = requests.get(endpoint_url, headers=headers)
+        response_2 = requests.get(endpoint_url_2)
         response.raise_for_status()  # Raises an HTTPError for bad responses (4xx and 5xx)
         # Check the response content or status code to determine validity
         if response.status_code == 200:
+            x=True
             
-            return True
-        else:
-            print(response.text)
-            return False
+        if response_2.status ==200:
+          y=True
+            
     except requests.RequestException as e:
         print(f"Error checking API key: {e}")
-        return False
+    return x,y
 
 
 def convert_to_seconds(time_str):
@@ -251,7 +253,8 @@ def add_text(request):
         subtitle_box_color = request.POST.get('subtitle_box_color')
         font_file = request.FILES.get('font_file')  # Assuming this is a different file field
         font_size = request.POST.get('font_size')
-        if is_api_key_valid(api_key,voice_id):
+        x,y= is_api_key_valid(api_key,voice_id)
+        if x and y:
                 
             if textfile and voice_id and api_key:
                 text_obj=TextFile.objects.create(
@@ -270,11 +273,21 @@ def add_text(request):
                 return render(request, 'vlc/frontend/VLSMaker/index.html', {
                     'error': 'Please provide all required fields.'
                 })
-        
-        messages.error(request,'Please provide valid API  key and voice Id')
-        return render(request, 'vlc/frontend/VLSMaker/index.html', {
-            'error': 'Please provide valid API key'
-        })
+        elif x and not y:
+            messages.error(request,'The voice ID you provided is invalid, please provide a valid one')
+            return render(request, 'vlc/frontend/VLSMaker/index.html', {
+                'error': 'Please provide valid API key'
+            })
+        elif y and not x:
+            messages.error(request,'The API key you provided is invalid, please provide a valid one')
+            return render(request, 'vlc/frontend/VLSMaker/index.html', {
+                'error': 'Please provide valid API key'
+            })
+                    elif not y and not x:
+            messages.error(request,'The API key and Voice ID you provided are incorrect, check your entry and try again')
+            return render(request, 'vlc/frontend/VLSMaker/index.html', {
+                'error': 'Please provide valid API key'
+            })
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
 
