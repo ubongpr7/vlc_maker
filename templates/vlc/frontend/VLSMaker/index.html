@@ -137,35 +137,40 @@
             </div>
             <div class="options" style="display: grid; grid-template-columns: repeat(2, 1fr); height: 290px; gap: 10px; margin-bottom: 48px;">
                 <!-- Option 1: FB/IG feed -->
-                <div id="box-1" onclick="selectOption('1:1')" style="display: flex; justify-content: center; background: white; text-align: center; border-radius: 8px; border: 1px solid #864AF9; padding: 12px 8px; cursor: pointer;">
-                    <input type="radio" id="option1" name="resolution" value="1:1" checked hidden>
+                <div class="box" data-resolution="1:1" style="display: flex; justify-content: center; background: white; text-align: center; border-radius: 8px; border: 1px solid #864AF9; padding: 12px 8px; cursor: pointer;">
+                    <input type="radio" name="resolution" value="1:1" checked hidden>
                     <div style="display: flex; flex-direction: column; align-items: center;">
-                        <div style="font-size: 18px; font-weight: 500; line-height: 21.94px; letter-spacing: -0.03em; text-align: center; margin-bottom: 30px;">
-                            FB/IG feed
-                        </div>
+                        <div style="font-size: 18px; font-weight: 500; line-height: 21.94px; letter-spacing: -0.03em; text-align: center; margin-bottom: 30px;">FB/IG feed</div>
                         <div style="height: 100px; width: 100px; background: #D9D9D9; border-radius: 8px; margin-bottom: 8px; border: 2px dashed;"></div>
-                        <div class="text" style="font-size: 16px;font-weight: 400;line-height: 21.79px;letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;">
-                            1:1
-                        </div>
-                        <div id="circle-11" style="width: 15px; height: 15px; border-radius: 90px; border: 3px solid #864AF9; display: flex; justify-content: center; align-items: center; padding: 7px; margin-top: 10px;">
-                            <div id="circle-12" style="width: 100%; height: 100%; border-radius: 90px; background: #864AF9;"></div>
+                        <div class="text" style="font-size: 16px; font-weight: 400; line-height: 21.79px; letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;">1:1</div>
+                        <div class="circle-outer" style="width: 15px; height: 15px; border-radius: 90px; border: 3px solid #864AF9; display: flex; justify-content: center; align-items: center; padding: 7px;">
+                            <div class="circle-inner" style="width: 100%; height: 100%; border-radius: 90px; background: #864AF9;"></div>
                         </div>
                     </div>
                 </div>
             
-                <!-- Option 2: YouTube -->
-                <div id="box-2" onclick="selectOption('16:9')" style="display: flex; justify-content: center; background: white; text-align: center; border-radius: 8px; border: 1px solid #88888877; padding: 12px 8px; cursor: pointer;">
-                    <input type="radio" id="option2" name="resolution" value="16:9" style="display: none;">
+                <!-- Option 2: TikTok/Short -->
+                <div class="box" data-resolution="4:5" style="display: flex; justify-content: center; background: white; text-align: center; border-radius: 8px; border: 1px solid #88888877; padding: 12px 8px; cursor: pointer;">
+                    <input type="radio" name="resolution" value="4:5" hidden>
                     <div style="display: flex; flex-direction: column; align-items: center;">
-                        <div style="font-size: 18px; font-weight: 500; line-height: 21.94px; letter-spacing: -0.03em; text-align: center; margin-bottom: 30px;">
-                            YouTube
-                        </div>
+                        <div style="font-size: 18px; font-weight: 500; line-height: 21.94px; letter-spacing: -0.03em; text-align: center; margin-bottom: 30px;">TikTok/Short</div>
                         <div style="height: 100px; width: 155px; background: #D9D9D9; border-radius: 8px; margin-bottom: 8px; border: 2px dashed;"></div>
-                        <div class="text" style="font-size: 16px;font-weight: 400;line-height: 21.79px;letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;">
-                            16:9
+                        <div class="text" style="font-size: 16px; font-weight: 400; line-height: 21.79px; letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;">4:5</div>
+                        <div class="circle-outer" style="width: 15px; height: 15px; border-radius: 90px; border: 3px solid #D9D9D9; display: flex; justify-content: center; align-items: center; padding: 7px;">
+                            <div class="circle-inner" style="width: 100%; height: 100%; border-radius: 90px; background: #D9D9D9;"></div>
                         </div>
-                        <div id="circle-21" style="width: 15px; height: 15px; border-radius: 90px; border: 3px solid #D9D9D9; display: flex; justify-content: center; align-items: center; padding: 7px;">
-                            <div id="circle-22" style="width: 100%; height: 100%; border-radius: 90px; background: #D9D9D9;"></div>
+                    </div>
+                </div>
+            
+                <!-- Option 3: YouTube -->
+                <div class="box" data-resolution="16:9" style="display: flex; justify-content: center; background: white; text-align: center; border-radius: 8px; border: 1px solid #88888877; padding: 12px 8px; cursor: pointer;">
+                    <input type="radio" name="resolution" value="16:9" hidden>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="font-size: 18px; font-weight: 500; line-height: 21.94px; letter-spacing: -0.03em; text-align: center; margin-bottom: 30px;">YouTube</div>
+                        <div style="height: 100px; width: 155px; background: #D9D9D9; border-radius: 8px; margin-bottom: 8px; border: 2px dashed;"></div>
+                        <div class="text" style="font-size: 16px; font-weight: 400; line-height: 21.79px; letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;">16:9</div>
+                        <div class="circle-outer" style="width: 15px; height: 15px; border-radius: 90px; border: 3px solid #D9D9D9; display: flex; justify-content: center; align-items: center; padding: 7px;">
+                            <div class="circle-inner" style="width: 100%; height: 100%; border-radius: 90px; background: #D9D9D9;"></div>
                         </div>
                     </div>
                 </div>

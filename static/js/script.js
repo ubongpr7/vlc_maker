@@ -1,63 +1,104 @@
-const box1 = document.getElementById('box-1');
-const circle11 = document.getElementById('circle-11');
-const circle12 = document.getElementById('circle-12');
+// const box1 = document.getElementById('box-1');
+// const circle11 = document.getElementById('circle-11');
+// const circle12 = document.getElementById('circle-12');
 
 
-const box2 = document.getElementById('box-2');
-const circle21 = document.getElementById('circle-21');
-const circle22 = document.getElementById('circle-22');
-function selectOption(resolution) {
-    // Reset styles for both options
-    document.getElementById('box-1').style.border = '1px solid #88888877';
-    document.getElementById('circle-11').style.border = '3px solid #D9D9D9';
-    document.getElementById('circle-12').style.background = '#D9D9D9';
+// const box2 = document.getElementById('box-2');
+// const circle21 = document.getElementById('circle-21');
+// const circle22 = document.getElementById('circle-22');
+// function selectOption(resolution) {
+//     // Reset styles for both options
+//     document.getElementById('box-1').style.border = '1px solid #88888877';
+//     document.getElementById('circle-11').style.border = '3px solid #D9D9D9';
+//     document.getElementById('circle-12').style.background = '#D9D9D9';
     
-    document.getElementById('box-2').style.border = '1px solid #88888877';
-    document.getElementById('circle-21').style.border = '3px solid #D9D9D9';
-    document.getElementById('circle-22').style.background = '#D9D9D9';
+//     document.getElementById('box-2').style.border = '1px solid #88888877';
+//     document.getElementById('circle-21').style.border = '3px solid #D9D9D9';
+//     document.getElementById('circle-22').style.background = '#D9D9D9';
 
+//     // Highlight the selected option
+//     if (resolution === '1:1') {
+//         document.getElementById('box-1').style.border = '1px solid #864AF9';
+//         document.getElementById('circle-11').style.border = '3px solid #864AF9';
+//         document.getElementById('circle-12').style.background = '#864AF9';
+//         document.getElementById('option1').checked = true;
+//         document.getElementById('option2').checked = false;
+//     } else if (resolution === '16:9') {
+//         document.getElementById('box-2').style.border = '1px solid #864AF9';
+//         document.getElementById('circle-21').style.border = '3px solid #864AF9';
+//         document.getElementById('circle-22').style.background = '#864AF9';
+//         document.getElementById('option2').checked = true;
+//         document.getElementById('option1').checked = false;
+//     }
+// }
+
+// function activateBox(selectedBox, selectedCircle1, selectedCircle2) {
+//     // Remove styles from all boxes and circles
+//     box1.style.border = '1px solid #88888877';
+//     circle11.style.border = '3px solid #D9D9D9';
+//     circle12.style.backgroundColor = '#D9D9D9';
+
+//     box2.style.border = '1px solid #88888877';
+//     circle21.style.border = '3px solid #D9D9D9';
+//     circle22.style.backgroundColor = '#D9D9D9';
+
+//     // Add styles to the selected box and circles
+//     selectedBox.style.border = '1px solid #864AF9';  // Example style for box-border
+//     selectedCircle1.style.border = '3px solid #864AF9';  // Example style for circle-outer
+//     selectedCircle2.style.backgroundColor = '#864AF9';  // Example style for circle-inner
+// }
+
+// // Event listener for box1
+// box1.addEventListener('click', function () {
+//     activateBox(box1, circle11, circle12);
+//     console.log('box1 clicked');
+// });
+
+// // Event listener for box2
+// box2.addEventListener('click', function () {
+//     activateBox(box2, circle21, circle22);
+//     console.log('box2 clicked');
+// });
+function resetAllOptions() {
+    const allBoxes = document.querySelectorAll('.box');
+    const allCirclesOuter = document.querySelectorAll('.circle-outer');
+    const allCirclesInner = document.querySelectorAll('.circle-inner');
+    
+    allBoxes.forEach(box => {
+        box.style.border = '1px solid #88888877'; // Reset box border
+    });
+    
+    allCirclesOuter.forEach(circleOuter => {
+        circleOuter.style.border = '3px solid #D9D9D9'; // Reset outer circle
+    });
+    
+    allCirclesInner.forEach(circleInner => {
+        circleInner.style.backgroundColor = '#D9D9D9'; // Reset inner circle
+    });
+}
+
+function selectOption(resolution) {
+    resetAllOptions(); // Reset all styles
+
+    const selectedBox = document.querySelector(`.box[data-resolution="${resolution}"]`);
+    const selectedCircleOuter = selectedBox.querySelector('.circle-outer');
+    const selectedCircleInner = selectedBox.querySelector('.circle-inner');
+    
     // Highlight the selected option
-    if (resolution === '1:1') {
-        document.getElementById('box-1').style.border = '1px solid #864AF9';
-        document.getElementById('circle-11').style.border = '3px solid #864AF9';
-        document.getElementById('circle-12').style.background = '#864AF9';
-        document.getElementById('option1').checked = true;
-        document.getElementById('option2').checked = false;
-    } else if (resolution === '16:9') {
-        document.getElementById('box-2').style.border = '1px solid #864AF9';
-        document.getElementById('circle-21').style.border = '3px solid #864AF9';
-        document.getElementById('circle-22').style.background = '#864AF9';
-        document.getElementById('option2').checked = true;
-        document.getElementById('option1').checked = false;
-    }
+    selectedBox.style.border = '1px solid #864AF9';
+    selectedCircleOuter.style.border = '3px solid #864AF9';
+    selectedCircleInner.style.backgroundColor = '#864AF9';
+    
+    // Set the selected radio button
+    document.querySelector(`input[value="${resolution}"]`).checked = true;
 }
 
-function activateBox(selectedBox, selectedCircle1, selectedCircle2) {
-    // Remove styles from all boxes and circles
-    box1.style.border = '1px solid #88888877';
-    circle11.style.border = '3px solid #D9D9D9';
-    circle12.style.backgroundColor = '#D9D9D9';
-
-    box2.style.border = '1px solid #88888877';
-    circle21.style.border = '3px solid #D9D9D9';
-    circle22.style.backgroundColor = '#D9D9D9';
-
-    // Add styles to the selected box and circles
-    selectedBox.style.border = '1px solid #864AF9';  // Example style for box-border
-    selectedCircle1.style.border = '3px solid #864AF9';  // Example style for circle-outer
-    selectedCircle2.style.backgroundColor = '#864AF9';  // Example style for circle-inner
-}
-
-// Event listener for box1
-box1.addEventListener('click', function () {
-    activateBox(box1, circle11, circle12);
-    console.log('box1 clicked');
-});
-
-// Event listener for box2
-box2.addEventListener('click', function () {
-    activateBox(box2, circle21, circle22);
-    console.log('box2 clicked');
+// Attach event listeners to all boxes
+document.querySelectorAll('.box').forEach(box => {
+    box.addEventListener('click', function() {
+        const resolution = this.getAttribute('data-resolution');
+        selectOption(resolution);
+    });
 });
 
 const fileUpload = document.getElementById('fileUpload');
