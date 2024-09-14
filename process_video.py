@@ -30,6 +30,22 @@ from typing import List, Dict
 import pysrt
 from pysrt import  SubRipTime,SubRipFile,SubRipItem
 
+
+# Suppress specific Pydantic warnings
+warnings.filterwarnings("ignore", category=UserWarning, )
+
+
+openai.api_key = 'sk-proj-mo9iZjhl3DNjXlxMcx1FT3BlbkFJz5UCGoPBLnSQhh2b2stB' # write your openai api
+PEXELS_API_KEY = 'ljSCcK6YYuU0kNyMTADStB8kSOWdkzHCZnPXc26QEHhaHYqeXusdnzaA' # write your pexels
+# Base URL for Pexels API
+BASE_URL = 'https://api.pexels.com/videos/search'
+os.environ['PYTHONIOENCODING'] = 'UTF-8'
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+imagemagick_path = "/usr/bin/convert" # Set the path to the ImageMagick executable
+os.environ['IMAGEMAGICK_BINARY'] = imagemagick_path
+change_settings({"IMAGEMAGICK_BINARY": imagemagick_path})
+
 def parse_srt_to_json(srt_file_path: str) -> Dict:
     """
     Parses an SRT file and converts it into a JSON structure.
@@ -77,22 +93,6 @@ def parse_srt_to_json(srt_file_path: str) -> Dict:
     
     # Return JSON structure
     return {"fragments": fragments}
-
-
-# Suppress specific Pydantic warnings
-warnings.filterwarnings("ignore", category=UserWarning, )
-
-
-openai.api_key = 'sk-proj-mo9iZjhl3DNjXlxMcx1FT3BlbkFJz5UCGoPBLnSQhh2b2stB' # write your openai api
-PEXELS_API_KEY = 'ljSCcK6YYuU0kNyMTADStB8kSOWdkzHCZnPXc26QEHhaHYqeXusdnzaA' # write your pexels
-# Base URL for Pexels API
-BASE_URL = 'https://api.pexels.com/videos/search'
-os.environ['PYTHONIOENCODING'] = 'UTF-8'
-
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-imagemagick_path = "/usr/bin/convert" # Set the path to the ImageMagick executable
-os.environ['IMAGEMAGICK_BINARY'] = imagemagick_path
-change_settings({"IMAGEMAGICK_BINARY": imagemagick_path})
 
 
 def generate_srt_file(audio_file_path, text_file_path, output_srt_file_path):
@@ -293,18 +293,6 @@ def load_video_from_file(file: Path) -> VideoFileClip:
     return VideoFileClip(os.path.normpath(file))
 
 
-# Define a class that mimics the structure of SubRipItem
-class SubtitleItem:
-    def __init__(self, index, start, end, text):
-        self.index = index
-        self.start = start
-        self.end = end
-        self.text = text
-
-    def __repr__(self):
-        return f"SubtitleItem({self.index}, start={self.start}, end={self.end}, text='{self.text}')"
-
-
 
 def convert_seconds_to_subrip_time(seconds):
     """Helper function to convert seconds into SubRipTime."""
@@ -404,15 +392,10 @@ def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pys
     import matplotlib.colors as mcolors
     x,y,z =mcolors.to_rgb(subtitle_box_color)
     subtitle_box_color=(x*255,y*255,z*255)
-    print('subtitle_box_color', subtitle_box_color)
-    print('subtitle_box_color', subtitle_box_color)
-    print('subtitle_box_color', subtitle_box_color)
-    print('subtitle_box_color', subtitle_box_color)
-    print('subtitle_box_color', subtitle_box_color)
-    print('subtitle_box_color', subtitle_box_color)
+    
     # Calculate the scaling factor based on the resolution of the clip
     scaling_factor = (clip.h / 1080)
-    font_size = int(42 * scaling_factor)
+    font_size = int(int(base_font_size) * scaling_factor)
 
     def split_text(text: str, max_line_width: int) -> str:
         words = text.split()
