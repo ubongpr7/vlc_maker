@@ -282,16 +282,12 @@ def add_text(request):
             return render(request, 'vlc/frontend/VLSMaker/index.html', {
                 'error': 'Please provide valid API key'
             })
-        elif y and not x:
-            messages.error(request,'The API key you provided is invalid, please provide a valid one')
+        elif not x:
+            messages.error(request,'The API key you provided is invalid, please provide a valid one!')
             return render(request, 'vlc/frontend/VLSMaker/index.html', {
                 'error': 'Please provide valid API key'
             })
-        elif not y and not x:
-            messages.error(request,'The API key and Voice ID you provided are incorrect, check your entry and try again')
-            return render(request, 'vlc/frontend/VLSMaker/index.html', {
-                'error': 'Please provide valid API key'
-            })
+        
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
 
