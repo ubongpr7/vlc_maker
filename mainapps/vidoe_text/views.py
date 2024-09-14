@@ -279,5 +279,5 @@ def add_text(request):
 
 
 def download_video(request,textfile_id,):
-    
-    return render(request,'vlc/download.html',{'textfile_id':textfile_id},)
+    bg_music=request.GET.get('bg_music',None)
+    return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music},)
