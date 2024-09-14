@@ -45,7 +45,7 @@ def is_api_key_valid(api_key,voice_id):
     except requests.RequestException as e:
         print(f"Error checking API key: {e}")
     try:
-        response_2 = requests.get(endpoint_url_2)
+        response_2 = requests.get(endpoint_url_2,headers=headers)
         if response_2.status_code ==200:
             y=True
     
