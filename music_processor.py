@@ -93,6 +93,8 @@ def process_video(video_path, music_info_path,textfile_id,base_dir):
     video_clip.close()
     for clip in background_clips:
         clip.close()
+    import time 
+    time.sleep(6)
     update_progress(100,dir_s)
     return final_path
 
