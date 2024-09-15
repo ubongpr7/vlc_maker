@@ -711,7 +711,7 @@ def main():
 
     # Speed up the video and save
     final_video_speeded_up = os.path.join(base_path, 'tmp', f"output_variation{textfile_id}_speed-up.mp4")
-    final_video_speeded_up_clip = speed_up_video_with_audio(final_video, final_video_speeded_up, speed_factor,textfile_id)
+    final_video_speeded_up_clip = speed_up_video_with_audio(final_video, final_video_speeded_up, 1,textfile_id)
     update_progress(70,dir_s)
 
     # Output file
