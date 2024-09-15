@@ -176,9 +176,14 @@
     </form>
         <script>
             function fetchVideoClips(categoryId, counter) {
-                
-                htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}`)
+                if (categoryId == ""){
+                    document.getElementById(`videoSelect_${counter}`).value=""
 
+                }
+                else{
+
+                    htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}`)
+                }
         
                 
             }
