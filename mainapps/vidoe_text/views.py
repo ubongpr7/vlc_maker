@@ -84,7 +84,7 @@ def serve_file(request, file_name):
     content_type = 'video/mp4'  # Or use a dynamic content type if needed
     range_header = request.headers.get('Range', None)
     range_match = None
-
+    import re
     if range_header:
         range_match = re.match(r"bytes=(\d+)-(\d*)", range_header)
 
