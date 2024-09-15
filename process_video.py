@@ -720,6 +720,7 @@ def main():
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     # Write the final video file with audio
+    fps=final_video_speeded_up.fps
     keyframe_interval=int(final_video_speeded_up.fps/2)
     
     # final_video_speeded_up.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
@@ -727,7 +728,7 @@ def main():
         os.path.normpath(output_file),
         codec="libx264",
         preset="ultrafast",
-        fps=fps,
+        fps=,
         ffmpeg_params=[
             "-movflags", "+faststart",
             "-g", str(keyframe_interval)  # Set keyframe interval dynamically
