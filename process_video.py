@@ -728,7 +728,7 @@ def main():
         os.path.normpath(output_file),
         codec="libx264",
         preset="ultrafast",
-        fps=,
+        fps=fps,
         ffmpeg_params=[
             "-movflags", "+faststart",
             "-g", str(keyframe_interval)  # Set keyframe interval dynamically
