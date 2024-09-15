@@ -256,11 +256,19 @@ function inputHander(c_number){
     
     const fileInput = document.getElementById(`fileUpload${c_number}`);
     const uploadText = document.getElementById(`uploadText${c_number}`);
+    const startTimeInput = document.getElementById(`from_when_${c_number}`);
+    const endTimeInput = document.getElementById(`to_when_${c_number}`);
+    
     fileInput.addEventListener('change', function() {
             if (fileInput.files.length > 0) {
                 uploadText.textContent = fileInput.files[0].name;
+                startTimeInput.required=true 
+                endTimeInput.required=true 
+                
             } else {
                 uploadText.textContent = 'Choose File';
+                startTimeInput.required=false
+                endTimeInput.required=false
             }
         });
 };
