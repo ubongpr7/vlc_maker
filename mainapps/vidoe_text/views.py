@@ -116,35 +116,35 @@ def format_seconds_to_mm_ss(seconds):
 #     response['Content-Disposition'] = f'inline; filename="{file_name}"'
 #     return response
 
-def serve_file(request, file_name):
-    """
-    Serve video from 'media/final/' or 'media/finished/' based on the folder name.
-    :param file_name: The folder where the video is located ('final' or 'finished')
-    :param textfile_id: The ID used to construct the video file name
-    :return: Video stream response
-    """
-    # Construct the path to the video file based on folder and textfile_id
-    video_file_path = os.path.join(settings.MEDIA_ROOT, file_name)
-
-    # Check if the file exists
-    if not os.path.exists(video_file_path):
-        raise Http404(f"Video with textfile_id {textfile_id} not found in folder {file_name}")
-
-    # Serve the video in chunks
-    response = FileResponse(open(video_file_path, 'rb'))
-    return response
-
-
 # def serve_file(request, file_name):
-#     file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+#     """
+#     Serve video from 'media/final/' or 'media/finished/' based on the folder name.
+#     :param file_name: The folder where the video is located ('final' or 'finished')
+#     :param textfile_id: The ID used to construct the video file name
+#     :return: Video stream response
+#     """
+#     # Construct the path to the video file based on folder and textfile_id
+#     video_file_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
-#     if not os.path.exists(file_path):
-#         raise Http404("File does not exist")
+#     # Check if the file exists
+#     if not os.path.exists(video_file_path):
+#         raise Http404(f"Video with textfile_id {textfile_id} not found in folder {file_name}")
 
-#     with open(file_path, 'rb') as f:
-#         response = HttpResponse(f.read(), content_type='application/octet-stream')
-#         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-#         return response
+#     # Serve the video in chunks
+#     response = FileResponse(open(video_file_path, 'rb'))
+#     return response
+
+
+def serve_file(request, file_name):
+    file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+
+    if not os.path.exists(file_path):
+        raise Http404("File does not exist")
+
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+        return response
     
 def process_background_music(request, textfile_id):
     context = {
