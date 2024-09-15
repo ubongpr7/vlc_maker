@@ -74,7 +74,7 @@ def format_seconds_to_mm_ss(seconds):
     secs = int(seconds % 60)
     return f"{minutes:02}:{secs:02}"
 
-def serve_video(request, file_name):
+def serve_file(request, file_name):
     file_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
     if not os.path.exists(file_path):
