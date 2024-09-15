@@ -527,6 +527,18 @@ MAINRESOLUTIONS = {
     '9:16': 9/16
 }
 
+from moviepy.editor import VideoFileClip
+
+def resize_clips_to_max_size(clips):
+    # Step 1: Get the maximum width and height from the clips
+    max_width = max(clip.w for clip in clips)
+    max_height = max(clip.h for clip in clips)
+
+    # Step 2: Resize each clip to the maximum width and height
+    resized_clips = [clip.resize(newsize=(max_width, max_height)) for clip in clips]
+
+    return resized_clips
+
 
 def concatenate_clips(clips, target_resolution=None, target_fps=None):
     """
@@ -549,9 +561,9 @@ def concatenate_clips(clips, target_resolution=None, target_fps=None):
             
             clip = clip.set_fps(target_fps)  # Set frame rate to target fps
         processed_clips.append(clip)
-
+    resized_clips=resize_clips_to_max_size(processed_clips)
     # Concatenate all video clips
-    final_clip = concatenate_videoclips(processed_clips, method="compose")
+    final_clip = concatenate_videoclips(resized_clips, method="compose")
     logging.info('Clip has been concatenated: ')
     return final_clip
 

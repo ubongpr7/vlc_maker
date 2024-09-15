@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileInputs = document.querySelectorAll('.uploaded_file');
     const uploadTexts = document.querySelectorAll('.uploadText');
     const svgs = document.querySelectorAll('.uploadFileIcon');
+    const selected_clips = document.querySelectorAll('.selected_clip');
 
     fileInputs.forEach((input, index) => {
         input.addEventListener('change', (event) => {
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 uploadTexts[index].textContent = `${file.name.slice(0,10)}`;
                 svgs[index].style.position = 'absolute';
                 svgs[index].style.opacity = '0';
+                selected_clips[index].value= ""
             } else {
                 uploadTexts[index].textContent = 'Choose File';
             }
