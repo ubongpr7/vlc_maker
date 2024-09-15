@@ -303,12 +303,16 @@ def convert_seconds_to_subrip_time(seconds):
     return SubRipTime(hours=h, minutes=m, seconds=s, milliseconds=ms)
 
 
-def speed_up_video_with_audio(input_video, output_video_path, speed_factor):
+def speed_up_video_with_audio(input_video, output_video_path, speed_factor,textfile_id):
     # Speed up the video and audio using speedx
-    sped_up_video = input_video.fx(vfx.speedx, speed_factor)
-
+    temp_input=f'temp_input_{textfile_id}.mp4'
+    input_video.write_videofile(temp_input)
+    # sped_up_video = input_video.fx(vfx.speedx, speed_factor)
+    command =['ffmpeg', '-i', temp_input, '-filter_complex',f'[o:v]setpts={1/speed_factor}*PTS[v];[0:a]atempo={speed_factor}[a]', '-map', '[v]','-map','[a]', '-y',output_video_path ]
+    subprocess.run(command,check=True)
+    os.remove(temp_input)
     # Return the sped-up video as a VideoClip object
-    return sped_up_video
+    return VideoFileClip(output_video_path)
 
 
 def load_subtitles_from_json_to_srt(json_file_path):
@@ -707,7 +711,7 @@ def main():
 
     # Speed up the video and save
     final_video_speeded_up = os.path.join(base_path, 'tmp', f"output_variation{textfile_id}_speed-up.mp4")
-    final_video_speeded_up = speed_up_video_with_audio(final_video, final_video_speeded_up, speed_factor=1)
+    final_video_speeded_up_clip = speed_up_video_with_audio(final_video, final_video_speeded_up, speed_factor,textfile_id)
     update_progress(70,dir_s)
 
     # Output file
@@ -720,11 +724,11 @@ def main():
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     # Write the final video file with audio
-    fps=final_video_speeded_up.fps
-    keyframe_interval=int(final_video_speeded_up.fps/2)
+    fps=final_video_speeded_up_clip.fps
+    keyframe_interval=int(final_video_speeded_up_clip.fps/2)
     
     # final_video_speeded_up.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
-    final_video_speeded_up.write_videofile(
+    final_video_speeded_up_clip.write_videofile(
         os.path.normpath(output_file),
         codec="libx264",
         preset="ultrafast",
