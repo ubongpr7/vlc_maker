@@ -571,6 +571,22 @@ def concatenate_clips(clips, target_resolution=None, target_fps=None):
     logging.info('Clip has been concatenated: ')
     return final_clip
 
+def convert_video(input_video_path, output_video_path):
+    command = [
+        'ffmpeg', 
+        '-i', input_video_path, 
+        '-c:v', 'libx264', 
+        '-preset', 'fast', 
+        '-g', '30', 
+        '-movflags', '+faststart', 
+        output_video_path
+    ]
+    
+    try:
+        subprocess.run(command, check=True)
+        print(f"Video conversion successful: {output_video_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during video conversion: {e}")
 
 
 def main():
@@ -728,19 +744,21 @@ def main():
     keyframe_interval=int(final_video_speeded_up_clip.fps/2)
     
     # final_video_speeded_up.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
-    final_video_speeded_up_clip.write_videofile(
-        os.path.normpath(output_file),
-        codec="libx264",
-        preset="ultrafast",
-        fps=fps,
-        ffmpeg_params=[
-            "-movflags", "+faststart",
-            "-g", str(keyframe_interval)  # Set keyframe interval dynamically
-        ]
-    )
+    # final_video_speeded_up_clip.write_videofile(
+    #     os.path.normpath(output_file),
+    #     codec="libx264",
+    #     preset="ultrafast",
+    #     fps=fps,
+    #     ffmpeg_params=[
+    #         "-movflags", "+faststart",
+    #         "-g", str(keyframe_interval)  # Set keyframe interval dynamically
+    #     ]
+    # )
+    convert_video(final_video_speeded_up,os.path.normpath(output_file),)
     update_progress(88,dir_s)
     import  time
     time.sleep(8)
+    os.remoe(final_video_speeded_up,final_video_speeded_up)
     update_progress(100,dir_s)
 if __name__ == "__main__":
     main()
