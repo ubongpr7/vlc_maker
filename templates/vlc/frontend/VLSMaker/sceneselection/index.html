@@ -184,10 +184,6 @@
 
                 }
                 else{
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = "";
-                    defaultOption.text = "Select clip";
-                    select2.appendChild(defaultOption);
 
                     htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}`)
                 }
