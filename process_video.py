@@ -743,7 +743,7 @@ def main():
     fps=final_video_speeded_up_clip.fps
     keyframe_interval=int(final_video_speeded_up_clip.fps/2)
     
-    final_video_speeded_up.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
+    final_video_speeded_up_clip.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
     # final_video_speeded_up_clip.write_videofile(
     #     os.path.normpath(output_file),
     #     codec="libx264",
