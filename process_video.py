@@ -305,14 +305,14 @@ def convert_seconds_to_subrip_time(seconds):
 
 def speed_up_video_with_audio(input_video, output_video_path, speed_factor,textfile_id):
     # Speed up the video and audio using speedx
-    temp_input=f'temp_input_{textfile_id}.mp4'
-    input_video.write_videofile(temp_input)
-    # sped_up_video = input_video.fx(vfx.speedx, speed_factor)
-    command =['ffmpeg', '-i', temp_input, '-filter_complex',f'[0:v]setpts={1/speed_factor}*PTS[v];[0:a]atempo={speed_factor}[a]', '-map', '[v]','-map','[a]', '-y',output_video_path ]
-    subprocess.run(command,check=True)
-    os.remove(temp_input)
+    # temp_input=f'temp_input_{textfile_id}.mp4'
+    # input_video.write_videofile(temp_input)
+    sped_up_video = input_video.fx(vfx.speedx, speed_factor)
+    # command =['ffmpeg', '-i', temp_input, '-filter_complex',f'[0:v]setpts={1/speed_factor}*PTS[v];[0:a]atempo={speed_factor}[a]', '-map', '[v]','-map','[a]', '-y',output_video_path ]
+    # subprocess.run(command,check=True)
+    # os.remove(temp_input)
     # Return the sped-up video as a VideoClip object
-    return VideoFileClip(output_video_path)
+    return sped_up_video
 
 
 def load_subtitles_from_json_to_srt(json_file_path):
@@ -743,7 +743,7 @@ def main():
     fps=final_video_speeded_up_clip.fps
     keyframe_interval=int(final_video_speeded_up_clip.fps/2)
     
-    # final_video_speeded_up.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
+    final_video_speeded_up.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
     # final_video_speeded_up_clip.write_videofile(
     #     os.path.normpath(output_file),
     #     codec="libx264",
@@ -754,7 +754,7 @@ def main():
     #         "-g", str(keyframe_interval)  # Set keyframe interval dynamically
     #     ]
     # )
-    convert_video(final_video_speeded_up,os.path.normpath(output_file),)
+    # convert_video(final_video_speeded_up,os.path.normpath(output_file),)
     update_progress(88,dir_s)
     import  time
     time.sleep(8)
