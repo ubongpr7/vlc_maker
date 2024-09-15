@@ -588,6 +588,17 @@ def convert_video(input_video_path, output_video_path):
     except subprocess.CalledProcessError as e:
         print(f"Error during video conversion: {e}")
 
+def convert_to_webm(input_video_path, output_webm_path):
+    # Load the input video
+    video_clip = VideoFileClip(input_video_path)
+    
+    # Write the video clip to a WebM file
+    video_clip.write_videofile(output_webm_path, codec="libvpx", audio_codec="libvorbis")
+
+    # Close the clip
+    video_clip.close()
+
+# Usage example
 
 def main():
     # if len(sys.argv) != 9:
@@ -731,6 +742,8 @@ def main():
     update_progress(70,dir_s)
 
     # Output file
+    output_file_web = os.path.join(base_path, 'final', f"final_output_{textfile_id}.webm")
+
     output_file = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
     if os.path.exists(output_file):
         os.remove(output_file)
@@ -755,7 +768,9 @@ def main():
     #     ]
     # )
     # convert_video(final_video_speeded_up,os.path.normpath(output_file),)
-    update_progress(88,dir_s)
+    update_progress(80,dir_s)
+    convert_to_webm(os.path.normpath(output_file),output_file_web)
+    update_progress(85,dir_s)
     import  time
     time.sleep(8)
     update_progress(100,dir_s)
