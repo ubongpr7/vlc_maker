@@ -17,7 +17,7 @@ from django.http import StreamingHttpResponse, Http404
 import os
 from wsgiref.util import FileWrapper
 from django.conf import settings
-
+from django.http import FileResponse, Http404
 import requests
 
 def is_api_key_valid(api_key,voice_id):
@@ -74,48 +74,65 @@ def format_seconds_to_mm_ss(seconds):
     secs = int(seconds % 60)
     return f"{minutes:02}:{secs:02}"
 
+# def serve_file(request, file_name):
+#     file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+
+#     if not os.path.exists(file_path):
+#         raise Http404("File does not exist")
+
+#     file_size = os.path.getsize(file_path)
+#     content_type = 'video/mp4'  # Or use a dynamic content type if needed
+#     range_header = request.headers.get('Range', None)
+#     range_match = None
+#     import re
+#     if range_header:
+#         range_match = re.match(r"bytes=(\d+)-(\d*)", range_header)
+
+#     if range_match:
+#         first_byte, last_byte = range_match.groups()
+#         first_byte = int(first_byte)
+#         last_byte = int(last_byte) if last_byte else file_size - 1
+#         length = last_byte - first_byte + 1
+
+#         with open(file_path, 'rb') as f:
+#             f.seek(first_byte)
+#             response = StreamingHttpResponse(
+#                 FileWrapper(f, length),
+#                 status=206,
+#                 content_type=content_type,
+#             )
+#             response['Content-Range'] = f'bytes {first_byte}-{last_byte}/{file_size}'
+#             response['Accept-Ranges'] = 'bytes'
+#             response['Content-Length'] = str(length)
+#     else:
+#         # If no range header, serve the entire file
+#         with open(file_path, 'rb') as f:
+#             response = StreamingHttpResponse(
+#                 FileWrapper(f, file_size),
+#                 content_type=content_type
+#             )
+#             response['Content-Length'] = str(file_size)
+
+#     response['Content-Disposition'] = f'inline; filename="{file_name}"'
+#     return response
+
 def serve_file(request, file_name):
-    file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+    """
+    Serve video from 'media/final/' or 'media/finished/' based on the folder name.
+    :param file_name: The folder where the video is located ('final' or 'finished')
+    :param textfile_id: The ID used to construct the video file name
+    :return: Video stream response
+    """
+    # Construct the path to the video file based on folder and textfile_id
+    video_file_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
-    if not os.path.exists(file_path):
-        raise Http404("File does not exist")
+    # Check if the file exists
+    if not os.path.exists(video_file_path):
+        raise Http404(f"Video with textfile_id {textfile_id} not found in folder {file_name}")
 
-    file_size = os.path.getsize(file_path)
-    content_type = 'video/mp4'  # Or use a dynamic content type if needed
-    range_header = request.headers.get('Range', None)
-    range_match = None
-    import re
-    if range_header:
-        range_match = re.match(r"bytes=(\d+)-(\d*)", range_header)
-
-    if range_match:
-        first_byte, last_byte = range_match.groups()
-        first_byte = int(first_byte)
-        last_byte = int(last_byte) if last_byte else file_size - 1
-        length = last_byte - first_byte + 1
-
-        with open(file_path, 'rb') as f:
-            f.seek(first_byte)
-            response = StreamingHttpResponse(
-                FileWrapper(f, length),
-                status=206,
-                content_type=content_type,
-            )
-            response['Content-Range'] = f'bytes {first_byte}-{last_byte}/{file_size}'
-            response['Accept-Ranges'] = 'bytes'
-            response['Content-Length'] = str(length)
-    else:
-        # If no range header, serve the entire file
-        with open(file_path, 'rb') as f:
-            response = StreamingHttpResponse(
-                FileWrapper(f, file_size),
-                content_type=content_type
-            )
-            response['Content-Length'] = str(file_size)
-
-    response['Content-Disposition'] = f'inline; filename="{file_name}"'
+    # Serve the video in chunks
+    response = FileResponse(open(video_file_path, 'rb'))
     return response
-
 
 
 # def serve_file(request, file_name):
