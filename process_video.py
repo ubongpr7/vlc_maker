@@ -308,7 +308,7 @@ def speed_up_video_with_audio(input_video, output_video_path, speed_factor,textf
     temp_input=f'temp_input_{textfile_id}.mp4'
     input_video.write_videofile(temp_input)
     # sped_up_video = input_video.fx(vfx.speedx, speed_factor)
-    command =['ffmpeg', '-i', temp_input, '-filter_complex',f'[o:v]setpts={1/speed_factor}*PTS[v];[0:a]atempo={speed_factor}[a]', '-map', '[v]','-map','[a]', '-y',output_video_path ]
+    command =['ffmpeg', '-i', temp_input, '-filter_complex',f'[0:v]setpts={1/speed_factor}*PTS[v];[0:a]atempo={speed_factor}[a]', '-map', '[v]','-map','[a]', '-y',output_video_path ]
     subprocess.run(command,check=True)
     os.remove(temp_input)
     # Return the sped-up video as a VideoClip object
