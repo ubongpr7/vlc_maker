@@ -176,11 +176,18 @@
     </form>
         <script>
             function fetchVideoClips(categoryId, counter) {
-                if (categoryId == ""){
-                    document.getElementById(`videoSelect_${counter}`).value=""
+                select2=document.getElementById(`videoSelect_${counter}`)
+                if (categoryId === ""){
+                    select2.value=""
+                    select2.innerHTML = "";
+
 
                 }
                 else{
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.text = "Select clip";
+                    select2.appendChild(defaultOption);
 
                     htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}`)
                 }
