@@ -86,7 +86,7 @@ def process_video(video_path, music_info_path,textfile_id,base_dir):
     os.makedirs(os.path.dirname(final_path), exist_ok=True)
 
     # Write the video file with the proper codec
-    video_clip.write_videofile(final_path, codec='libx264')
+    video_clip.write_videofile(final_path, codec='libx264',preset="ultrafast",ffmpeg_params=["-movflags", "+faststart"])
 
     update_progress(94,dir_s)
     # Close the clips to free resources
