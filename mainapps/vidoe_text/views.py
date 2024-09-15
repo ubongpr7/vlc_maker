@@ -13,6 +13,11 @@ from django.conf import settings
 from .models import TextFile, TextLineVideoClip
 from threading import Timer
 
+from django.http import StreamingHttpResponse, Http404
+import os
+from wsgiref.util import FileWrapper
+from django.conf import settings
+
 import requests
 
 def is_api_key_valid(api_key,voice_id):
@@ -68,16 +73,61 @@ def format_seconds_to_mm_ss(seconds):
     minutes = int(seconds // 60)
     secs = int(seconds % 60)
     return f"{minutes:02}:{secs:02}"
-def serve_file(request, file_name):
+
+def serve_video(request, file_name):
     file_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
     if not os.path.exists(file_path):
         raise Http404("File does not exist")
 
-    with open(file_path, 'rb') as f:
-        response = HttpResponse(f.read(), content_type='application/octet-stream')
-        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-        return response
+    file_size = os.path.getsize(file_path)
+    content_type = 'video/mp4'  # Or use a dynamic content type if needed
+    range_header = request.headers.get('Range', None)
+    range_match = None
+
+    if range_header:
+        range_match = re.match(r"bytes=(\d+)-(\d*)", range_header)
+
+    if range_match:
+        first_byte, last_byte = range_match.groups()
+        first_byte = int(first_byte)
+        last_byte = int(last_byte) if last_byte else file_size - 1
+        length = last_byte - first_byte + 1
+
+        with open(file_path, 'rb') as f:
+            f.seek(first_byte)
+            response = StreamingHttpResponse(
+                FileWrapper(f, length),
+                status=206,
+                content_type=content_type,
+            )
+            response['Content-Range'] = f'bytes {first_byte}-{last_byte}/{file_size}'
+            response['Accept-Ranges'] = 'bytes'
+            response['Content-Length'] = str(length)
+    else:
+        # If no range header, serve the entire file
+        with open(file_path, 'rb') as f:
+            response = StreamingHttpResponse(
+                FileWrapper(f, file_size),
+                content_type=content_type
+            )
+            response['Content-Length'] = str(file_size)
+
+    response['Content-Disposition'] = f'inline; filename="{file_name}"'
+    return response
+
+
+
+# def serve_file(request, file_name):
+#     file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+
+#     if not os.path.exists(file_path):
+#         raise Http404("File does not exist")
+
+#     with open(file_path, 'rb') as f:
+#         response = HttpResponse(f.read(), content_type='application/octet-stream')
+#         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+#         return response
     
 def process_background_music(request, textfile_id):
     context = {
