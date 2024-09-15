@@ -758,7 +758,6 @@ def main():
     update_progress(88,dir_s)
     import  time
     time.sleep(8)
-    os.remove(final_video_speeded_up)
     update_progress(100,dir_s)
 if __name__ == "__main__":
     main()
