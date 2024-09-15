@@ -181,6 +181,10 @@
                     select2.value=""
                     select2.innerHTML = "";
 
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.text = "Select a video";
+                    select2.appendChild(defaultOption);
 
                 }
                 else{
