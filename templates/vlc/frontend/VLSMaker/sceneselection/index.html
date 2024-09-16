@@ -13,7 +13,7 @@
     <style>
         /* Style for the button */
         .file-button {
-            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient background */
+            background: #864af9;
             border: none;
             border-radius: 25px; /* Rounded corners */
             padding: 15px 30px;
@@ -25,10 +25,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation on hover */
         }
 
-        .file-button:hover {
-            transform: translateY(-5px); /* Slightly raises the button on hover */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
-        }
+        
 
         /* Centering the button */
         .center-container {
@@ -141,14 +138,14 @@
 
     <div class="card">
         <div class="card-header">
-            Upload Script Text File
+            Upload Your Script 
         </div>
         <div class="card-body">
             <form method="POST" action="." enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="Script-text-file-text" style="display: flex; align-items: center; margin-bottom: 16px;">
                     <div style="font-size: 18px; font-weight: 600; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                        Script Text File:
+                        Script Text File: <span style="font-size: small;">Please make sure your script is written in txt file</span>
                     </div>
                 </div>
                 <div class="Script-text-file-Upload" style="width: 100%; height: 56px; border: 1px solid #000000B2; box-sizing: border-box; border-radius: 8px; padding: 8px; gap: 24px; display: flex; align-items: center; margin-bottom: 24px;">
@@ -164,7 +161,7 @@
     
                 <input type="text" name="purpose" hidden value='text_file'>
                 <div class="center-container">
-                    <button class="file-button" type="submit">Save Text File</button>
+                    <button class="file-button" type="submit">Load Script</button>
                 </div>
             </form>
         </div>

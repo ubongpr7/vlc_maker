@@ -48,6 +48,9 @@ def add_video_clips(request, textfile_id):
                             # timestamp_end=timestamp_end
                         )
                     )
+                else:
+                    messages.error(request,"You did not choose the clips completely")
+                    return redirect(f'/video/add-scene/{textfile_id}')
 
 
             TextLineVideoClip.objects.bulk_create(video_clips_data)
