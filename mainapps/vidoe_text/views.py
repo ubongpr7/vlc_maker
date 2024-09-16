@@ -19,6 +19,7 @@ from wsgiref.util import FileWrapper
 from django.conf import settings
 from django.http import FileResponse, Http404
 import requests
+from django.contrib.auth.decorators import login_required
 
 def is_api_key_valid(api_key,voice_id):
     """
@@ -86,7 +87,7 @@ def serve_file(request, file_name):
         response = HttpResponse(f.read(), content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
-    
+@login_required  
 def process_background_music(request, textfile_id):
     context = {
         'media_url': settings.MEDIA_URL,
@@ -156,6 +157,7 @@ def process_background_music(request, textfile_id):
 
         return redirect(f'/text/progress_page/bg_music/{textfile_id}')
     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id})
+
 def clean_progress_file(text_file_id):
     """Deletes the progress file after 3 seconds when progress is 100%."""
     if os.path.exists(f'{settings.MEDIA_ROOT}/{text_file_id}_progress.txt'):
@@ -173,9 +175,12 @@ def progress(request,text_file_id):
         return JsonResponse({'progress': progress})
     except FileNotFoundError:
         return JsonResponse({'progress': 0})
+@login_required
 def progress_page(request,al_the_way,text_file_id):
     return render(request,'vlc/progress.html',{"al_the_way":al_the_way,'text_file_id':text_file_id})
 
+
+@login_required
 def process_textfile(request, textfile_id):
     try:
         # Fetch the TextFile instance
@@ -255,6 +260,7 @@ def process_textfile(request, textfile_id):
     # Return success message
     return redirect(f'/text/progress_page/build/{textfile_id}')
 
+@login_required
 def add_text(request):
     if request.method == 'POST':
         voice_id = request.POST.get('voiceid')
@@ -298,11 +304,13 @@ def add_text(request):
         
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
+@login_required
 def add_text_file(request, textfile_id):
     text_file_present=False
     text_file_obj= get_object_or_404(TextFile,get_object_or_404)
     return render(request,'vlc/frontend/VLSMaker/index.html',{"textfile_id":textfile_id,})
 
+@login_required
 def download_video(request,textfile_id,):
     bg_music=request.GET.get('bg_music',None)
     return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music},)
