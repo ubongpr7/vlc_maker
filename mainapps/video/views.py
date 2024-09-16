@@ -4,8 +4,11 @@ from django.http import HttpResponse
 from django.forms import modelformset_factory
 from django.views.decorators.csrf import csrf_exempt
 from .models import VideoClip,ClipCategory
+from django.contrib.auth.decorators import login_required
 
-@csrf_exempt
+
+# @csrf_exempt
+@login_required
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
 
@@ -13,7 +16,8 @@ def add_video_clips(request, textfile_id):
     if request.method == 'POST':
         if  text_file.text_file and request.POST.get('purpose') == 'process':
             if text_file.video_clips:
-                for video_clip in text_file.video_clips:
+
+                for video_clip in TextLineVideoClip.objects.filter(text_file=text_file):
                     video_clip.delete()
                     print('Deleted a video_clip')
             
