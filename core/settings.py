@@ -151,6 +151,11 @@ EMAIL_USE_TLS = False
 EMAIL_HOST_USER = "ubongpr7@gmail.com"
 EMAIL_HOST_PASSWORD = "nmcmiwlgwdrwesef"
 
+# settings.py
+
+STRIPE_SECRET_KEY = 'your-secret-key'
+STRIPE_PUBLISHABLE_KEY = 'your-publishable-key'
+STRIPE_CLIENT_ID = 'your-stripe-connect-client-id'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
