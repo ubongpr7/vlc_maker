@@ -46,7 +46,6 @@
     /* height: 200px; */
     padding: 16px;
     font-size: 14px;
-    font-weight: bold;
 
     box-sizing: border-box;
 }
@@ -57,9 +56,12 @@
     padding: 5px;
     border-radius: 8px 8px 0 0;
     text-align: center;
+    font-weight: bold;
+
 }
 
 .card-body {
+    font-weight: bold;
     padding: 5px;
 }
 
@@ -148,7 +150,8 @@
             <form method="POST" action="." enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="Script-text-file-text" style="display: flex; align-items: center; margin-bottom: 16px;">
-                    <div style=" line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+    
+                    <div style="  font-weight: bold; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
                         Script Text File: 
                     </div>
                     <div class="vh-parent">
@@ -259,7 +262,7 @@
 
             </div>
             
-            <div class="button" style="width: fit-content; height:24px;position:absolute;right:10%; display: flex; justify-content: flex-end; align-items: center;">
+            <div class="button" style="width: fit-content; margin-bottom: 50px; height:24px;position:absolute;right:10%; display: flex; justify-content: flex-end; align-items: center;">
                 <div style="display: flex; align-items: center;padding:10px; justify-content: center; border-radius: 8px;  background: #864AF9; cursor: pointer;">
                     <button type="submit"  style="text-decoration: none; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; margin-right: 10px; background: none; border: none; cursor: pointer;">
                         Proceed To Background Music Selection
