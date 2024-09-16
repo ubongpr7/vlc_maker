@@ -5,6 +5,7 @@ from django.forms import modelformset_factory
 from django.views.decorators.csrf import csrf_exempt
 from .models import VideoClip,ClipCategory
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 # @csrf_exempt
@@ -57,6 +58,8 @@ def add_video_clips(request, textfile_id):
                 text_file.text_file=request.FILES.get('text_file')
                 text_file.save()
                 return redirect(f'/video/add-scene/{textfile_id}')
+            messages.error(request,'You did not upload text file')
+            return redirect(f'/video/add-scene/{textfile_id}')
 
 
     else:
