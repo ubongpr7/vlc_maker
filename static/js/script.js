@@ -101,20 +101,10 @@ document.querySelectorAll('.box').forEach(box => {
     });
 });
 
-const fileUpload = document.getElementById('fileUpload');
 const fileName = document.getElementById('fileName');
 
 const font_file = document.getElementById('font_file');
 const font_fileName = document.getElementById('font_file_name');
-
-fileUpload.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        fileName.textContent = `${file.name.slice(0,15)}`;
-    } else {
-        fileName.textContent = 'No file selected';
-    }
-});
 
 font_file.addEventListener('change', (event) => {
     const file = event.target.files[0];

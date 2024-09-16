@@ -164,7 +164,7 @@
 
     </form> -->
     {% if text_file.text_file %}
-    
+    cd de
     <form method="POST" action="." enctype="multipart/form-data">
     {% csrf_token %}
     <input type="text", hidden name="purpose" value='process'>
@@ -256,6 +256,17 @@
     </form>
     {% endif %}
         <script>
+            
+            const fileUpload = document.getElementById('fileUpload');
+            fileUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    fileName.textContent = `${file.name.slice(0,15)}`;
+                } else {
+                    fileName.textContent = 'No file selected';
+                }
+            });
+
             function fetchVideoClips(categoryId, counter) {
                 select2=document.getElementById(`videoSelect_${counter}`)
                 if (categoryId === ""){
