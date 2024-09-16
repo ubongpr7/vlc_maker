@@ -8,6 +8,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Scene Selection</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
     <link rel="stylesheet" href="{% static 'sceneselection/style.css'%}">
     <script src="{% static 'sceneselection/script.js'%}"></script>
     <style>
@@ -145,8 +147,17 @@
                 {% csrf_token %}
                 <div class="Script-text-file-text" style="display: flex; align-items: center; margin-bottom: 16px;">
                     <div style="font-size: 18px; font-weight: 600; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                        Script Text File: <span style="font-size: small;">Please make sure your script is written in txt file</span>
+                        Script Text File: 
                     </div>
+                    <div class="vh-parent">
+                        <div class="vh-child">
+                            <span class="text3">
+                                Please make sure your script is written in txt file
+                            </span>
+                        </div>
+                        ?
+                    </div>
+                </div>
                 </div>
                 <div class="Script-text-file-Upload" style="width: 100%; height: 56px; border: 1px solid #000000B2; box-sizing: border-box; border-radius: 8px; padding: 8px; gap: 24px; display: flex; align-items: center; margin-bottom: 24px;">
                     <div style="padding: 8px 24px; border-radius: 8px; cursor: pointer; background: #864AF9; width: fit-content; color: white; display: flex; align-items: center; gap: 10px; position: relative;">
