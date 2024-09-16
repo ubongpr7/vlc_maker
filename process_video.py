@@ -757,19 +757,8 @@ def main():
     keyframe_interval=int(final_video_speeded_up_clip.fps/2)
     
     final_video_speeded_up_clip.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
-    # final_video_speeded_up_clip.write_videofile(
-    #     os.path.normpath(output_file),
-    #     codec="libx264",
-    #     preset="ultrafast",
-    #     fps=fps,
-    #     ffmpeg_params=[
-    #         "-movflags", "+faststart",
-    #         "-g", str(keyframe_interval)  # Set keyframe interval dynamically
-    #     ]
-    # )
-    # convert_video(final_video_speeded_up,os.path.normpath(output_file),)
     update_progress(80,dir_s)
-    convert_to_webm(os.path.normpath(output_file),output_file_web)
+    # convert_to_webm(os.path.normpath(output_file),output_file_web)
     update_progress(85,dir_s)
     import  time
     time.sleep(8)
