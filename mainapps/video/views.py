@@ -24,6 +24,8 @@ def upload_video_folder(request):
 
             # Create each folder/subfolder as a category
             for folder_name in folder_path:
+                folder_name=folder_name.replace(' ','_')
+                print(folder_name)
                 category, created = ClipCategory.objects.get_or_create(name=folder_name, parent=parent, user=request.user)
                 parent = category  # Make the current folder the parent for the next iteration
             

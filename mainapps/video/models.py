@@ -49,6 +49,12 @@ class ClipCategory(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subcategories', blank=True, null=True)
     def __str__(self):
         return self.name
+    class Meta:
+        # Ensure the combination of name and user is unique
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'user'], name='unique_category_per_user')
+        ]
+
 
 class VideoClip(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.SET_NULL,null=True,blank=True,editable=False, related_name='user_clips')
