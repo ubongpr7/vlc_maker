@@ -4,8 +4,6 @@ from .models import Video,VideoProcessingTask,ProcessedVideo,VideoClip,ClipCateg
 from django.contrib import admin
 
 admin.site.register(VideoProcessingTask)
-admin.site.register(VideoClip)
-admin.site.register(ClipCategory)
 admin.site.register(Video)
 admin.site.register(ProcessedVideo)
 
