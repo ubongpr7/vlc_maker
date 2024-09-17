@@ -45,7 +45,7 @@
             </div>
             
         <!-- Progress bar -->
-        <div id="progressWrapper" style="width: 100%; background-color: #f3f3f3; margin-bottom: 24px;">
+        <div id="progressWrapper"  style="width: 100%;display:none; background-color: #f3f3f3; margin-bottom: 24px;">
             <div id="progressBar" style="width: 0%; height: 30px; background-color: #4CAF50; text-align: center; line-height: 30px; color: white;">
                 0%
             </div>
@@ -112,6 +112,7 @@ uploadForm.addEventListener('submit', function(event) {
     xhr.upload.addEventListener('progress', function(e) {
         if (e.lengthComputable) {
             const percentComplete = (e.loaded / e.total) * 100;
+            document.getElementById('progressWrapper').display='block'
             progressBar.style.width = percentComplete + '%';
             progressBar.textContent = Math.round(percentComplete) + '%';
         }
