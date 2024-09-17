@@ -22,6 +22,7 @@ def upload_video_folder(request):
         for file in uploaded_folder:
             folder_path = Path(file.name).parent.parts  # Extract the folder structure, ignoring the file name
             parent = None
+            print('folder_path: ', folder_path)
 
             # Create each folder/subfolder as a category
             for folder_name in folder_path:
