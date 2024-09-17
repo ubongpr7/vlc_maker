@@ -147,6 +147,51 @@
     <div class="card-container">
         <div>
             {% include 'upload.html' %}
+            
+        <div class="card">
+            <div class="card-header">
+                <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
+                    Upload Your Script 
+                </span>
+            
+            </div>
+            <div class="card-body">
+                <form method="POST" action="." enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="Script-text-file-text" style="display: flex; align-items: center; margin-bottom: 16px;">
+        
+                        <div style="  font-weight: bold; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                            Script Text File: 
+                        </div>
+                        <div class="vh-parent">
+                            <div class="vh-child">
+                                <span class="text3">
+                                    Please Make Sure Your Script Is On Txt File
+                                </span>
+                            </div>
+                            ?
+                        </div>
+                    </div>
+                    </div>
+                    <div class="Script-text-file-Upload" style="width: 100%; height: 50px; border: 1px solid #000000B2; box-sizing: border-box; border-radius: 8px; padding: 8px; gap: 24px; display: flex; align-items: center; margin-bottom: 24px;">
+                        <div style="padding: 8px 24px; border-radius: 8px; cursor: pointer; background: #864AF9; width: fit-content; color: white; display: flex; align-items: center; gap: 10px; position: relative;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                                
+                            <span class="text2" style="font-size: 16px; line-height: 24px; text-align: center; font-weight: 400;">Choose file</span>
+                            <input type="file" id="fileUpload" name="text_file" accept=".txt" style="width: 100%; height: 100%; position: absolute; opacity: 0; cursor: pointer; z-index: 2; left: 0; border-radius: 8px;">
+                        </div>
+                        <div class="text2" id="fileName" style="color: #00000080;">No file chosen</div>
+                    </div>
+        
+                    <input type="text" name="purpose" hidden value='text_file'>
+                    <div class="center-container">
+                        <button class="file-button" type="submit">Load Script</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
 
         </div>
 
