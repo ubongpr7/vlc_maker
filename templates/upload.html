@@ -74,15 +74,15 @@ document.querySelector("#fileInput").addEventListener("change", function() {
     // Send folder structure to backend in a hidden input field
     document.querySelector("#directories").value = JSON.stringify(directories);
 });
-const fileName= document.getElementById('fileName2')
+const fileName2= document.getElementById('fileName2')
 
 const fileUpload = document.getElementById('fileInput');
     fileUpload.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
-            fileName.textContent = `${file.name.slice(0,15)}`;
+            fileName2.textContent = `${file.name.slice(0,15)}`;
         } else {
-            fileName.textContent = 'No files selected';
+            fileName2.textContent = 'No files selected';
         }
     });
 const uploadForm = document.getElementById('uploadForm');
