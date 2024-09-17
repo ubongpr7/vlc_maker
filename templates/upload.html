@@ -60,7 +60,7 @@
         });
 
         // Send the file
-        xhr.open('POST', '{% url "upload_video_folder" %}');
+        xhr.open('POST', '{% url "video:upload_video_folder" %}');
         xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
         xhr.send(formData);
     });
