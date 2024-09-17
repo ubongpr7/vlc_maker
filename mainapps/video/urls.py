@@ -5,4 +5,5 @@ app_name='video'
 urlpatterns=[
     path('add-scene/<str:textfile_id>/',add_video_clips,name='add_scenes'),
     path('get_clip/<str:cat_id>/',get_clip,name='get_clip'),
+    path('upload-folder/',upload_video_folder,name='upload_video_folder'),
 ]

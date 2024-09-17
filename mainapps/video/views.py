@@ -6,9 +6,36 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import VideoClip,ClipCategory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import os
+from django.core.files.storage import FileSystemStorage
 
 
-# @csrf_exempt
+
+
+@login_required
+def upload_video_folder(request):
+    if request.method == 'POST':
+        uploaded_folder = request.FILES.getlist('folder')  # Get all files from the uploaded folder
+
+        # Assume the user selects a root folder, now we extract folder and subfolder names
+        for file in uploaded_folder:
+            folder_path = file.name.split('/')[:-1]  # Extract the folder structure
+            parent = None
+
+            # Create each folder/subfolder as a category
+            for folder_name in folder_path:
+                category, created = ClipCategory.objects.get_or_create(name=folder_name, parent=parent, user=request.user)
+                parent = category  # Make the current folder the parent for the next iteration
+            
+            # Save the file into the appropriate category (the last folder in the structure)
+            VideoClip.objects.create(title=os.path.basename(file.name), video_file=file, category=parent)
+
+        return redirect('/text')  # Redirect to a success page or some other view
+
+    return render(request, 'upload.html')
+
+
+
 @login_required
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
