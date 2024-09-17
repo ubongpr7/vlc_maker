@@ -54,6 +54,7 @@ def upload_video_folder(request):
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
     if text_file.user != request.user:
+        message.error(request,'You Do Not have access to the Resources You Requested ')
         return render(request,'permission_denied.html')
     video_categories=ClipCategory.objects.filter(user=request.user)
     if request.method == 'POST':

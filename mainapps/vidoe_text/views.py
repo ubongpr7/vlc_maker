@@ -97,6 +97,8 @@ def process_background_music(request, textfile_id):
             # Fetch the TextFile instance
             textfile = TextFile.objects.get(pk=textfile_id)
             if textfile.user != request.user:
+                message.error(request,'You Do Not have access to the Resources You Requested ')
+
                 return render(request,'permission_denied.html')
         except TextFile.DoesNotExist:
             return Http404("Text file not found")
@@ -189,7 +191,9 @@ def process_textfile(request, textfile_id):
         # Fetch the TextFile instance
         textfile = TextFile.objects.get(pk=textfile_id)
         if textfile.user != request.user:
-                return render(request,'permission_denied.html')
+            message.error(request,'You Do Not have access to the Resources You Requested ')
+
+            return render(request,'permission_denied.html')
     except TextFile.DoesNotExist:
         return Http404("Text file not found")
 
