@@ -35,14 +35,19 @@
             justify-content: center;
             align-items: center;
         }
+        .card-container{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
     
         .card {
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 50%;
-    margin: 0 auto;
+    max-width: 45%;
+    /* margin: 0 auto; */
     /* height: 200px; */
     padding: 16px;
     font-size: 14px;
@@ -138,7 +143,7 @@
         </div>
     </div>
     {% include 'messages.html' %}
-    <div class="center-container">
+    <div class="card-container">
         <div class="card">
             <div class="card-header">
                 <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
@@ -184,7 +189,7 @@
         </div>
         {% include 'upload.html' %}
 
-    </div>
+    </div>    
     {% if text_file.text_file %}
     <form method="POST" action="." enctype="multipart/form-data">
     {% csrf_token %}
