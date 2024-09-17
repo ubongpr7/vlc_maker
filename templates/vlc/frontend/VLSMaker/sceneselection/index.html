@@ -31,14 +31,14 @@
 
         /* Centering the button */
         .center-container {
-            display: grid;
-            grid-template-columns:1fr 1fr;
-            gap:20px;
-            flex-direction:
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .card-container{
-            display:flex;
-            justify-content:space-between;
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20;
             align-items:center;
         }
     
@@ -47,8 +47,8 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* max-width: 45%; */
-    margin: 0 auto;
+    max-width: 45%;
+    /* margin: 0 auto; */
     /* height: 200px; */
     padding: 16px;
     font-size: 14px;
