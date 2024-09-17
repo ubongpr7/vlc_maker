@@ -809,7 +809,7 @@ def main():
     update_progress(70,dir_s)
 
     # Output file
-    watermarked_path = os.path.join(base_path, 'final','w', f"final_output_{textfile_id}.webm")
+    watermarked_path = os.path.join(base_path, 'final','w', f"final_output_{textfile_id}.mp4")
 
     output_file = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
     if os.path.exists(output_file):
