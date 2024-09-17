@@ -482,6 +482,32 @@ def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pys
     return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
 
+from moviepy.editor import VideoFileClip, ImageClip
+
+def add_watermark(video_path, output_path):
+    # Load the video
+    watermark_path= os.path.join('media','vlc','logo.png')
+
+    video = VideoFileClip(video_path)
+    
+    # Load the watermark image
+    watermark = ImageClip(watermark_path)
+    
+    # Resize the watermark to 50% of the video's height, maintaining aspect ratio
+    watermark = watermark.resize(height=video.h * 0.5)
+    
+    # Set the opacity of the watermark to 0.7
+    watermark = watermark.set_opacity(0.7)
+    
+    # Position the watermark at the center of the video
+    watermark = watermark.set_position(("center", "center"))
+    
+    # Overlay the watermark on the video
+    final_video = video.set_duration(video.duration).fx(vfx.composite, watermark)
+    
+    # Write the final video to a file
+    final_video.write_videofile(output_path, codec='libx264')
+
 
 
 def adjust_segment_properties(segment: VideoFileClip, original: VideoFileClip) -> VideoFileClip:
@@ -599,6 +625,45 @@ def convert_to_webm(input_video_path, output_webm_path):
     video_clip.close()
 
 # Usage example
+
+
+from moviepy.editor import VideoFileClip, ImageClip
+import numpy as np
+
+def add_animated_watermark(video_path, output_path):
+    # Load the video
+    video = VideoFileClip(video_path)
+    watermark_path= os.path.join('media','vlc','logo.png')
+    
+    # Load and resize the watermark to a smaller size (e.g., 10% of the video width)
+    watermark = ImageClip(watermark_path).resize(width=video.w * 0.1)
+
+    # Set the watermark opacity
+    watermark = watermark.set_opacity(0.7)
+
+    # Function to calculate the new position of the watermark
+    def moving_watermark(t):
+        # Speed in pixels per second (modify to adjust speed)
+        speed_x, speed_y = 100, 75
+        
+        # Calculate the new position (bouncing around the screen)
+        pos_x = np.abs((speed_x * t) % (2 * video.w) - video.w)
+        pos_y = np.abs((speed_y * t) % (2 * video.h) - video.h)
+        
+        return (pos_x, pos_y)
+
+    # Animate the watermark by changing its position over time
+    watermark = watermark.set_position(moving_watermark, relative=False)
+
+    # Overlay the animated watermark on the video
+    final_video = video.set_duration(video.duration).fx(vfx.composite, watermark)
+
+    # Write the output video with the animated watermark
+    final_video.write_videofile(output_path, codec='libx264')
+
+
+
+
 
 def main():
     # if len(sys.argv) != 9:
@@ -742,7 +807,7 @@ def main():
     update_progress(70,dir_s)
 
     # Output file
-    output_file_web = os.path.join(base_path, 'final', f"final_output_{textfile_id}.webm")
+    watermarked_path = os.path.join(base_path, 'final','w', f"final_output_{textfile_id}.webm")
 
     output_file = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
     if os.path.exists(output_file):
@@ -758,9 +823,10 @@ def main():
     
     final_video_speeded_up_clip.write_videofile(os.path.normpath(output_file), preset="ultrafast", codec="libx264", audio_codec="aac", temp_audiofile="temp-audio.m4a", remove_temp=True)
     update_progress(80,dir_s)
-    # convert_to_webm(os.path.normpath(output_file),output_file_web)
     update_progress(85,dir_s)
     import  time
+    time.sleep(3)
+    add_animated_watermark(output_file,os.path.normpath(watermarked_path))
     time.sleep(8)
     update_progress(100,dir_s)
 if __name__ == "__main__":
