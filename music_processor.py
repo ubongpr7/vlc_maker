@@ -163,7 +163,7 @@ def process_video(video_path, music_info_path,textfile_id,base_dir):
         clip.close()
     import time 
     time.sleep(4)
-    add_animated_watermark(output_path,os.path.normpath(watermarked_path))
+    add_animated_watermark(final_path,os.path.normpath(watermarked_path))
     time.sleep(6)
     update_progress(100,dir_s)
     return final_path
