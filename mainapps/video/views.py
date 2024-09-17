@@ -42,48 +42,10 @@ def upload_video_folder(request):
                     video_file=file,
                     category=parent
                 )
-
-        return redirect('/text')  # Redirect to a success page or some other view
+        messages.success(request,'Files Upload Successgul!')
+        return HttpResponse('Upload successgul!')
 
     return render(request, 'upload.html')
-
-# @login_required
-# def upload_video_folder(request):
-#     if request.method == 'POST':
-#         uploaded_folder = request.FILES.getlist('folder')  # Get all files from the uploaded folder
-
-#         # Process each uploaded file
-#         for file in uploaded_folder:
-#             folder_path = Path(file.name).parent.parts  # Extract the folder structure, ignoring the file name
-#             parent = None
-#             print('folder_path: ', folder_path)
-
-#             # Create each folder/subfolder as a category
-#             for folder_name in folder_path:
-#                 folder_name = folder_name.replace(' ', '_')  # Replace spaces with underscores
-#                 print(f"Processing folder: {folder_name}")
-
-#                 # Get or create the category for this folder
-#                 category, created = ClipCategory.objects.get_or_create(
-#                     name=folder_name, parent=parent, user=request.user
-#                 )
-                
-#                 # Log whether the category was created or already existed
-#                 if created:
-#                     print(f"Created new category: {category.name}")
-#                 else:
-#                     print(f"Category {category.name} already exists")
-                
-#                 # Set the current category as the parent for the next folder in the hierarchy
-#                 parent = category
-
-#             # Once all folders are processed, save the video file in the deepest category
-#             video_title = os.path.basename(file.name)  # Extract file name for video title
-#             VideoClip.objects.create(title=video_title, video_file=file, category=parent)
-
-#         return redirect('/text')  # Redirect to a success page or another view
-
-#     return render(request, 'upload.html')
 
 
 
@@ -92,7 +54,7 @@ def upload_video_folder(request):
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
 
-    video_categories=ClipCategory.objects.all()
+    video_categories=ClipCategory.objects.filter(user=request.user)
     if request.method == 'POST':
         if  text_file.text_file and request.POST.get('purpose') == 'process':
             if text_file.video_clips:

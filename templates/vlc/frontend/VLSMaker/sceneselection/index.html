@@ -182,8 +182,7 @@
             </form>
         </div>
     </div>
-    
-
+    {% include 'upload.html' %}
     {% if text_file.text_file %}
     <form method="POST" action="." enctype="multipart/form-data">
     {% csrf_token %}
@@ -276,7 +275,7 @@
     </form>
     {% endif %}
         <script>
-            
+            const fileName= document.getElementById('fileName')
             const fileUpload = document.getElementById('fileUpload');
             fileUpload.addEventListener('change', (event) => {
                 const file = event.target.files[0];
