@@ -96,6 +96,8 @@ def process_background_music(request, textfile_id):
         try:
             # Fetch the TextFile instance
             textfile = TextFile.objects.get(pk=textfile_id)
+            if textfile.user != request.user:
+                return render(request,'permission_denied.html')
         except TextFile.DoesNotExist:
             return Http404("Text file not found")
         no_of_mp3 = int(request.POST.get('no_of_mp3', 0))  # Number of MP3 files
@@ -177,6 +179,7 @@ def progress(request,text_file_id):
         return JsonResponse({'progress': 0})
 @login_required
 def progress_page(request,al_the_way,text_file_id):
+
     return render(request,'vlc/progress.html',{"al_the_way":al_the_way,'text_file_id':text_file_id})
 
 
@@ -185,6 +188,8 @@ def process_textfile(request, textfile_id):
     try:
         # Fetch the TextFile instance
         textfile = TextFile.objects.get(pk=textfile_id)
+        if textfile.user != request.user:
+                return render(request,'permission_denied.html')
     except TextFile.DoesNotExist:
         return Http404("Text file not found")
 

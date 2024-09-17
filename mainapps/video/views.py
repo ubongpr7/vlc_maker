@@ -53,7 +53,8 @@ def upload_video_folder(request):
 @login_required
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
-
+    if text_file.user != request.user:
+        return render(request,'permission_denied.html')
     video_categories=ClipCategory.objects.filter(user=request.user)
     if request.method == 'POST':
         if  text_file.text_file and request.POST.get('purpose') == 'process':

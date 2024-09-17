@@ -115,6 +115,8 @@ class TextFile(models.Model):
         except IOError as e:
             raise IOError(f"Error processing file: {e}")
 
+    def __str__(self):
+        return self.voice_id
         
 def text_clip_upload_path(instance, filename):
     """Generate a unique file path for each uploaded text file."""
