@@ -145,6 +145,8 @@
     </div>
     {% include 'messages.html' %}
     <div class="card-container">
+        {% include 'upload.html' %}
+
         <div class="card">
             <div class="card-header">
                 <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
@@ -188,7 +190,6 @@
                 </form>
             </div>
         </div>
-        {% include 'upload.html' %}
 
     </div>    
     {% if text_file.text_file %}
