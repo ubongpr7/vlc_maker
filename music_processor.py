@@ -37,7 +37,7 @@ def add_animated_watermark(video_path, output_path):
     # Function to calculate the new position of the watermark
     def moving_watermark(t):
         # Speed in pixels per second (modify to adjust speed)
-        speed_x, speed_y = 100, 75
+        speed_x, speed_y = 200, 250
         
         # Calculate the new position (bouncing around the screen)
         pos_x = np.abs((speed_x * t) % (2 * video.w) - video.w)
