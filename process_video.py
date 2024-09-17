@@ -818,6 +818,7 @@ def main():
 
     # Create the necessary directories if they do not exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    os.makedirs(os.path.dirname(watermarked_path), exist_ok=True)
 
     # Write the final video file with audio
     fps=final_video_speeded_up_clip.fps
