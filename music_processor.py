@@ -49,10 +49,12 @@ def add_animated_watermark(video_path, output_path):
     watermark = watermark.set_position(moving_watermark, relative=False)
 
     # Overlay the animated watermark on the video
-    final_video = video.set_duration(video.duration).fx(vfx.composite, watermark)
+    watermaked = CompositeVideoClip([video, watermark], size=video.size)
+
+
 
     # Write the output video with the animated watermark
-    final_video.write_videofile(output_path, codec='libx264')
+    watermaked.write_videofile(output_path, codec='libx264')
 
 
 
