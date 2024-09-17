@@ -55,7 +55,7 @@ def add_animated_watermark(video_path, output_path):
     watermaked.set_duration(video.duration)
 
     # Write the output video with the animated watermark
-    watermaked.write_videofile(output_path, codec='libx264')
+    watermaked.write_videofile(output_path,  codec='libx264',preset="ultrafast",ffmpeg_params=["-movflags", "+faststart"])
 
 
 
