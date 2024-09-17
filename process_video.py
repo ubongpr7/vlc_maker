@@ -654,7 +654,7 @@ def add_animated_watermark(video_path, output_path):
 
     # Animate the watermark by changing its position over time
     watermark = watermark.set_position(moving_watermark, relative=False)
-
+    watermark = watermark.set_duration(video.duration)
  # Overlay the animated watermark on the video
     watermaked = CompositeVideoClip([video, watermark], size=video.size)
 
