@@ -636,10 +636,10 @@ def add_animated_watermark(video_path, output_path):
     watermark_path= os.path.join('media','vlc','logo.png')
     
     # Load and resize the watermark to a smaller size (e.g., 10% of the video width)
-    watermark = ImageClip(watermark_path).resize(width=video.w * 0.1)
+    watermark = ImageClip(watermark_path).resize(width=video.w * 0.4)
 
     # Set the watermark opacity
-    watermark = watermark.set_opacity(0.7)
+    watermark = watermark.set_opacity(0.5)
 
     # Function to calculate the new position of the watermark
     def moving_watermark(t):

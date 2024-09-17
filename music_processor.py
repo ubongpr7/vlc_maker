@@ -29,10 +29,10 @@ def add_animated_watermark(video_path, output_path):
     watermark_path= os.path.join('media','vlc','logo.png')
     
     # Load and resize the watermark to a smaller size (e.g., 10% of the video width)
-    watermark = ImageClip(watermark_path).resize(width=video.w * 0.1)
+    watermark = ImageClip(watermark_path).resize(width=video.w * 0.4)
 
     # Set the watermark opacity
-    watermark = watermark.set_opacity(0.7)
+    watermark = watermark.set_opacity(0.5)
 
     # Function to calculate the new position of the watermark
     def moving_watermark(t):
@@ -151,12 +151,11 @@ def process_video(video_path, music_info_path,textfile_id,base_dir):
 
     # Create the necessary directories if they do not exist
     os.makedirs(os.path.dirname(final_path), exist_ok=True)
-    watermarked_path = os.path.join(base_path, 'finished','w', f"final_output_{textfile_id}.mp4")
+    watermarked_path = os.path.join('media', 'finished','w', f"final_output_{textfile_id}.mp4")
     os.makedirs(os.path.dirname(watermarked_path), exist_ok=True)
 
     # Write the video file with the proper codec
     video_clip.write_videofile(final_path, codec='libx264',preset="ultrafast",ffmpeg_params=["-movflags", "+faststart"])
-    os.mkdir
     update_progress(94,dir_s)
     # Close the clips to free resources
     video_clip.close()
