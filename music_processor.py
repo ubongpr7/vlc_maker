@@ -144,14 +144,18 @@ def process_video(video_path, music_info_path,textfile_id,base_dir):
     # Set the final audio to the video clip
     video_clip = video_clip.set_audio(final_audio)
     final_path = os.path.join(base_dir, 'finished', f'video_output_{textfile_id}.mp4')
+    watermarked_path = os.path.join(base_dir,'finished','w', f"video_output_{textfile_id}.mp4")
 
     # Remove the existing file if it exists
     if os.path.exists(final_path):
         os.remove(final_path)
 
+    # Remove the existing file if it exists
+    if os.path.exists(watermarked_path):
+        os.remove(watermarked_path)
+
     # Create the necessary directories if they do not exist
     os.makedirs(os.path.dirname(final_path), exist_ok=True)
-    watermarked_path = os.path.join(os.getcwd(),'media', 'finished','w', f"final_output_{textfile_id}.mp4")
     os.makedirs(os.path.dirname(watermarked_path), exist_ok=True)
 
     # Write the video file with the proper codec
