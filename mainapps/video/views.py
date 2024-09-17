@@ -16,9 +16,12 @@ import json
 @login_required
 def upload_video_folder(request):
     if request.method == 'POST':
-        uploaded_folder = request.FILES.getlist('folder')  # Get all files from the uploaded folder
+        if 'directories' not in request.POST:
+            return render(request, 'upload.html', {'error': 'No directory data provided.'})
+
+        uploaded_folder = request.FILES.getlist('folder')
         directories = json.loads(request.POST['directories'])  # Get folder structure from the frontend
-        
+
         for folder_path, files in directories.items():
             folder_parts = folder_path.split('/')  # Split folder path into parts (subfolders)
             parent = None
@@ -33,10 +36,7 @@ def upload_video_folder(request):
 
             # Now save the files under the last category (deepest folder)
             for file_name in files:
-                # Find the corresponding file in the uploaded folder
                 file = next(f for f in uploaded_folder if f.name == file_name)
-                
-                # Create the VideoClip linked to the correct category
                 VideoClip.objects.create(
                     title=file_name,
                     video_file=file,
@@ -46,7 +46,6 @@ def upload_video_folder(request):
         return redirect('/text')  # Redirect to a success page or some other view
 
     return render(request, 'upload.html')
-
 
 # @login_required
 # def upload_video_folder(request):

@@ -1,12 +1,11 @@
 <form id="uploadForm" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <label for="folder">Upload folder:</label>
+    <label for="fileInput">Upload folder:</label>
     <input id="fileInput" type="file" name="folder" webkitdirectory multiple>
     <input type="text" id="directories" name="directories" hidden />
     
     <button type="submit">Upload</button>
 </form>
-
 
 <!-- Progress bar -->
 <div id="progressWrapper" style="width: 100%; background-color: #f3f3f3;">
@@ -17,69 +16,73 @@
 
 <!-- Display upload status -->
 <div id="uploadStatus"></div>
-
 <script>
-    const uploadForm = document.getElementById('uploadForm');
-    const fileInput = document.getElementById('fileInput');
-    const progressBar = document.getElementById('progressBar');
-    const progressWrapper = document.getElementById('progressWrapper');
-    const uploadStatus = document.getElementById('uploadStatus');
+document.querySelector("#fileInput").addEventListener("change", function() {
+    let files = document.querySelector("#fileInput").files;
+    let directories = {};  // This will store folder paths and their corresponding files
 
-    uploadForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const files = fileInput.files;
-        if (files.length === 0) {
-            alert('Please select a file to upload.');
-            return;
+    // Loop through all selected files
+    for (let file of files) {
+        const folderPath = file.webkitRelativePath.split('/').slice(0, -1).join('/');
+        if (!directories[folderPath]) {
+            directories[folderPath] = [];  // Initialize array for this folder
         }
+        directories[folderPath].push(file.name);  // Add file name to the folder
+    }
 
-        const formData = new FormData();
-        for (let i = 0; i < files.length; i++) {
-            formData.append('folder', files[i]);
+    // Send folder structure to backend in a hidden input field
+    document.querySelector("#directories").value = JSON.stringify(directories);
+});
+
+const uploadForm = document.getElementById('uploadForm');
+const progressBar = document.getElementById('progressBar');
+const uploadStatus = document.getElementById('uploadStatus');
+
+uploadForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const files = document.getElementById('fileInput').files;
+    if (files.length === 0) {
+        alert('Please select files to upload.');
+        return;
+    }
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+        formData.append('folder', files[i]);
+    }
+
+    // Add the directory structure data to the FormData object
+    formData.append('directories', document.getElementById('directories').value);
+
+    const xhr = new XMLHttpRequest();
+
+    // Progress event listener
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            const percentComplete = (e.loaded / e.total) * 100;
+            progressBar.style.width = percentComplete + '%';
+            progressBar.textContent = Math.round(percentComplete) + '%';
         }
-
-        const xhr = new XMLHttpRequest();
-
-        // Progress event listener
-        xhr.upload.addEventListener('progress', function(e) {
-            if (e.lengthComputable) {
-                const percentComplete = (e.loaded / e.total) * 100;
-                progressBar.style.width = percentComplete + '%';
-                progressBar.textContent = Math.round(percentComplete) + '%';
-            }
-        });
-
-        // Complete event listener
-        xhr.addEventListener('load', function() {
-            if (xhr.status === 200) {
-                uploadStatus.textContent = 'Upload completed successfully!';
-            } else {
-                uploadStatus.textContent = 'Upload failed. Please try again.';
-            }
-        });
-
-        // Send the file
-        xhr.open('POST', '{% url "video:upload_video_folder" %}');
-        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-        xhr.send(formData);
     });
-</script>
-<script>
-    document.querySelector("#fileInput").addEventListener("change", function() {
-        let files = document.querySelector("#fileInput").files;
-        let directories = {};  // This will store folder paths and their corresponding files
 
-        // Loop through all selected files
-        for (let file of files) {
-            const folderPath = file.webkitRelativePath.split('/').slice(0, -1).join('/');
-            if (!directories[folderPath]) {
-                directories[folderPath] = [];  // Initialize array for this folder
-            }
-            directories[folderPath].push(file.name);  // Add file name to the folder
+    // Complete event listener
+    xhr.addEventListener('load', function() {
+        if (xhr.status === 200) {
+            uploadStatus.textContent = 'Upload completed successfully!';
+        } else {
+            uploadStatus.textContent = 'Upload failed. Please try again.';
         }
-
-        // Send folder structure to backend in a hidden input field
-        document.querySelector("#directories").value = JSON.stringify(directories);
     });
+
+    // Error event listener
+    xhr.addEventListener('error', function() {
+        uploadStatus.textContent = 'An error occurred during the upload.';
+    });
+
+    // Send the file and directory data
+    xhr.open('POST', '{% url "video:upload_video_folder" %}');
+    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+    xhr.send(formData);
+});
 </script>
