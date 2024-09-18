@@ -39,7 +39,6 @@ def upload_video_folder(request):
                 if file:
                     # Check if the file is empty (size == 0 bytes)
                     if file.size != 0:
-                        messages.warning(request, f"File '{file_name}' is empty and has been skipped.")
                     
                     
                         video_extensions = ['mp4', 'webm', 'mkv', 'avi', 'mov']
@@ -53,6 +52,8 @@ def upload_video_folder(request):
                             # Optionally, handle files that aren't valid video types
                             messages.warning(request, f"File '{file_name}' is not a valid video format.")
                     else:
+                        messages.warning(request, f"File '{file_name}' is empty and has been skipped.")
+
                         continue
                 else:
                     continue
