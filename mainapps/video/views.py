@@ -38,22 +38,24 @@ def upload_video_folder(request):
                 file = next((f for f in uploaded_folder if f.name == file_name), None)
                 if file:
                     # Check if the file is empty (size == 0 bytes)
-                    if file.size == 0:
+                    if file.size != 0:
                         messages.warning(request, f"File '{file_name}' is empty and has been skipped.")
-                        continue
                     
-                    # Ensure that the file has a valid video extension
-                    video_extensions = ['mp4', 'webm', 'mkv', 'avi', 'mov']
-                    if file.name.split('.')[-1].lower() in video_extensions:
-                        VideoClip.objects.create(
-                            title=file_name,
-                            video_file=file,
-                            category=parent
-                        )
+                    
+                        video_extensions = ['mp4', 'webm', 'mkv', 'avi', 'mov']
+                        if file.name.split('.')[-1].lower() in video_extensions:
+                            VideoClip.objects.create(
+                                title=file_name,
+                                video_file=file,
+                                category=parent
+                            )
+                        else:
+                            # Optionally, handle files that aren't valid video types
+                            messages.warning(request, f"File '{file_name}' is not a valid video format.")
                     else:
-                        # Optionally, handle files that aren't valid video types
-                        messages.warning(request, f"File '{file_name}' is not a valid video format.")
-        
+                        continue
+                else:
+                    continue
         messages.success(request, 'Files uploaded successfully!')
         return HttpResponse('Upload successful!')
 
