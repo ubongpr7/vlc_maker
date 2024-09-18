@@ -22,4 +22,7 @@ services:
       - "8000:8000"  # Expose port for your web service
     depends_on:
       - db
+    networks:
+      - vls_maker
+
 
