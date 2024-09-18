@@ -35,11 +35,12 @@
             border-radius: 8px;
             box-shadow: 0px 4px 4px -4px #0C0C0D0D;
             box-shadow: 0px 16px 32px -4px #0C0C0D1A;">
-            <form action="." style="
+            <form action="." method="post" style="
                 display: flex;
                 flex-direction: column;
                 row-gap: 48px;
                 ">
+                {% csrf_token %}
                 <div class="logo" style="
                     display: flex;
                     align-items: center;
