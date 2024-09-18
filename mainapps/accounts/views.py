@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from djstripe.settings import djstripe_settings
+from djstripe.models import Subscription
 # Create your views here.
 def login(request):
     
@@ -36,3 +39,11 @@ def payment_method(request):
     plan =request.POST.get('plan')
     automatic =request.POST.get('automatic')
     payment_meth =request.POST.get('payment_method')
+@login_required
+def embedded_pricing_page(request):
+    return render(request, 'accounts/embedded_stripe.html', 
+    #     {
+    #     'stripe_public_key': djstripe_settings.STRIPE_PUBLIC_KEY,
+    #     'stripe_pricing_table_id': settings.STRIPE_PRICING_TABLE_ID,
+    # }
+    )
