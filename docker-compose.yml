@@ -7,6 +7,9 @@ services:
       - POSTGRES_PASSWORD=postgres3
     ports:
       - "5432:5432"  # Expose port for PostgreSQL
+    networks:
+      - vls_maker
+
 
   web:
     image: nas415/vlc_maker:latest  # Use the local vlc_maker image
