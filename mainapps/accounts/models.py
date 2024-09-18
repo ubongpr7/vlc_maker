@@ -59,4 +59,4 @@ class StripeSubscription(models.Model):
 
 class MyStripeModel(models.Model):
     name = models.CharField(max_length=100)
-    stripe_subscription = models.ForeignKey(StripeSubscription, on_delete=models.SET_NULL)
+    stripe_subscription = models.ForeignKey(StripeSubscription, null=True, blank=True,on_delete=models.SET_NULL)
