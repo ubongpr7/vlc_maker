@@ -26,3 +26,6 @@ services:
       - vls_maker
 
 
+networks:
+  vls_maker:
+    driver: bridge
