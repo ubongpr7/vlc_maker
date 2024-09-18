@@ -31,7 +31,7 @@ DEFAULT_APPS = [
 THIRD_PARTY_APPS=[
     "bootstrap5",
     "django_htmx",
-    
+    # 'djstripe',
 ]
 MAIN_APPS=[
     'mainapps.video',
@@ -157,6 +157,12 @@ STRIPE_SECRET_KEY = 'your-secret-key'
 STRIPE_PUBLISHABLE_KEY = 'your-publishable-key'
 STRIPE_CLIENT_ID = 'your-stripe-connect-client-id'
 
+STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "<your publishable key>")
+STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
+STRIPE_LIVE_MODE = False
+# Needed for webhooks, which are discussed later in the guide.
+DJSTRIPE_WEBHOOK_SECRET = os.environ.get("DJSTRIPE_WEBHOOK_SECRET", "whsec_xxx")
+STRIPE_PRICING_TABLE_ID = "prctbl_1Nkn4YACsyNNXfUPmD4Nw2kL"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

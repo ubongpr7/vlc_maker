@@ -17,6 +17,7 @@ services:
       sh -c "
         python3.10 manage.py makemigrations &&
         python3.10 manage.py migrate &&
+        python3.10 manage.py djstripe_sync_models price &&
         python3.10 manage.py runserver 0.0.0.0:8000
       "
     volumes:
@@ -32,3 +33,8 @@ services:
 networks:
   vls_maker:
     driver: bridge
+env_file:
+  - .env
+environment:
+  - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+  - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}

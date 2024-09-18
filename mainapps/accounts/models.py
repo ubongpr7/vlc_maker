@@ -23,7 +23,14 @@ class User(AbstractUser):
     api_key = models.CharField(max_length=255, blank=True, null=True)
     allowed_videos = models.IntegerField(default=0)  # Number of videos allowed based on subscription
     generated_videos = models.IntegerField(default=0)  # Track how many videos the user has generated
-
+    # subscription = models.ForeignKey(
+    #     'djstripe.Subscription', null=True, blank=True, on_delete=models.SET_NULL,
+    #     help_text="The user's Stripe Subscription object, if it exists"
+    # )
+    # customer = models.ForeignKey(
+    #     'djstripe.Customer', null=True, blank=True, on_delete=models.SET_NULL,
+    #     help_text="The user's Stripe Customer object, if it exists"
+    # )    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
@@ -42,3 +49,14 @@ class SubscriptionPlan(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class StripeSubscription(models.Model):
+    start_date = models.DateTimeField(help_text="The start date of the subscription.")
+    status = models.CharField(max_length=20, help_text="The status of this subscription.")
+    # other data we need about the Subscription from Stripe goes here 
+
+
+class MyStripeModel(models.Model):
+    name = models.CharField(max_length=100)
+    stripe_subscription = models.ForeignKey(StripeSubscription, on_delete=models.SET_NULL)
