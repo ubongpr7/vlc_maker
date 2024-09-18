@@ -12,45 +12,6 @@ from pathlib import Path
 import json
 
 
-
-# @login_required
-# def upload_video_folder(request):
-#     if request.method == 'POST':
-#         if 'directories' not in request.POST:
-#             return render(request, 'upload.html', {'error': 'No directory data provided.'})
-
-#         uploaded_folder = request.FILES.getlist('folder')
-#         directories = json.loads(request.POST['directories'])  # Get folder structure from the frontend
-
-#         for folder_path, files in directories.items():
-#             folder_parts = folder_path.split('/')  # Split folder path into parts (subfolders)
-#             parent = None
-
-#             # Create categories and subcategories based on folder structure
-#             for folder_name in folder_parts:
-#                 category, created = ClipCategory.objects.get_or_create(
-#                     name=folder_name, parent=parent, user=request.user
-#                 )
-#                 parent = category  # Make the current folder the parent for the next iteration
-
-#             # Now save the files under the last category (deepest folder)
-#             for file_name in files:
-#                 file = next(f for f in uploaded_folder if f.name == file_name)
-#                 VideoClip.objects.create(
-#                     title=file_name,
-#                     video_file=file,
-#                     category=parent
-#                 )
-#         messages.success(request,'Files Upload Successgul!')
-#         return HttpResponse('Upload successgul!')
-
-#     return render(request, 'upload.html')
-
-
-
-
-
-
 @login_required
 def upload_video_folder(request):
     if request.method == 'POST':
@@ -59,9 +20,6 @@ def upload_video_folder(request):
 
         uploaded_folder = request.FILES.getlist('folder')
         directories = json.loads(request.POST['directories'])  # Get folder structure from the frontend
-
-        # Define allowed video extensions
-        allowed_extensions = ['mp4', 'webm', 'avi', 'mov', 'mkv', 'flv']
 
         for folder_path, files in directories.items():
             folder_parts = folder_path.split('/')  # Split folder path into parts (subfolders)
@@ -76,24 +34,76 @@ def upload_video_folder(request):
 
             # Now save the files under the last category (deepest folder)
             for file_name in files:
-                # Get the file based on the file name
-                file = next(f for f in uploaded_folder if f.name == file_name)
-
-                # Check if the file extension is in the allowed video extensions
-                file_extension = file_name.split('.')[-1].lower()  # Get file extension in lowercase
-                if file_extension in allowed_extensions:
-                    VideoClip.objects.create(
-                        title=file_name,
-                        video_file=file,
-                        category=parent
-                    )
-                else:
-                    messages.warning(request, f"{file_name} is not a valid video file and was not uploaded.")
+                # Filter uploaded files by name, also ensuring that the file is a valid video type
+                file = next((f for f in uploaded_folder if f.name == file_name), None)
+                if file:
+                    # Check if the file is empty (size == 0 bytes)
+                    if file.size == 0:
+                        messages.warning(request, f"File '{file_name}' is empty and has been skipped.")
+                        continue
+                    
+                    # Ensure that the file has a valid video extension
+                    video_extensions = ['mp4', 'webm', 'mkv', 'avi', 'mov']
+                    if file.name.split('.')[-1].lower() in video_extensions:
+                        VideoClip.objects.create(
+                            title=file_name,
+                            video_file=file,
+                            category=parent
+                        )
+                    else:
+                        # Optionally, handle files that aren't valid video types
+                        messages.warning(request, f"File '{file_name}' is not a valid video format.")
         
-        messages.success(request, 'Files Upload Successful!')
+        messages.success(request, 'Files uploaded successfully!')
         return HttpResponse('Upload successful!')
 
     return render(request, 'upload.html')
+
+
+
+# @login_required
+# def upload_video_folder(request):
+#     if request.method == 'POST':
+#         if 'directories' not in request.POST:
+#             return render(request, 'upload.html', {'error': 'No directory data provided.'})
+
+#         uploaded_folder = request.FILES.getlist('folder')
+#         directories = json.loads(request.POST['directories'])  # Get folder structure from the frontend
+
+#         # Define allowed video extensions
+#         allowed_extensions = ['mp4', 'webm', 'avi', 'mov', 'mkv', 'flv']
+
+#         for folder_path, files in directories.items():
+#             folder_parts = folder_path.split('/')  # Split folder path into parts (subfolders)
+#             parent = None
+
+#             # Create categories and subcategories based on folder structure
+#             for folder_name in folder_parts:
+#                 category, created = ClipCategory.objects.get_or_create(
+#                     name=folder_name, parent=parent, user=request.user
+#                 )
+#                 parent = category  # Make the current folder the parent for the next iteration
+
+#             # Now save the files under the last category (deepest folder)
+#             for file_name in files:
+#                 # Get the file based on the file name
+#                 file = next(f for f in uploaded_folder if f.name == file_name)
+
+#                 # Check if the file extension is in the allowed video extensions
+#                 file_extension = file_name.split('.')[-1].lower()  # Get file extension in lowercase
+#                 if file_extension in allowed_extensions:
+#                     VideoClip.objects.create(
+#                         title=file_name,
+#                         video_file=file,
+#                         category=parent
+#                     )
+#                 else:
+#                     messages.warning(request, f"{file_name} is not a valid video file and was not uploaded.")
+        
+#         messages.success(request, 'Files Upload Successful!')
+#         return HttpResponse('Upload successful!')
+
+#     return render(request, 'upload.html')
 
 
 
