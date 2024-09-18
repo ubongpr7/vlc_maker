@@ -84,7 +84,7 @@
             <div style="position: absolute; top: -50px; left: 594px;">Download</div>
         </div>
     </div>
-    
+    {% include 'partials/loading.html' %}    
     <div class="content" style="display: flex; justify-content: center; width: 100%; margin-bottom: 50px; z-index: 99; background: transparent;">
         <div style="width: 524px; padding: 40px 24px; background: white; border: 1px solid #0000004D; border-radius: 8px; display: flex; gap: 48px; flex-direction: column;">
             <div class="heading" style="display: flex; width: 100%; justify-content: center;">
@@ -96,7 +96,7 @@
                 
                 <div style="display: flex; background-color: #D9D9D9; width: 100%; height: 376px; border-radius: 8px; align-items: center; justify-content: center;">
                     <div id="videoPreviewContainer" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                        <video style="max-width: 100%; max-height: 100%;" controls>
+                        <video id="my-video" style="max-width: 100%; max-height: 100%;" controls>
                             
                             <source  src="{% url 'video_text:serve_file' file_name='final/w/final_output_'|add:textfile_id|add:'.mp4' %}" type="video/mp4">
                             
