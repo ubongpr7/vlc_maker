@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:14  # Use the local postgres image with tag 14
     environment:
-      - POSTGRES_DB=${POSTGRES}
-      - POSTGRES_USER=${POSTGRES}
-      - POSTGRES_PASSWORD=${POSTGRES}
+      - POSTGRES_DB=${POSTGRES_CRED}
+      - POSTGRES_USER=${POSTGRES_CRED}
+      - POSTGRES_PASSWORD=${POSTGRES_CRED}
     ports:
       - "5432:5432"  # Expose port for PostgreSQL
     networks:
