@@ -155,7 +155,9 @@ EMAIL_HOST_PASSWORD = "nmcmiwlgwdrwesef"
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_CLIENT_ID = 'your-stripe-connect-client-id'
-
+STRIP_PRO_PLAN_ID=os.getenv('STRIP_PRO_PLAN_ID')
+STRIP_GROWTH_PLAN_ID=os.getenv('STRIP_GROWTH_PLAN_ID')
+STRIP_STARTER_PLAN_ID=os.getenv('STRIP_STARTER_PLAN_ID')
 # STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "<your publishable key>")
 # STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
 STRIPE_LIVE_MODE = False

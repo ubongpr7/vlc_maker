@@ -35,6 +35,3 @@ networks:
     driver: bridge
 env_file:
   - .env
-environment:
-  - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-  - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
