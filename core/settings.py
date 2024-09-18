@@ -151,7 +151,8 @@ EMAIL_USE_TLS = False
 EMAIL_HOST_USER = "ubongpr7@gmail.com"
 EMAIL_HOST_PASSWORD = "nmcmiwlgwdrwesef"
 
-# settings.py
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"  # or "djstripe_id" if you're working with an existing database
+
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_CLIENT_ID = 'your-stripe-connect-client-id'
