@@ -41,7 +41,7 @@ def payment_method(request):
     payment_meth =request.POST.get('payment_method')
 @login_required
 def embedded_pricing_page(request):
-    return render(request, 'accounts/embedded_stripe.html', 
+    return render(request, 'accounts/embed_stripe.html', 
     #     {
     #     'stripe_public_key': djstripe_settings.STRIPE_PUBLIC_KEY,
     #     'stripe_pricing_table_id': settings.STRIPE_PRICING_TABLE_ID,
