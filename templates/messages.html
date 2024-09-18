@@ -46,4 +46,22 @@ color: #f57f17;
     {% for message in messages %}
         <div class="message {{ message.tags }}">{{ message }}</div>
     {% endfor %}
-        {% endif %}
+{% endif %}
+
+<script>
+    // Wait until the DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        // Select all message divs
+        const messages = document.querySelectorAll('#django-messages .message');
+
+        // Loop through each message and set a timeout to hide it
+        if (messages){
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.display = 'none';
+                }, 10000); // 10000 milliseconds = 10 seconds
+            });
+        });
+
+        }
+</script>
