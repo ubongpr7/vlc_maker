@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:14  # Use the local postgres image with tag 14
     environment:
-      - POSTGRES_DB=postgres3
-      - POSTGRES_USER=postgres3
-      - POSTGRES_PASSWORD=postgres3
+      - POSTGRES_DB=${POSTGRES}
+      - POSTGRES_USER=${POSTGRES}
+      - POSTGRES_PASSWORD=${POSTGRES}
     ports:
       - "5432:5432"  # Expose port for PostgreSQL
     networks:
@@ -33,5 +33,3 @@ services:
 networks:
   vls_maker:
     driver: bridge
-env_file:
-  - .env

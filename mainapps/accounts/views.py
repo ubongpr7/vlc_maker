@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
-
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 def login(request):
@@ -31,4 +31,8 @@ def login(request):
     return render(request,'accounts/login.html',)
 
 
-
+@require_POST
+def payment_method(request):
+    plan =request.POST.get('plan')
+    automatic =request.POST.get('automatic')
+    payment_meth =request.POST.get('payment_method')
