@@ -15,7 +15,7 @@ def login(request):
         
         if user is not None:
             # If the user exists, log them in
-            login(user)
+            login(request, user)
             messages.success(request, 'Successfully logged in!')
             return redirect('/text')  # Redirect to a 'home' page or any other page after login
         else:
