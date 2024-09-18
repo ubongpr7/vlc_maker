@@ -152,13 +152,12 @@ EMAIL_HOST_USER = "ubongpr7@gmail.com"
 EMAIL_HOST_PASSWORD = "nmcmiwlgwdrwesef"
 
 # settings.py
-
-STRIPE_SECRET_KEY = 'your-secret-key'
-STRIPE_PUBLISHABLE_KEY = 'your-publishable-key'
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_CLIENT_ID = 'your-stripe-connect-client-id'
 
-STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "<your publishable key>")
-STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
+# STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "<your publishable key>")
+# STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
 STRIPE_LIVE_MODE = False
 # Needed for webhooks, which are discussed later in the guide.
 DJSTRIPE_WEBHOOK_SECRET = os.environ.get("DJSTRIPE_WEBHOOK_SECRET", "whsec_xxx")
