@@ -40,7 +40,7 @@ def text_file_upload_path(instance, filename):
     filename = f'{uuid.uuid4()}.{ext}'  # Use UUID to ensure unique file names
     if instance.id:
         return os.path.join('text_files', 'new', filename)
-    return os.path.join('text_files', str(instance.id), filename)
+    return os.path.join('text_files', filename)
 
 def font_file_upload_path(instance, filename):
     """Generate a unique file path for uploaded custom fonts."""
