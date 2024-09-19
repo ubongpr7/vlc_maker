@@ -6,3 +6,4 @@ dj-static
 static-ranges
 stripe
 dj-stripe
+django-smtp-ssl
