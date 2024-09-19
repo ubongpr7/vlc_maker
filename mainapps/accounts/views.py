@@ -192,7 +192,7 @@ def stripe_webhook(request):
 
 
 def subscription_confirm(request):
-    stripe_api_key = APIKey.objects.filter(livemode=True,type="secret").first()
+    stripe_api_key = APIKey.objects.filter(livemode=False,type="secret").first()
     if not stripe_api_key:
         messages.error(request, "Stripe API key not found.")
         return HttpResponseRedirect(reverse("subscription_details"))
