@@ -189,13 +189,11 @@ def stripe_webhook(request):
 #         return HttpResponseRedirect(reverse("subscription_details"))
 
 
-
-
 def subscription_confirm(request):
-    stripe_api_key = APIKey.objects.filter(livemode=False,type="secret").first()
+    stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
     if not stripe_api_key:
         messages.error(request, "Stripe API key not found.")
-        return HttpResponseRedirect(reverse("/"))
+        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     # Set the Stripe API key dynamically
     stripe.api_key = stripe_api_key.secret
@@ -204,7 +202,7 @@ def subscription_confirm(request):
     session_id = request.GET.get("session_id")
     if not session_id:
         messages.error(request, "Session ID is missing.")
-        return HttpResponseRedirect(reverse("/"))
+        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     try:
         # Retrieve session data from Stripe
@@ -217,8 +215,8 @@ def subscription_confirm(request):
         # Try to find an existing user or create a new one
         User = get_user_model()
         user, created = User.objects.get_or_create(email=customer_email, defaults={
-            'username': customer_email,  # Adjust to your needs
-            'password': User.objects.make_random_password(),  # Auto-generate password
+            'username': customer_email,
+            'password': User.objects.make_random_password(),
         })
 
         # Sync the subscription from Stripe
@@ -239,13 +237,15 @@ def subscription_confirm(request):
         else:
             messages.success(request, "Your subscription was successfully updated!")
 
-        return HttpResponseRedirect(reverse("/text"))
+        return HttpResponseRedirect(reverse("text:add_text"))  # Update with correct view name
 
     except stripe.error.StripeError as e:
         # Handle errors from Stripe
         messages.error(request, f"Stripe error: {e}")
-        return HttpResponseRedirect(reverse("/text"))
+        return HttpResponseRedirect(reverse("text"))  # Update with correct view name
 
     except IntegrityError:
         messages.error(request, "Error creating your account. Please contact support.")
-        return HttpResponseRedirect(reverse("/"))
+        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+
