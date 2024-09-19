@@ -233,7 +233,7 @@ def subscription_confirm(request):
         else:
             messages.success(request, "Your subscription was successfully updated!")
 
-        return HttpResponseRedirect(reverse("text:add_text"))  # Update with correct view name
+        return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
 
     except stripe.error.StripeError as e:
         # Handle Stripe-related errors
