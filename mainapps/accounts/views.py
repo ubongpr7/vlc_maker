@@ -228,8 +228,8 @@ def subscription_confirm(request):
         user.customer, _ = Customer.get_or_create(subscriber=user)
         user.save()
 
-        # Automatically log the user in (optional)
-        login(request, user)
+        auth_login(request, user)
+        
 
         # Success message and redirect to a page
         if created:
