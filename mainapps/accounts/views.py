@@ -299,7 +299,7 @@ def subscription_confirm(request):
         )
         # Sync the subscription from Stripe
         subscription = stripe.Subscription.retrieve(str(subscription_id))
-        djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
+        djstripe_subscription = Subscription.sync_from_stripe_data(str(subscription))
 
         # Set the subscription on the user model (if needed)
         user.subscription = djstripe_subscription
