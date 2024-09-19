@@ -3,6 +3,9 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
+from django.conf import settings
+from datetime import datetime, timedelta
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -25,7 +28,8 @@ class User(AbstractUser):
     generated_videos = models.IntegerField(default=0)  # Track how many videos the user has generated
     subscription = models.ForeignKey(
         'djstripe.Subscription', null=True, blank=True, on_delete=models.SET_NULL,
-        help_text="The user's Stripe Subscription object, if it exists"
+        help_text="The user's Stripe Subscription object, if it exists",
+        related_name='subscriber'
     )
     customer = models.ForeignKey(
         'djstripe.Customer', null=True, blank=True, on_delete=models.SET_NULL,
@@ -60,3 +64,33 @@ class StripeSubscription(models.Model):
 class MyStripeModel(models.Model):
     name = models.CharField(max_length=100)
     stripe_subscription = models.ForeignKey(StripeSubscription, null=True, blank=True,on_delete=models.SET_NULL)
+
+
+class Credit(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    credits = models.IntegerField(default=0)
+    last_reset = models.DateTimeField(auto_now_add=True)
+
+    def deduct_credits(self, amount):
+        if self.credits >= amount:
+            self.credits -= amount
+            self.save()
+            return True
+        return False
+
+    def reset_credits(self, monthly_credits):
+        # Check if the last reset was more than a month ago
+        if (datetime.now() - self.last_reset) >= timedelta(days=30):
+            self.credits = monthly_credits
+            self.last_reset = datetime.now()
+            self.save()
+
+
+
+class VlcPlan(models.Model):
+    name = models.CharField(max_length=100)
+    stripe_plan_id = models.CharField(max_length=100)  # Stripe plan identifier
+    monthly_credits = models.IntegerField(default=10)  # Number of credits per month
+
+    def __str__(self):
+        return self.name
