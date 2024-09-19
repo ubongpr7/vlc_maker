@@ -189,6 +189,67 @@ def stripe_webhook(request):
 #         return HttpResponseRedirect(reverse("subscription_details"))
 
 
+# def subscription_confirm(request):
+#     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
+#     if not stripe_api_key:
+#         messages.error(request, "Stripe API key not found.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     # Set the Stripe API key dynamically
+#     stripe.api_key = str(stripe_api_key.secret)
+
+#     # Get the session ID from the URL
+#     session_id = str(request.GET.get("session_id"))
+#     if not session_id:
+#         messages.error(request, "Session ID is missing.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     try:
+#         # Retrieve session data from Stripe
+#         session = stripe.checkout.Session.retrieve(session_id)
+
+#         # Extract customer email from the session
+#         customer_email = session.customer_details.email
+#         subscription_id = session.subscription
+
+#         # Try to find an existing user or create a new one
+#         User = get_user_model()
+#         user, created = User.objects.get_or_create(email=customer_email, defaults={
+#             'username': customer_email,
+#             'password': User.objects.make_random_password(),
+#         })
+
+#         # Sync the subscription from Stripe
+#         subscription = stripe.Subscription.retrieve(subscription_id)
+#         djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
+
+#         # Set the subscription and customer on the user model
+#         user.subscription = djstripe_subscription
+#         user.customer, _ = Customer.get_or_create(subscriber=user)
+#         user.save()
+
+#         auth_login(request, user)
+        
+
+#         # Success message and redirect to a page
+#         if created:
+#             messages.success(request, "You've successfully signed up, and an account was created for you!")
+#         else:
+#             messages.success(request, "Your subscription was successfully updated!")
+
+#         return HttpResponseRedirect(reverse("text:add_text"))  # Update with correct view name
+
+#     except stripe.error.StripeError as e:
+#         # Handle errors from Stripe
+#         messages.error(request, f"Stripe error: {e}")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     except IntegrityError:
+#         messages.error(request, "Error creating your account. Please contact support.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+
+
 def subscription_confirm(request):
     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
     if not stripe_api_key:
@@ -196,43 +257,52 @@ def subscription_confirm(request):
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     # Set the Stripe API key dynamically
-    stripe.api_key = stripe_api_key.secret
+    stripe.api_key = str(stripe_api_key.secret)
 
     # Get the session ID from the URL
-    session_id = str(request.GET.get("session_id"))
+    session_id = request.GET.get("session_id")
     if not session_id:
         messages.error(request, "Session ID is missing.")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     try:
-        # Retrieve session data from Stripe
+        # Retrieve the session from Stripe
         session = stripe.checkout.Session.retrieve(session_id)
 
-        # Extract customer email from the session
+        # Extract customer email and subscription ID from the session
         customer_email = session.customer_details.email
         subscription_id = session.subscription
 
-        # Try to find an existing user or create a new one
+        # Retrieve or create the customer from Stripe data
+        stripe_customer = stripe.Customer.retrieve(session.customer)
+        djstripe_customer, created = Customer.get_or_create(
+            id=stripe_customer.id, defaults={'subscriber': None}
+        )
+
+        # Check if there's an existing user or create a new one based on the customer email
         User = get_user_model()
-        user, created = User.objects.get_or_create(email=customer_email, defaults={
+        user, user_created = User.objects.get_or_create(email=customer_email, defaults={
             'username': customer_email,
             'password': User.objects.make_random_password(),
         })
+
+        # Link the user to the Stripe customer
+        djstripe_customer.subscriber = user
+        djstripe_customer.save()
 
         # Sync the subscription from Stripe
         subscription = stripe.Subscription.retrieve(subscription_id)
         djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
 
-        # Set the subscription and customer on the user model
+        # Set the subscription on the user model (if needed)
         user.subscription = djstripe_subscription
-        user.customer, _ = Customer.get_or_create(subscriber=user)
         user.save()
 
+        # Automatically log the user in
         auth_login(request, user)
-        
 
-        # Success message and redirect to a page
-        if created:
+        # Success message
+        if user_created:
             messages.success(request, "You've successfully signed up, and an account was created for you!")
         else:
             messages.success(request, "Your subscription was successfully updated!")
@@ -240,12 +310,16 @@ def subscription_confirm(request):
         return HttpResponseRedirect(reverse("text:add_text"))  # Update with correct view name
 
     except stripe.error.StripeError as e:
-        # Handle errors from Stripe
+        # Handle Stripe-related errors
         messages.error(request, f"Stripe error: {e}")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     except IntegrityError:
+        # Handle database errors
         messages.error(request, "Error creating your account. Please contact support.")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
-
+    except Exception as e:
+        # Catch any other unforeseen errors
+        messages.error(request, "An unexpected error occurred.")
+        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
