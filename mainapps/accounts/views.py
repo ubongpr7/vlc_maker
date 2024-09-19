@@ -21,6 +21,38 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 
 
+
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+def send_registration_email(user, password, request):
+    subject = 'Welcome to Our Platform!'
+    from_email = 'no-reply@example.com'
+    to = user.email
+    
+    # Prepare the context for the email template
+    context = {
+        'user': user,
+        'password': password,
+        'password_reset_link': request.build_absolute_uri(reverse('password_reset'))
+    }
+    
+    # Render the HTML template
+    html_content = render_to_string('partials/regiter_email.html', context)
+    text_content = strip_tags(html_content)  # Fallback for plain text email
+
+    # Create the email
+    email = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    email.attach_alternative(html_content, "text/html")
+    
+    # Send the email
+    email.send()
+
+
+
+
 # Create your views here.
 def login(request):
     
@@ -54,7 +86,11 @@ def payment_method(request):
     plan =request.POST.get('plan')
     automatic =request.POST.get('automatic')
     payment_meth =request.POST.get('payment_method')
-# @login_required
+
+
+
+
+
 def embedded_pricing_page(request):
     return render(request, 'accounts/embed_stripe.html', 
     #     {
@@ -181,7 +217,7 @@ def subscription_confirm(request):
         # Try to find an existing user or create a new one
         User = get_user_model()
         user, created = User.objects.get_or_create(email=customer_email, defaults={
-            'username': customer_email.split("@")[0],  # Adjust to your needs
+            'username': customer_email,  # Adjust to your needs
             'password': User.objects.make_random_password(),  # Auto-generate password
         })
 
