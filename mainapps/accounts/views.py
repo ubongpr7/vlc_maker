@@ -279,7 +279,7 @@ def subscription_confirm(request):
         # Extract customer email and subscription ID from the session
         customer_email = session.customer_details.email
         subscription_id = session.subscription
-
+        customer_name = session.customer_details.name  # Get the name
         # Retrieve or create the customer from Stripe data
         stripe_customer = stripe.Customer.retrieve(session.customer)
 
@@ -288,14 +288,17 @@ def subscription_confirm(request):
         user, user_created = User.objects.get_or_create(email=customer_email, defaults={
             'username': customer_email,
             'password': User.objects.make_random_password(),
+            'first_name': customer_name.split()[0] if customer_name else "",  # Save first name
+            'last_name': " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else "",  # Save last name
         })
+
 
         # Link the user to the Stripe customer
         djstripe_customer, created = Customer.get_or_create(
             subscriber=user
         )
         # Sync the subscription from Stripe
-        subscription = stripe.Subscription.retrieve(subscription_id)
+        subscription = stripe.Subscription.retrieve(str(subscription_id))
         djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
 
         # Set the subscription on the user model (if needed)
