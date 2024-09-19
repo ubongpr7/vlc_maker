@@ -242,7 +242,7 @@ def subscription_confirm(request):
     except stripe.error.StripeError as e:
         # Handle errors from Stripe
         messages.error(request, f"Stripe error: {e}")
-        return HttpResponseRedirect(reverse("text"))  # Update with correct view name
+        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     except IntegrityError:
         messages.error(request, "Error creating your account. Please contact support.")
