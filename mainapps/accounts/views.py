@@ -199,7 +199,7 @@ def subscription_confirm(request):
     stripe.api_key = stripe_api_key.secret
 
     # Get the session ID from the URL
-    session_id = request.GET.get("session_id")
+    session_id = str(request.GET.get("session_id"))
     if not session_id:
         messages.error(request, "Session ID is missing.")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
