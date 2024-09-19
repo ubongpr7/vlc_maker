@@ -138,6 +138,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
 
 STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
+DOMAIN_NAME = "http://153.92.208.98:8000"
 
 MEDIA_URL = '/media/'
 MEDIAFILES_DIRS=[os.path.join(BASE_DIR,'media')]
@@ -145,25 +146,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465  
+EMAIL_PORT = 465  # SSL port
 EMAIL_USE_SSL = True
-EMAIL_USE_TLS = False
-EMAIL_HOST_USER = "ubongpr7@gmail.com"
-EMAIL_HOST_PASSWORD = "nmcmiwlgwdrwesef"
-
+EMAIL_USE_TLS = False  # Don't use TLS since you are using SSL
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Default 'from' email address
 
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 STRIPE_LIVE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
-# STRIPE_CLIENT_ID = 'your-stripe-connect-client-id'
-# STRIP_PRO_PLAN_ID=os.getenv('STRIP_PRO_PLAN_ID')
-# STRIP_GROWTH_PLAN_ID=os.getenv('STRIP_GROWTH_PLAN_ID')
-# STRIP_STARTER_PLAN_ID=os.getenv('STRIP_STARTER_PLAN_ID')
 
 STRIPE_PRICING_TABLE_ID = "prctbl_1PzmCnEt5xiNvM25Ro8qIuJs"
 
-# STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "<your secret key>")
-# STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
-STRIPE_LIVE_MODE = True  # Change to True in production
 DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"  # Get it from the section in the Stripe dashboard where you added the webhook endpoint
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

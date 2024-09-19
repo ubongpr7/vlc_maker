@@ -6,6 +6,7 @@ from djstripe.settings import djstripe_settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth import get_user_model
+from mainapps.accounts.emails import send_user_password_email
 from mainapps.accounts.models import Credit
 import stripe
 
@@ -31,6 +32,8 @@ from django.urls import reverse
 from djstripe.models import Subscription, Customer, Product
 from django.utils.timezone import now
 
+from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
 
 
 from django.core.mail import EmailMultiAlternatives
@@ -60,6 +63,17 @@ def send_registration_email(user, password, request):
     # Send the email
     email.send()
 
+from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
+
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    success_url = reverse_lazy('password_reset_done')
+
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
 
 
 
@@ -231,6 +245,7 @@ def subscription_confirm(request):
                 user.save()
             messages.success(request, "You've successfully signed up, and an account was created for you!")
         else:
+            send_user_password_email(user)
             messages.success(request, "Your subscription was successfully updated!")
 
         return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
@@ -249,3 +264,15 @@ def subscription_confirm(request):
         # Catch any other unforeseen errors
         messages.error(request, f"An unexpected error occurred.{e}")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+
+
+
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    success_url = reverse_lazy('password_reset_done')
+
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
