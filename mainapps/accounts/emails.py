@@ -52,6 +52,6 @@ def send_user_password_email(user):
         message="Click the link below to reset your password:",
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_email=user.email,
-        html_file='password_email.html',  # Path to your HTML email template
+        html_file='accounts/password_reset.html',  # Path to your HTML email template
         context=context
     )
