@@ -249,6 +249,13 @@ def stripe_webhook(request):
 #         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
 
+from djstripe.models import Subscription, Customer
+from django.contrib.auth import login as auth_login
+from django.db import IntegrityError
+import stripe
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 def subscription_confirm(request):
     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
@@ -321,5 +328,5 @@ def subscription_confirm(request):
 
     except Exception as e:
         # Catch any other unforeseen errors
-        messages.error(request, "An unexpected error occurred.")
+        messages.error(request, f"An unexpected error occurred.{e}")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
