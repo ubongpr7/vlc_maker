@@ -1,5 +1,9 @@
+{% extends 'wrapper/base.html' %}
 
+
+{% endblock extra_script %}
 <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-<stripe-pricing-table pricing-table-id="prctbl_1PzmCnEt5xiNvM25Ro8qIuJs"
-publishable-key="pk_live_51PxpLrEt5xiNvM25OEEzt1jP6gULHxWzPvGRbwWPJoRZQV9kiqoGQY3RBKzihW3oz004j6nCEDhK2cVaUMzpJcCi00PUMinPRg">
-</stripe-pricing-table>
+    <stripe-pricing-table pricing-table-id="prctbl_1PzmCnEt5xiNvM25Ro8qIuJs"
+    publishable-key="pk_live_51PxpLrEt5xiNvM25OEEzt1jP6gULHxWzPvGRbwWPJoRZQV9kiqoGQY3RBKzihW3oz004j6nCEDhK2cVaUMzpJcCi00PUMinPRg">
+    </stripe-pricing-table>
+{% endblock script %}
