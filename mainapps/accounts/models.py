@@ -2,6 +2,9 @@
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from djstripe.models import Product
+from django.utils.timezone import now
+from datetime import timedelta
 
 from django.conf import settings
 from datetime import datetime, timedelta
@@ -68,6 +71,7 @@ class MyStripeModel(models.Model):
 
 class Credit(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,null=True,blank=True, on_delete=models.SET_NULL)
     credits = models.IntegerField(default=0)
     last_reset = models.DateTimeField(auto_now_add=True)
 
@@ -79,11 +83,23 @@ class Credit(models.Model):
         return False
 
     def reset_credits(self, monthly_credits):
-        # Check if the last reset was more than a month ago
-        if (datetime.now() - self.last_reset) >= timedelta(days=30):
+        if (now() - self.last_reset) >= timedelta(days=30):
             self.credits = monthly_credits
-            self.last_reset = datetime.now()
+            self.last_reset = now()
             self.save()
+
+    @classmethod
+    def create_or_update_credit(cls, user, product, credits):
+        # If user already has a credit linked to a different product, delete it
+        Credit.objects.filter(user=user).exclude(product=product).delete()
+        
+        # Create or update credit linked to the current product
+        credit, created = cls.objects.update_or_create(
+            user=user,
+            product=product,
+            defaults={'credits': credits, 'last_reset': now()}
+        )
+        return credit
 
 
 
