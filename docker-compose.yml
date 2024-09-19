@@ -18,7 +18,7 @@ services:
         python3.10 manage.py makemigrations &&
         python3.10 manage.py migrate &&
         python3.10 manage.py migrate djstripe &&
-        python3.10 manage.py djstripe_sync_models price &&
+        python3.10 manage.py djstripe_sync_models price Invoice Subscription &&
         python3.10 manage.py runserver 0.0.0.0:8000
       "
     volumes:
