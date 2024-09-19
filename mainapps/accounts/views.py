@@ -282,9 +282,6 @@ def subscription_confirm(request):
 
         # Retrieve or create the customer from Stripe data
         stripe_customer = stripe.Customer.retrieve(session.customer)
-        djstripe_customer, created = Customer.get_or_create(
-            defaults={'subscriber': None}
-        )
 
         # Check if there's an existing user or create a new one based on the customer email
         User = get_user_model()
@@ -294,9 +291,9 @@ def subscription_confirm(request):
         })
 
         # Link the user to the Stripe customer
-        djstripe_customer.subscriber = user
-        djstripe_customer.save()
-
+        djstripe_customer, created = Customer.get_or_create(
+            subscriber=user
+        )
         # Sync the subscription from Stripe
         subscription = stripe.Subscription.retrieve(subscription_id)
         djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
