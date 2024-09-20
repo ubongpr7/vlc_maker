@@ -245,10 +245,15 @@ class Command(BaseCommand):
             # Output SRT file path (temp_srt will hold the generated SRT content)
             output_srt_file_path = temp_srt.name
 
-            # Run the Aeneas command to generate SRT
-            command = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
-                    f'"task_language=eng|is_text_type=plain|os_task_file_format=srt" "{output_srt_file_path}"'
+            # # Run the Aeneas command to generate SRT
+            # command = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
+            #         f'"task_language=eng|is_text_type=plain|os_task_file_format=srt" "{output_srt_file_path}"'
 
+            command = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
+              f'"task_language=eng|is_text_type=plain|os_task_file_format=json" "{output_srt_file_path}"'
+
+            print(command)
+            
             try:
                 logging.info(f'Running command: {command}')
                 result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
