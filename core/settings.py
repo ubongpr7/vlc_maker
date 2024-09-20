@@ -94,7 +94,7 @@ DATABASES = {
 'NAME': 'vsl_db2',
 'USER': 'ubongpr7',
 'PASSWORD':  os.getenv('DB_PASSWORD'),
-'HOST': 'vls-db2.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
+'HOST': 'database-1.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
 'PORT': '5432',
 }
 }
