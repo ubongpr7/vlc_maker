@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from djstripe.settings import djstripe_settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth import get_user_model
@@ -11,7 +10,8 @@ from mainapps.accounts.models import Credit
 import stripe
 
 from django.contrib.auth import get_user_model
-from djstripe.models import Subscription, Customer,APIKey
+# from djstripe.settings import djstripe_settings
+# from djstripe.models import Subscription, Customer,APIKey
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -22,7 +22,6 @@ from django.views.decorators.csrf import csrf_exempt
 # Set the Stripe secret key
 from django.http import HttpResponse
 
-from djstripe.models import Subscription, Customer
 from django.contrib.auth import login as auth_login
 from django.db import IntegrityError
 import stripe
