@@ -222,9 +222,17 @@ class Command(BaseCommand):
 
 
         # Instead of manually saving the file, save it using Django's FileField
-            audio_file_name = f"/{timestamp}_{self.text_file_instance.id}_audio.mp3"
+ # Check if the generated_audio field already contains a file, and delete it if it does
+            if self.text_file_instance.generated_audio:
+                self.text_file_instance.generated_audio.delete(save=False)  # Delete the old file, don't save yet
+
+            # Create a new file name for the audio (no leading /)
+            audio_file_name = f"{timestamp}_{self.text_file_instance.id}_audio.mp3"
+
+            # Save the new file to Django's FileField (linked to S3 storage)
             self.text_file_instance.generated_audio.save(audio_file_name, ContentFile(audio_data))
 
+        # Return the URL to
             return self.text_file_instance.generated_audio  # This will return the URL managed by Django's FileField
         except Exception as e:
             print(e)
