@@ -10,6 +10,8 @@ import os
 from django.core.files.storage import FileSystemStorage
 from pathlib import Path
 import json
+from django.urls import reverse
+
 
 
 @login_required
@@ -63,56 +65,6 @@ def upload_video_folder(request):
     return render(request, 'upload.html')
 
 
-
-# @login_required
-# def upload_video_folder(request):
-#     if request.method == 'POST':
-#         if 'directories' not in request.POST:
-#             return render(request, 'upload.html', {'error': 'No directory data provided.'})
-
-#         uploaded_folder = request.FILES.getlist('folder')
-#         directories = json.loads(request.POST['directories'])  # Get folder structure from the frontend
-
-#         # Define allowed video extensions
-#         allowed_extensions = ['mp4', 'webm', 'avi', 'mov', 'mkv', 'flv']
-
-#         for folder_path, files in directories.items():
-#             folder_parts = folder_path.split('/')  # Split folder path into parts (subfolders)
-#             parent = None
-
-#             # Create categories and subcategories based on folder structure
-#             for folder_name in folder_parts:
-#                 category, created = ClipCategory.objects.get_or_create(
-#                     name=folder_name, parent=parent, user=request.user
-#                 )
-#                 parent = category  # Make the current folder the parent for the next iteration
-
-#             # Now save the files under the last category (deepest folder)
-#             for file_name in files:
-#                 # Get the file based on the file name
-#                 file = next(f for f in uploaded_folder if f.name == file_name)
-
-#                 # Check if the file extension is in the allowed video extensions
-#                 file_extension = file_name.split('.')[-1].lower()  # Get file extension in lowercase
-#                 if file_extension in allowed_extensions:
-#                     VideoClip.objects.create(
-#                         title=file_name,
-#                         video_file=file,
-#                         category=parent
-#                     )
-#                 else:
-#                     messages.warning(request, f"{file_name} is not a valid video file and was not uploaded.")
-        
-#         messages.success(request, 'Files Upload Successful!')
-#         return HttpResponse('Upload successful!')
-
-#     return render(request, 'upload.html')
-
-
-
-
-
-
 @login_required
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
@@ -156,19 +108,22 @@ def add_video_clips(request, textfile_id):
                     )
                 else:
                     messages.error(request,"You did not choose the clips completely")
-                    return redirect(f'/video/add-scene/{textfile_id}')
+                    return redirect(reverse('video:add_scenes', args=[textfile_id]))
+                
 
 
             TextLineVideoClip.objects.bulk_create(video_clips_data)
+            
             return redirect(f'/text/process-textfile/{textfile_id}')  # Redirect to a success page or another appropriate view
 
         elif request.POST.get('purpose') == 'text_file':
             if request.FILES.get('text_file'):
                 text_file.text_file=request.FILES.get('text_file')
                 text_file.save()
-                return redirect(f'/video/add-scene/{textfile_id}')
+                return redirect(reverse('video:add_scenes', args=[textfile_id]))
+            
             messages.error(request,'You did not upload text file')
-            return redirect(f'/video/add-scene/{textfile_id}')
+            return redirect(reverse('video:add_scenes', args=[textfile_id]))
 
 
     else:

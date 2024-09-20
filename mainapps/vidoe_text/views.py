@@ -12,6 +12,7 @@ from django.http import HttpResponse, JsonResponse, Http404
 from django.conf import settings
 from .models import TextFile, TextLineVideoClip
 from threading import Timer
+from django.urls import reverse
 
 from django.http import StreamingHttpResponse, Http404
 import os
@@ -159,8 +160,8 @@ def process_background_music(request, textfile_id):
 
 
 
+        return redirect(reverse('video:add_scenes', args=[textfile_id]))
 
-        return redirect(f'/text/progress_page/bg_music/{textfile_id}')
     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id})
 
 def clean_progress_file(text_file_id):
@@ -269,7 +270,8 @@ def process_textfile(request, textfile_id):
         return JsonResponse({"error": f"Error running subprocess: {str(e)}"}, status=500)
 
     # Return success message
-    return redirect(f'/text/progress_page/build/{textfile_id}')
+    return redirect(reverse('video_text:progress', args=['build',textfile_id]))
+    
 
 @login_required
 def add_text(request):
@@ -296,7 +298,8 @@ def add_text(request):
                     font_size=font_size,
                     font_color=font_color
                 )
-                return redirect(f'/video/add-scene/{text_obj.id}')  # Redirect to a success page or another URL
+                return redirect(reverse('video:add_scenes', args=[text_obj.id]))
+
             else:
                 messages.error(request,'Please provide all required fields.')
                 return render(request, 'vlc/frontend/VLSMaker/index.html', {
