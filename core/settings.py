@@ -91,10 +91,10 @@ DATABASES = {
 DATABASES = {
 'default': {
 'ENGINE': 'django.db.backends.postgresql',
-'NAME': 'vsl_db2',
+'NAME': 'vlcdb',
 'USER': 'ubongpr7',
 'PASSWORD':  os.getenv('DB_PASSWORD'),
-'HOST': 'database-1.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
+'HOST': 'vlcdb.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
 'PORT': '5432',
 }
 }
