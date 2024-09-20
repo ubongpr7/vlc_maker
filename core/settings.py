@@ -31,7 +31,7 @@ DEFAULT_APPS = [
 THIRD_PARTY_APPS=[
     "bootstrap5",
     "django_htmx",
-    'djstripe',
+    # 'djstripe',
     'storages',
 ]
 MAIN_APPS=[
