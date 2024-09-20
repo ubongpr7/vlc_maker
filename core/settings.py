@@ -91,13 +91,14 @@ DATABASES = {
 DATABASES = {
 'default': {
 'ENGINE': 'django.db.backends.postgresql',
-'NAME': 'vlsfree',
+'NAME': 'vsl_db2',
 'USER': 'ubongpr7',
-'PASSWORD': 'prosujatPr7',
-'HOST': 'vlsfree.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
-'PORT': 5432,
+'PASSWORD':  os.getenv('DB_PASSWORD'),
+'HOST': 'vls-db2.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
+'PORT': '5432',
 }
 }
+
 AUTH_USER_MODEL='accounts.User'
 
 # Password validation
