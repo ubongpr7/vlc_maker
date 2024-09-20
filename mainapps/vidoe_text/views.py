@@ -60,23 +60,22 @@ def is_api_key_valid(api_key,voice_id):
         
     return x,y
 
-from djstripe.models import Subscription
+# from djstripe.models import Subscription
 from mainapps.accounts.models import Credit,VlcPlan
 
 def reset_user_credits(user):
-    # Get the user's current subscription
-    subscription = Subscription.objects.filter(subscriber=user).first()
+    # # Get the user's current subscription
     
-    if subscription and subscription.plan:
-        # Fetch the plan's monthly credits
-        plan = VlcPlan.objects.get(stripe_plan_id=subscription.plan.id)
-        monthly_credits = plan.monthly_credits
+    # if subscription and subscription.plan:
+    #     # Fetch the plan's monthly credits
+    #     plan = VlcPlan.objects.get(stripe_plan_id=subscription.plan.id)
+    #     monthly_credits = plan.monthly_credits
         
-        # Reset the user's credits based on their plan
-        user_credit, created = Credit.objects.get_or_create(user=user)
-        user_credit.reset_credits(monthly_credits)
-    else:
-        # Handle case when the user has no active subscription
+    #     # Reset the user's credits based on their plan
+    #     user_credit, created = Credit.objects.get_or_create(user=user)
+    #     user_credit.reset_credits(monthly_credits)
+    # else:
+    #     # Handle case when the user has no active subscription
         pass
 
 def convert_to_seconds(time_str):
