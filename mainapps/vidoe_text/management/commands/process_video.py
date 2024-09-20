@@ -84,7 +84,7 @@ class Command(BaseCommand):
     
         timestamp = int(time.time())
 
-        output_audio_file = f'{timestamp}_{text_file_id}_audio.mp3'
+        output_audio_file = os.path.join(base_path,'audio',f'{timestamp}_{text_file_id}_audio.mp3')
 
         audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
         print(f'audio_file: ',audio_file)
