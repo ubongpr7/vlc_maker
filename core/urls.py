@@ -10,5 +10,5 @@ urlpatterns = [
     path('', include('mainapps.home.urls',namespace='home')),
     path('video/', include('mainapps.video.urls',namespace='video')),
     path('text/', include('mainapps.vidoe_text.urls',namespace='video_text')),
-    # path("stripe/", include("djstripe.urls", namespace="djstripe")),
+    path("stripe/", include("djstripe.urls", namespace="djstripe")),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
