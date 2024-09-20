@@ -254,39 +254,39 @@ class Command(BaseCommand):
 
             print(command)
             
-            try:
-                logging.info(f'Running command: {command}')
-                result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            # try:
+            #     logging.info(f'Running command: {command}')
+            #     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-                # Log command output
-                logging.info(f'Command output: {result.stdout}')
-                logging.error(f'Command error (if any): {result.stderr}')
+            #     # Log command output
+            #     logging.info(f'Command output: {result.stdout}')
+            #     logging.error(f'Command error (if any): {result.stderr}')
 
-                # Check for errors in subprocess execution
-                if result.returncode == 0:
-                    logging.info(f'SRT content generated successfully')
+            #     # Check for errors in subprocess execution
+            #     if result.returncode == 0:
+            #         logging.info(f'SRT content generated successfully')
 
-                    # Read the generated SRT content from the output file
-                    with open(output_srt_file_path, 'r') as srt_file:
-                        srt_content = srt_file.read()
+            #         # Read the generated SRT content from the output file
+            #         with open(output_srt_file_path, 'r') as srt_file:
+            #             srt_content = srt_file.read()
 
-                    srt_file_name = f"{text_file_instance.id}_generated.srt"
+            #         srt_file_name = f"{text_file_instance.id}_generated.srt"
 
-                    # If there is an existing SRT file, delete it first
-                    if text_file_instance.srt_file:
-                        text_file_instance.srt_file.delete(save=False)
+            #         # If there is an existing SRT file, delete it first
+            #         if text_file_instance.srt_file:
+            #             text_file_instance.srt_file.delete(save=False)
 
-                    # Save the new SRT content to the srt_file field
-                    text_file_instance.srt_file.save(srt_file_name, ContentFile(srt_content))
+            #         # Save the new SRT content to the srt_file field
+            #         text_file_instance.generated_srt.save(srt_file_name, ContentFile(srt_content))
 
-                    logging.info(f'SRT file saved to instance: {srt_file_name}')
-                    return True
-                else:
-                    logging.error(f'Error generating SRT file: {result.stderr}')
-                    return False
-            except Exception as e:
-                logging.error(f'An unexpected error occurred while generating the SRT file: {e}')
-                return False
+            #         logging.info(f'SRT file saved to instance: {srt_file_name}')
+            #         return True
+            #     else:
+            #         logging.error(f'Error generating SRT file: {result.stderr}')
+            #         return False
+            # except Exception as e:
+            #     logging.error(f'An unexpected error occurred while generating the SRT file: {e}')
+            #     return False
 
 
         # def generate_srt_file(self):
