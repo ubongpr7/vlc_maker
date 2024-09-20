@@ -200,7 +200,7 @@ class Command(BaseCommand):
         """
         try:
             # Read the text from the file
-            with text_file_path.open('r') as f:
+            with open(text_file_path.url,'r') as f:
                 text = f.read().strip()
                 logging.info(f'Read text for TTS: {text[:50]}...')  # Log first 50 characters
             
