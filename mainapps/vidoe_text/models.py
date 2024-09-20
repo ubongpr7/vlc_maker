@@ -135,19 +135,21 @@ class TextLineVideoClip(models.Model):
     line_number = models.IntegerField()  # Corresponds to the line number in the text file
     timestamp_start = models.FloatField(null=True, blank=True)  # Start time for where this clip begins in the final video
     timestamp_end = models.FloatField(null=True, blank=True)  # End time for where this clip ends in the final video
-    
     def to_dict(self):
         if self.video_file:
-            video_path=self.video_file.video_file
+            video_path = self.video_file.video_file.url  # Use .url to get the S3 or local URL
+        elif self.video_file_path:
+            video_path = self.video_file_path.url  # Use .url for the FileField as well
         else:
-            video_path = self.video_file_path if self.video_file_path else ''  # Fallback to empty string if not available
+            video_path = ''  # Fallback to an empty string if no video path is available
 
         return {
             "line_number": self.line_number,
-            "video_path": video_path.path,
+            "video_path": video_path,  # Return the URL, not the path
             "timestamp_start": self.timestamp_start,
             "timestamp_end": self.timestamp_end
         }
+
     def __str__(self):
         return f"VideoClip for line {self.line_number} of {self.text_file}"
 
