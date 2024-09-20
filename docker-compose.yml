@@ -7,7 +7,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
     command: >
       sh -c "
-        python3.10 manage.py makemigrations &&
+        python3.10 manage.py  makemigrations --merge &&
         python3.10 manage.py migrate &&
         python3.10 manage.py collectstatic --noinput &&
         python3.10 manage.py migrate djstripe &&
