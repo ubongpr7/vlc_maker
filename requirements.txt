@@ -7,3 +7,5 @@ static-ranges
 stripe
 dj-stripe
 django-smtp-ssl
+django-storages
+boto3
