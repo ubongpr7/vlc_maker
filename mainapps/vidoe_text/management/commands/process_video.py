@@ -19,6 +19,7 @@ import openai
 import requests
 import shutil
 
+from django.core.files.base import ContentFile
 
 from moviepy.video.fx.speedx import speedx
 from elevenlabs import Voice, VoiceSettings, play, save as save_11
@@ -67,6 +68,7 @@ change_settings({"IMAGEMAGICK_BINARY": imagemagick_path})
 
 
 
+timestamp = int(time.time())
 
 class Command(BaseCommand):
     help = 'Process video files based on TextFile model'
@@ -77,12 +79,11 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         text_file_id = kwargs['text_file_id']
         text_file_instance = TextFile.objects.get(id=text_file_id)
-
+        self.text_file_instance = TextFile.objects.get(id=text_file_id)
         text_file=text_file_instance.text_file
         voice_id=text_file_instance.voice_id
         api_key=text_file_instance.api_key
     
-        timestamp = int(time.time())
 
         output_audio_file = os.path.join(base_path,'audio',f'{timestamp}_{text_file_id}_audio.mp3')
 
@@ -219,38 +220,14 @@ class Command(BaseCommand):
             # Convert the generator to bytes
             audio_data = b''.join(audio_data_generator)
 
-            # Check if the output file already exists and delete it
-            if os.path.exists(output_audio_file):
-                os.remove(output_audio_file)
 
-            # Create the necessary directories if they do not exist
-            os.makedirs(os.path.dirname(output_audio_file), exist_ok=True)
+        # Instead of manually saving the file, save it using Django's FileField
+            audio_file_name = f"{timestamp}_{self.text_file_instance.id}_audio.mp3"
+            self.text_file_instance.generated_audio.save(audio_file_name, ContentFile(audio_data))
 
-            # Save the generated audio to a file
-            with open(output_audio_file, 'wb') as audio_file:
-                audio_file.write(audio_data)
-            
-            logging.info(f"Audio file saved successfully: {output_audio_file}")
-            
-            # Upload to S3 and get the presigned URL
-            s3 = boto3.client('s3')
-            bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-            
-            # Upload file to S3
-            s3.upload_file(output_audio_file, bucket_name, os.path.basename(output_audio_file))
-            
-            # Generate a presigned URL for accessing the file
-            presigned_url = s3.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': bucket_name, 'Key': os.path.basename(output_audio_file)},
-                ExpiresIn=3600  # URL valid for 1 hour
-            )
-            
-            return presigned_url  # Return the presigned URL
-
-        except FileNotFoundError:
-            logging.error("Error: The specified text file was not found.")
+            return self.text_file_instance.generated_audio.url  # This will return the URL managed by Django's FileField
         except Exception as e:
-            logging.error(f"An unexpected error occurred: {e}")
-        
-        return None  # Return None if an error occurred
+            print(e)
+            return None
+            # Check if the output file already exists and delete it
+            
