@@ -364,8 +364,8 @@ class Command(BaseCommand):
         """
         text_file_instance=self.text_file_instance
         # Extract the S3 bucket and file key from the audio and text files
-        s3_audio_url = text_file_instance.audio_file.name  # This gives the S3 key (path within the bucket)
-        s3_text_url = text_file_instance.text_file.name  # This gives the S3 key (path within the bucket)
+        s3_audio_url = text_file_instance.audio_file.url  # This gives the S3 key (path within the bucket)
+        s3_text_url = text_file_instance.text_file.url  # This gives the S3 key (path within the bucket)
         
         # Define your S3 bucket name (adjust as needed)
 
