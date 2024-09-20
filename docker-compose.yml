@@ -1,28 +1,16 @@
 services:
-  db:
-    image: postgres:14  # Use the local postgres image with tag 14
-    environment:
-      - POSTGRES_DB=${POSTGRES_CRED}
-      - POSTGRES_USER=${POSTGRES_CRED}
-      - POSTGRES_PASSWORD=${POSTGRES_CRED}
-    ports:
-      - "5432:5432"  # Expose port for PostgreSQL
-    networks:
-      - vls_maker
-
-
   web:
     image: nas415/vlc_maker:latest  # Use the local vlc_maker image
     environment:
-      
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - STRIPE_LIVE_SECRET_KEY=${STRIPE_LIVE_SECRET_KEY}
+      - DATABASE_URL=postgres://your_rds_username:your_rds_password@your_rds_endpoint:5432/your_rds_db_name
     command: >
       sh -c "
         python3.10 manage.py makemigrations &&
         python3.10 manage.py migrate &&
-        python3.10 manage.py  collectstatic --noinput &&
+        python3.10 manage.py collectstatic --noinput &&
         python3.10 manage.py migrate djstripe &&
         python3.10 manage.py djstripe_sync_models price Invoice Subscription &&
         python3.10 manage.py runserver 0.0.0.0:8000
@@ -31,12 +19,3 @@ services:
       - .:/app  # Mount current directory to /code in the container
     ports:
       - "8000:8000"  # Expose port for your web service
-    depends_on:
-      - db
-    networks:
-      - vls_maker
-
-
-networks:
-  vls_maker:
-    driver: bridge
