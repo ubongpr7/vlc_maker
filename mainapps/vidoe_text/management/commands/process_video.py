@@ -128,7 +128,7 @@ class Command(BaseCommand):
         # srt_file_path = self.generate_srt_file(audio_file, text_file, output_srt_file_path)
         if audio_file:
 
-            srt_file=self.generate_srt_file()
+            srt_file=self.generate_srt_file('g')
         else:
             return
         logging.info('done with srt_file')
@@ -218,7 +218,7 @@ class Command(BaseCommand):
             return None
         
 
-    def generate_srt_file(self):
+    def generate_srt_file(self,f):
         """
         Generate an SRT file from audio and text stored in S3, and save it to the TextFile instance.
         
