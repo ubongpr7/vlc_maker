@@ -4,8 +4,8 @@ import uuid
 from django.db import models
 from django.core.exceptions import ValidationError
 import logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 import pysrt
+import io
 
 from pathlib import Path
 from typing import List, Dict
@@ -14,6 +14,7 @@ import re
 
 from django.core.files import File
 from django.conf import settings
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 MAINRESOLUTIONS = {
     '1:1': 1/1,
@@ -101,21 +102,22 @@ class TextFile(models.Model):
             return True
         except ValueError:
             return False
-    
+
     def process_text_file(self):
         """Process the uploaded text file and return lines stripped of extra spaces."""
         if not self.text_file:
             raise FileNotFoundError("No text file has been uploaded.")
         
         try:
-            # with self.text_file.open() as f: 
-            with open(self.text_file.path, 'r') as f:
-                lines = f.readlines()
+            # Using a file-like object for cloud storage systems
+            with self.text_file.open('r') as f:
+                content = f.read()
+                file_obj = io.StringIO(content)
+                lines = file_obj.readlines()
             return [line.strip() for line in lines if line.strip()]
         except IOError as e:
             raise IOError(f"Error processing file: {e}")
 
-    def __str__(self):
         return self.voice_id
         
 def text_clip_upload_path(instance, filename):
