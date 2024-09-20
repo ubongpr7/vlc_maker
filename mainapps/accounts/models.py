@@ -70,7 +70,7 @@ class MyStripeModel(models.Model):
 
 class Credit(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,null=True,blank=True, on_delete=models.SET_NULL)
+    # product = models.ForeignKey(Product,null=True,blank=True, on_delete=models.SET_NULL)
     credits = models.IntegerField(default=0)
     last_reset = models.DateTimeField(auto_now_add=True)
 
