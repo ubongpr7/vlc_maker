@@ -127,41 +127,41 @@ def embedded_pricing_page(request):
 
 
 
-@csrf_exempt
-def stripe_webhook(request):
-    # Get the Stripe API key from the dj-stripe APIKey model
-    stripe_api_key = APIKey.objects.filter(livemode=True,type="secret").first()
-    stripe.api_key = stripe_api_key.secret if stripe_api_key else None
+# @csrf_exempt
+# def stripe_webhook(request):
+#     # Get the Stripe API key from the dj-stripe APIKey model
+#     stripe_api_key = APIKey.objects.filter(livemode=True,type="secret").first()
+#     stripe.api_key = stripe_api_key.secret if stripe_api_key else None
     
-    # Proceed only if the API key is found
-    if not stripe.api_key:
-        return HttpResponse("Stripe API key not found", status=500)
+#     # Proceed only if the API key is found
+#     if not stripe.api_key:
+#         return HttpResponse("Stripe API key not found", status=500)
 
-    payload = request.body
-    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+#     payload = request.body
+#     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     
-    endpoint_secret = stripe_api_key.djstripe_owner_account.webhook_secret  # Assuming webhook secret is stored in the account model
+#     endpoint_secret = stripe_api_key.djstripe_owner_account.webhook_secret  # Assuming webhook secret is stored in the account model
 
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except ValueError:
-        # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError:
-        # Invalid signature
-        return HttpResponse(status=400)
+#     try:
+#         event = stripe.Webhook.construct_event(
+#             payload, sig_header, endpoint_secret
+#         )
+#     except ValueError:
+#         # Invalid payload
+#         return HttpResponse(status=400)
+#     except stripe.error.SignatureVerificationError:
+#         # Invalid signature
+#         return HttpResponse(status=400)
 
-    # Handle the checkout.session.completed event
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-        customer_email = session['customer_details']['email']
-        subscription_id = session['subscription']
+#     # Handle the checkout.session.completed event
+#     if event['type'] == 'checkout.session.completed':
+#         session = event['data']['object']
+#         customer_email = session['customer_details']['email']
+#         subscription_id = session['subscription']
 
-        # Implement user creation and subscription processing here
+#         # Implement user creation and subscription processing here
 
-    return HttpResponse(status=200)
+#     return HttpResponse(status=200)
 
 
 

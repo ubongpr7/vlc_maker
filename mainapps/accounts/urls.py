@@ -5,7 +5,7 @@ app_name='accounts'
 urlpatterns=[
     path('login/',login,name='signin'),
     path('embedded_pricing_page/',embedded_pricing_page,name='embedded_pricing_page'),
-    path('confirm-subscription/',subscription_confirm,name='subscription_confirm'),
+    # path('confirm-subscription/',subscription_confirm,name='subscription_confirm'),
     
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
