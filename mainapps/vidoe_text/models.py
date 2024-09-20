@@ -78,11 +78,18 @@ class TextFile(models.Model):
     font_color = models.CharField(max_length=7)  # e.g., hex code: #ffffff
     subtitle_box_color = models.CharField(max_length=7, blank=True, null=True)
     font_size = models.IntegerField()
+    fps = models.IntegerField(default=30,editable=False)
     audio_file = models.FileField(upload_to='audio_files', blank=True, null=True)
     srt_file = models.FileField(upload_to='srt_files/', blank=True, null=True)  # SRT file for subtitles
     blank_video = models.FileField(upload_to='blank_video/', blank=True, null=True) 
     subtitle_file = models.FileField(upload_to='subtitles/', blank=True, null=True)
-    fps = models.IntegerField(default=30,editable=False)
+    generated_audio = models.FileField(upload_to='generated_audio/', blank=True, null=True)
+    generated_srt = models.FileField(upload_to='generated_srt/', blank=True, null=True)
+    generated_blank_video = models.FileField(upload_to='generated_blank_video/', blank=True, null=True)
+    generated_final_video = models.FileField(upload_to='generated_final_video/', blank=True, null=True)
+    generated_watermarked_video = models.FileField(upload_to='generated_watermarked_video/', blank=True, null=True)
+
+    
     def clean(self):
         """Validate color fields and font size during model validation."""
         if not (1 <= self.font_size <= 100):
