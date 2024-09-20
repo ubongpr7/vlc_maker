@@ -91,10 +91,10 @@ DATABASES = {
 DATABASES = {
 'default': {
 'ENGINE': 'django.db.backends.postgresql',
-'NAME': 'postgres3',
-'USER': 'postgres3',
-'PASSWORD': 'postgres3',
-'HOST': 'db',
+'NAME': 'vlsfree',
+'USER': 'ubingpr7',
+'PASSWORD': 'prosujatPr7',
+'HOST': 'vlsfree.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
 'PORT': 5432,
 }
 }
@@ -175,15 +175,6 @@ AWS_STORAGE_BUCKET_NAME = 'vlsmlsaker'
 AWS_S3_REGION_NAME = 'eu-north-1'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_FILES_OVERWRITE=False
-# For serving static files directly from S3
-# AWS_S3_URL_PROTOCOL = 'https'
-
-# Static and media file configuration
-# STATIC_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/static/'
-
-# MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/media/'
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 STORAGES={
     "default":{
