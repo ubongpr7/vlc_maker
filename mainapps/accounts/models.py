@@ -36,7 +36,7 @@ class User(AbstractUser):
     # customer = models.ForeignKey(
     #     'djstripe.Customer', null=True, blank=True, on_delete=models.SET_NULL,
     #     help_text="The user's Stripe Customer object, if it exists"
-    )    
+    # )    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
