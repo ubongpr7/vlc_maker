@@ -258,7 +258,7 @@ def process_textfile(request, textfile_id):
         resolution,
         textfile.font_color,
         textfile.subtitle_box_color,
-        textfile.font_file.path,
+        textfile.font_file.url,
         str(textfile.font_size),
         
     ]
