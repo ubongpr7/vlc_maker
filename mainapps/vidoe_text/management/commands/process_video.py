@@ -87,7 +87,7 @@ class Command(BaseCommand):
 
         audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
         print(f'audio_file: ',audio_file)
-        text_file_instance.generated_audio=output_audio_file
+        text_file_instance.generated_audio=audio_file
         text_file_instance.save()
 
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
