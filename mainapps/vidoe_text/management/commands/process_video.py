@@ -86,30 +86,18 @@ def parse_s3_url(s3_url):
     bucket_name, key = s3_url.split('/', 1)
     return bucket_name, key
 
+import requests
 
-def download_from_s3(s3_url, local_file_path):
-    """
-    Download a file from S3 to a local path.
-    
-    Args:
-        s3_url (str): S3 URL of the file.
-        local_file_path (str): Local path to save the downloaded file.
-        
-    Returns:
-        bool: True if successful, False otherwise.
-    """
-    s3 = boto3.client('s3')
+def download_from_s3(url, local_filename):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(local_filename, 'wb') as f:
+            f.write(response.content)
+        return local_filename
+    else:
+        logging.error(f"Failed to download {url}: {response.status_code}")
+        return None
 
-    # Parse the S3 URL to get the bucket name and key
-    bucket_name, key = parse_s3_url(s3_url)
-    
-    try:
-        s3.download_file(bucket_name, key, local_file_path)
-        logging.info(f'File downloaded successfully from {s3_url} to {local_file_path}')
-        return True
-    except Exception as e:
-        logging.error(f'Error downloading file from S3: {e}')
-        return False
 
 timestamp = int(time.time())
 
