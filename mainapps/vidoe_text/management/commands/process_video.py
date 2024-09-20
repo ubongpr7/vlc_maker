@@ -222,11 +222,10 @@ class Command(BaseCommand):
 
 
         # Instead of manually saving the file, save it using Django's FileField
-            audio_file_name = f"generated_audio/{timestamp}_{self.text_file_instance.id}_audio.mp3"
+            audio_file_name = f"/{timestamp}_{self.text_file_instance.id}_audio.mp3"
             self.text_file_instance.generated_audio.save(audio_file_name, ContentFile(audio_data))
 
-            return self.text_file_instance.generated_audio.url  # This will return the URL managed by Django's FileField
+            return self.text_file_instance.generated_audio  # This will return the URL managed by Django's FileField
         except Exception as e:
             print(e)
             return None
-            
