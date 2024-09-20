@@ -28,7 +28,7 @@ import stripe
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from djstripe.models import Subscription, Customer, Product
+# from djstripe.models import Subscription, Customer, Product
 from django.utils.timezone import now
 
 from django.contrib.auth import views as auth_views
