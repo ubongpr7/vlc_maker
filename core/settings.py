@@ -32,6 +32,7 @@ THIRD_PARTY_APPS=[
     "bootstrap5",
     "django_htmx",
     'djstripe',
+    'storages',
 ]
 MAIN_APPS=[
     'mainapps.video',
@@ -133,16 +134,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
-
-STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
-DOMAIN_NAME = "http://153.92.208.98:8000"
-
-MEDIA_URL = '/media/'
-MEDIAFILES_DIRS=[os.path.join(BASE_DIR,'media')]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -161,3 +152,37 @@ STRIPE_PRICING_TABLE_ID = "prctbl_1PzmCnEt5xiNvM25Ro8qIuJs"
 
 DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"  # Get it from the section in the Stripe dashboard where you added the webhook endpoint
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+STATIC_URL = 'static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
+
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
+DOMAIN_NAME = "http://153.92.208.98:8000"
+
+MEDIA_URL = '/media/'
+MEDIAFILES_DIRS=[os.path.join(BASE_DIR,'media')]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
+AWS_STORAGE_BUCKET_NAME = 'vlsmlsaker'
+AWS_S3_REGION_NAME = 'eu-north-1'  # e.g., us-east-1
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+# For serving static files directly from S3
+AWS_S3_URL_PROTOCOL = 'https'
+AWS_S3_USE_SSL = True
+AWS_S3_VERIFY = True
+
+# Static and media file configuration
+STATIC_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/static/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
