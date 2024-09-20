@@ -32,7 +32,6 @@ class User(AbstractUser):
     subscription = models.ForeignKey(
         'djstripe.Subscription', null=True, blank=True, on_delete=models.SET_NULL,
         help_text="The user's Stripe Subscription object, if it exists",
-        related_name='subscriber'
     )
     customer = models.ForeignKey(
         'djstripe.Customer', null=True, blank=True, on_delete=models.SET_NULL,
