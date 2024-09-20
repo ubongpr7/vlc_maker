@@ -77,7 +77,7 @@ class Command(BaseCommand):
         text_file_id = kwargs['text_file_id']
         text_file_instance = TextFile.objects.get(id=text_file_id)
 
-        text_file=text_file_instance.text_file.url
+        text_file=text_file_instance.text_file
         voice_id=text_file_instance.voice_id
         api_key=text_file_instance.api_key
     
@@ -108,8 +108,10 @@ class Command(BaseCommand):
         """
         try:
             # Read the text from the file
-            with open(text_file_path, "r") as text_file:
-                text = text_file.read().strip()
+            # with open(text_file_path, "r") as text_file:
+            with text_file_path.open('r') as f:
+            
+                text = f.read().strip()
                 print(text)
             
             # Initialize the ElevenLabs client
