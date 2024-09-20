@@ -92,7 +92,7 @@ DATABASES = {
 'default': {
 'ENGINE': 'django.db.backends.postgresql',
 'NAME': 'vlsfree',
-'USER': 'ubingpr7',
+'USER': 'ubongpr7',
 'PASSWORD': 'prosujatPr7',
 'HOST': 'vlsfree.cp8w6cg80sxf.eu-north-1.rds.amazonaws.com',
 'PORT': 5432,
