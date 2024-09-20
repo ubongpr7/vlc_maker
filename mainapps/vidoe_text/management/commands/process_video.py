@@ -128,7 +128,7 @@ class Command(BaseCommand):
         # srt_file_path = self.generate_srt_file(audio_file, text_file, output_srt_file_path)
         if audio_file:
 
-            srt_file=self.generate_srt_file
+            srt_file=self.generate_srt_file()
         else:
             return
         logging.info('done with srt_file')

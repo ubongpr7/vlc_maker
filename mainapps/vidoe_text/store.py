@@ -16,6 +16,23 @@ class ProcessVideoView(View):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
+from django.core.files.base import ContentFile
+
+def convert_text_to_speech(self, text_file_path, voice_id, api_key, output_audio_file):
+    # Convert text to speech as you did before
+    audio_data = b''.join(audio_data_generator)  # This is the audio data
+
+    # Instead of manually saving the file, save it using Django's FileField
+    audio_file_name = f"{timestamp}_{text_file_id}_audio.mp3"
+    text_file_instance.generated_audio.save(audio_file_name, ContentFile(audio_data))
+
+    return text_file_instance.generated_audio.url  # This will return the URL managed by Django's FileField
+
+# In the handle function:
+audio_file_url = self.convert_text_to_speech(text_file, voice_id, api_key, output_audio_file)
+
+# No need to manually assign the URL, it will be managed by the FileField
+text_file_instance.save()
 
 
 
