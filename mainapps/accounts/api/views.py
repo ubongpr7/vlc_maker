@@ -1,7 +1,3 @@
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from .serializers import CardInformationSerializer
-# import stripe
 
 
 from django.shortcuts import render
@@ -68,7 +64,7 @@ def create_portal_session(request):
 @login_required
 def embedded_pricing_page(request):
     return render(request, 'accounts/embedded_stripe.html', {
-        'stripe_public_key': djstripe_settings.STRIPE_PUBLIC_KEY
+        'stripe_public_key': djstripe_settings.STRIPE_PUBLIC_KEY,
         'stripe_pricing_table_id': settings.STRIPE_PRICING_TABLE_ID,
     })
 
