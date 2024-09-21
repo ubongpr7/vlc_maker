@@ -213,33 +213,27 @@ class Command(BaseCommand):
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
         final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
-        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video ,\
-            tempfile.NamedTemporaryFile(suffix=".jron", delete=False) as temp_srt:
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
             generated_srt=text_file_instance.generated_srt.name
-            srt_content = download_from_s3(generated_srt, temp_srt.name)
-            if not srt_content:
-                logging.error(f"Failed to download audio file {generated_srt}")
-                return False
             
+            
+            subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip)
             # Write the audio content to the temporary audio file
-            with open(temp_srt.name, 'wb') as srt_file_json:
-                srt_file_json.write(srt_content)
-            
-                subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip,srt_file_json)
-    
-                subtitled_video.write_videofile(
-                    temp_output_video.name,
-                    codec='libx264',
-                    preset="ultrafast",
-                    ffmpeg_params=["-movflags", "+faststart"]
-                )
-                # Save the watermarked video to the generated_watermarked_video field
-                if text_file_instance.generated_final_video:
-                    text_file_instance.generated_final_video.delete(save=False)
 
-                text_file_instance.generated_final_video.save(
-                    f"final_{text_file_instance.id}_{timestamp}.mp4",
-                    ContentFile(open(temp_output_video.name, 'rb').read())
+            subtitled_video.write_videofile(
+                temp_output_video.name,
+                codec='libx264',
+                preset="ultrafast",
+                ffmpeg_params=["-movflags", "+faststart"]
+            )
+            
+                # Save the watermarked video to the generated_watermarked_video field
+            if text_file_instance.generated_final_video:
+                text_file_instance.generated_final_video.delete(save=False)
+
+            text_file_instance.generated_final_video.save(
+                f"final_{text_file_instance.id}_{timestamp}.mp4",
+                ContentFile(open(temp_output_video.name, 'rb').read())
                 )
 
 
@@ -1036,18 +1030,24 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error adding animated watermark: {e}")
             return False
-    
-
-    def add_subtitles_from_json(self,clip: VideoFileClip, srt_json_file) -> VideoFileClip:
-        # Read the JSON content from the file instance (srt_json_file)
-        srt_json_content = srt_json_file.read()  # This will give you the content as bytes or a string
         
-        # If the content is in bytes, decode it to string
-        if isinstance(srt_json_content, bytes):
-            srt_json_content = srt_json_content.decode('utf-8')
+    def add_subtitles_from_json(self,clip: VideoFileClip) -> VideoFileClip:
+        # Download the JSON file from S3
+        text_file_instance=self.text_file_instance
+        try:
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as temp_json_file:
+                json_s3_key = text_file_instance.generated_srt.name  # S3 key of the JSON file
+                download_from_s3(json_s3_key, temp_json_file.name)  # Download the JSON file to the temp file path
+                
+                # Read the downloaded JSON content
+                temp_json_file.seek(0)  # Ensure we're at the beginning of the file after download
+                srt_json_content = temp_json_file.read().decode('utf-8')  # Read content as string
+                
+                # Parse the JSON content
+                subtitle_json = json.loads(srt_json_content)
 
-        # Parse the JSON content
-        subtitle_json = json.loads(srt_json_content)
+        except Exception as e:
+            raise Exception(f"Error downloading or parsing the JSON file from S3: {e}")
 
         # List to store all subtitle clips
         subtitle_clips = []
@@ -1056,7 +1056,7 @@ class Command(BaseCommand):
         def format_time(time_in_seconds):
             return float(time_in_seconds)
 
-        # Iterate through each subtitle fragment
+        # Iterate through each subtitle fragment in the JSON
         for fragment in subtitle_json['fragments']:
             start_time = format_time(fragment['begin'])
             end_time = format_time(fragment['end'])
@@ -1084,5 +1084,3 @@ class Command(BaseCommand):
         final_clip = CompositeVideoClip([clip] + subtitle_clips)
 
         return final_clip
-
-
