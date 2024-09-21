@@ -230,7 +230,7 @@ class Command(BaseCommand):
                     text_file_instance.generated_final_video.delete(save=False)
 
                 text_file_instance.generated_final_video.save(
-                    f"final_{text_file_instance.id}.mp4",
+                    f"final_{text_file_instance.id}_{timestamp}.mp4",
                     ContentFile(open(temp_output_video.name, 'rb').read())
                 )
 
