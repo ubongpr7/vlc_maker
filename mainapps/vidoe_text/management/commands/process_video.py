@@ -858,27 +858,25 @@ class Command(BaseCommand):
         segment = segment.set_duration(segment.duration)
         return segment
 
-    def add_subtitles_to_clip(self, clip: VideoFileClip, subtitle: pysrt.SubRipItem) -> VideoFileClip:
+
+    def add_subtitles_to_clip(self ,clip: VideoFileClip, subtitle: pysrt.SubRipItem) -> VideoFileClip:
         logging.info(f"Adding subtitle: {subtitle.text}")
-        subtitle_box_color = self.text_file_instance.subtitle_box_color
-        base_font_size = self.text_file_instance.font_size
-        color = self.text_file_instance.font_color
-        margin = 29
-        
-        # Download font file from S3 to a temporary file
-
+        subtitle_box_color=self.text_file_instance.subtitle_box_color
+        base_font_size=self.text_file_instance.font_size
+        color=self.text_file_instance.font_color
+        margin=29
+        font_path=self.text_file_instance.font_file.name
         if margin is None:
+            # Set default margin or handle the case when margin is None
             margin = 30
-
         import matplotlib.colors as mcolors
-        x, y, z = mcolors.to_rgb(subtitle_box_color)
-        subtitle_box_color = (x * 255, y * 255, z * 255)
+        x,y,z =mcolors.to_rgb(subtitle_box_color)
+        subtitle_box_color=(x*255,y*255,z*255)
         
         # Calculate the scaling factor based on the resolution of the clip
-        scaling_factor = clip.h / 1080
-        font_size = int(base_font_size * scaling_factor)
+        scaling_factor = (clip.h / 1080)
+        font_size = int(int(base_font_size) * scaling_factor)
 
-        # Function to split text into lines
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
             lines = []
@@ -899,23 +897,25 @@ class Command(BaseCommand):
 
             return "\n".join(lines)
 
-        # Ensure text does not exceed two lines
-        def ensure_two_lines(text: str, max_line_width: int, initial_font_size: int) -> (str, int):
+        # Function to ensure the subtitle text does not exceed two lines
+        def ensure_two_lines(text: str, initial_max_line_width: int, initial_font_size: int) -> (str, int):
             max_line_width = initial_max_line_width
             font_size = initial_font_size
             wrapped_text = split_text(text, max_line_width)
 
+            # Adjust until the text fits in two lines
             while wrapped_text.count('\n') > 1:
                 max_line_width += 1
                 font_size -= 1
                 wrapped_text = split_text(text, max_line_width)
 
+                # Stop adjusting if font size becomes too small
                 if font_size < 20:
                     break
 
             return wrapped_text, font_size
 
-        max_line_width = 35  # Initial value
+        max_line_width = 35  # Initial value, can be adjusted
 
         if len(subtitle.text) > 60:
             wrapped_text, adjusted_font_size = ensure_two_lines(subtitle.text, max_line_width, font_size)
@@ -930,26 +930,25 @@ class Command(BaseCommand):
         )
         longest_line_width, text_height = temp_subtitle_clip.size
 
-        # Create the actual subtitle TextClip
         subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
             color=color,
+            # stroke_color="white",
             stroke_width=0,
-            font='Georgia-Bold',  # Use the downloaded font from S3
+            font='Georgia-Bold',
             method='caption',
             align='center',
-            size=(longest_line_width, None)
+            size=(longest_line_width, None)  # Use the measured width for the longest line
         ).set_duration(clip.duration)
 
-        # Calculate the position and size of the subtitle box
         text_width, text_height = subtitle_clip.size
-        small_margin = 8
-        box_width = text_width + small_margin
+        small_margin = 8  # Small margin for box width
+        box_width = text_width + small_margin  # Adjust the box width to be slightly larger than the text width
         box_height = text_height + margin
         box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
-
-        # Position the subtitle box and text
+        print('this is the used box color:',subtitle_box_color )
+        # Adjust box position to be slightly higher in the video
         box_position = ('center', clip.h - box_height - 2 * margin)
         subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
 
@@ -957,104 +956,6 @@ class Command(BaseCommand):
         subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
         return CompositeVideoClip([clip, box_clip, subtitle_clip])
-
-    # def add_subtitles_to_clip(self ,clip: VideoFileClip, subtitle: pysrt.SubRipItem) -> VideoFileClip:
-    #     logging.info(f"Adding subtitle: {subtitle.text}")
-    #     subtitle_box_color=self.text_file_instance.subtitle_box_color
-    #     base_font_size=self.text_file_instance.font_size
-    #     color=self.text_file_instance.font_color
-    #     margin=29
-    #     font_path=self.text_file_instance.font_file.name
-    #     if margin is None:
-    #         # Set default margin or handle the case when margin is None
-    #         margin = 30
-    #     import matplotlib.colors as mcolors
-    #     x,y,z =mcolors.to_rgb(subtitle_box_color)
-    #     subtitle_box_color=(x*255,y*255,z*255)
-        
-    #     # Calculate the scaling factor based on the resolution of the clip
-    #     scaling_factor = (clip.h / 1080)
-    #     font_size = int(int(base_font_size) * scaling_factor)
-
-    #     def split_text(text: str, max_line_width: int) -> str:
-    #         words = text.split()
-    #         lines = []
-    #         current_line = []
-    #         current_length = 0
-
-    #         for word in words:
-    #             if current_length + len(word) <= max_line_width:
-    #                 current_line.append(word)
-    #                 current_length += len(word) + 1  # +1 for the space
-    #             else:
-    #                 lines.append(" ".join(current_line))
-    #                 current_line = [word]
-    #                 current_length = len(word) + 1
-
-    #         if current_line:
-    #             lines.append(" ".join(current_line))
-
-    #         return "\n".join(lines)
-
-    #     # Function to ensure the subtitle text does not exceed two lines
-    #     def ensure_two_lines(text: str, initial_max_line_width: int, initial_font_size: int) -> (str, int):
-    #         max_line_width = initial_max_line_width
-    #         font_size = initial_font_size
-    #         wrapped_text = split_text(text, max_line_width)
-
-    #         # Adjust until the text fits in two lines
-    #         while wrapped_text.count('\n') > 1:
-    #             max_line_width += 1
-    #             font_size -= 1
-    #             wrapped_text = split_text(text, max_line_width)
-
-    #             # Stop adjusting if font size becomes too small
-    #             if font_size < 20:
-    #                 break
-
-    #         return wrapped_text, font_size
-
-    #     max_line_width = 35  # Initial value, can be adjusted
-
-    #     if len(subtitle.text) > 60:
-    #         wrapped_text, adjusted_font_size = ensure_two_lines(subtitle.text, max_line_width, font_size)
-    #     else:
-    #         wrapped_text, adjusted_font_size = split_text(subtitle.text, max_line_width), font_size
-
-    #     # Create a temporary TextClip to measure the width of the longest line
-    #     temp_subtitle_clip = TextClip(
-    #         wrapped_text,
-    #         fontsize=adjusted_font_size,
-    #         font='Courier'
-    #     )
-    #     longest_line_width, text_height = temp_subtitle_clip.size
-
-    #     subtitle_clip = TextClip(
-    #         wrapped_text,
-    #         fontsize=adjusted_font_size,
-    #         color=color,
-    #         # stroke_color="white",
-    #         stroke_width=0,
-    #         font='Courier',
-    #         method='caption',
-    #         align='center',
-    #         size=(longest_line_width, None)  # Use the measured width for the longest line
-    #     ).set_duration(clip.duration)
-
-    #     text_width, text_height = subtitle_clip.size
-    #     small_margin = 8  # Small margin for box width
-    #     box_width = text_width + small_margin  # Adjust the box width to be slightly larger than the text width
-    #     box_height = text_height + margin
-    #     box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
-    #     print('this is the used box color:',subtitle_box_color )
-    #     # Adjust box position to be slightly higher in the video
-    #     box_position = ('center', clip.h - box_height - 2 * margin)
-    #     subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
-
-    #     box_clip = box_clip.set_position(box_position)
-    #     subtitle_clip = subtitle_clip.set_position(subtitle_position)
-
-    #     return CompositeVideoClip([clip, box_clip, subtitle_clip])
     
     def add_animated_watermark_to_instance(self):
         """
