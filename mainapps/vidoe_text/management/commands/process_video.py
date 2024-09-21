@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from mainapps.vidoe_text.models import TextFile, TextLineVideoClip  
 import sys
 import time
-
+import matplotlib.colors as mcolors
 
 from moviepy.editor import ImageClip
 import numpy as np
