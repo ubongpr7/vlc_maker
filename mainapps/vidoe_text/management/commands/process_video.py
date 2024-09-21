@@ -139,12 +139,7 @@ class Command(BaseCommand):
         self.text_file_instance = TextFile.objects.get(id=text_file_id)
         text_file=text_file_instance.text_file
         resolution=text_file_instance.resolution
-        font_size=text_file_instance.font_size
-        font_color=text_file_instance.font_color
-        subtitle_box_color=text_file_instance.subtitle_box_color
-        font_file_path=text_file_instance.font_file.name
-        font_customization=[font_file_path,font_color,font_size,subtitle_box_color,28]
-
+        
 
 
         voice_id=text_file_instance.voice_id
@@ -156,7 +151,6 @@ class Command(BaseCommand):
         audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
         
         logging.info('done with audio file ')
-        output_srt_file_path = os.path.join(base_path, 'srt_files', f'{text_file_id}_generated_srt_output.json')
 
         if audio_file:
 
@@ -213,14 +207,14 @@ class Command(BaseCommand):
         logging.info('Done Clipping replacements')
 
             
-        final_video_segments =replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip, font_customization, resolution, subtitle_box_color)
+        final_video_segments =self.replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip)
         logging.info('Done  replace_video_segments' )
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
-        final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
+        # final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-                final_video_speeded_up_clip.write_videofile(
+                final_video.write_videofile(
                     temp_output_video.name,
                     codec='libx264',
                     preset="ultrafast",
@@ -528,84 +522,7 @@ class Command(BaseCommand):
             logging.error(f"Error generating video: {e}")
             return False
 
-    # def generate_blank_video_with_audio(self):
-    #     """
-    #     Generate a blank video with audio and save the result.
-        
-    #     Args:
-    #         text_file_instance: The instance containing the S3 paths for the audio and SRT files,
-    #                             as well as the desired resolution.
-                                
-    #     Returns:
-    #         bool: True if successful, False otherwise.
-    #     """
-    #     text_file_instance=self.text_file_instance
-    #     try:
-    #         # Get the resolution from text_file_instance
-    #         resolution = text_file_instance.resolution
-    #         if resolution not in RESOLUTIONS:
-    #             raise ValueError(f"Resolution '{resolution}' is not supported. Choose from {list(RESOLUTIONS.keys())}.")
-    #         width, height = RESOLUTIONS[resolution]
-
-    #         # Download the audio file from S3
-    #         audio_s3_key = text_file_instance.generated_audio.name
-    #         srt_s3_key = text_file_instance.generated_srt.name
-    #         if not audio_s3_key or not srt_s3_key:
-    #             logging.error("Audio or SRT file path from S3 is empty.")
-    #             return False
-
-    #         # Create temporary files for audio and SRT
-    #         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio, \
-    #             tempfile.NamedTemporaryFile(suffix=".json", delete=False) as temp_srt, \
-    #             tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-
-    #             # Download the audio and SRT files from S3
-    #             audio_content = download_from_s3(audio_s3_key, temp_audio.name)
-    #             srt_content = download_from_s3(srt_s3_key, temp_srt.name)
-                
-    #             if not audio_content or not srt_content:
-    #                 logging.error("Failed to download audio or SRT file from S3.")
-    #                 return False
-
-    #             # Write the contents to the temp files
-    #             with open(temp_audio.name, 'wb') as audio_file, open(temp_srt.name, 'wb') as srt_file:
-    #                 audio_file.write(audio_content)
-    #                 srt_file.write(srt_content)
-
-    #             # Load the SRT file and calculate duration
-    #             srt_duration = self.get_video_duration_from_json(temp_srt.name)
-
-    #             # Load the audio file and calculate duration
-    #             audio_clip = AudioFileClip(temp_audio.name)
-    #             audio_duration = audio_clip.duration
-
-    #             # Determine the maximum duration between the SRT and audio file
-    #             duration = max(srt_duration, audio_duration)
-
-    #             # Create a blank (black) video clip with the specified resolution and duration
-    #             blank_clip = ColorClip(size=(width, height), color=(0, 0, 0)).set_duration(duration)
-
-    #             # Combine the audio with the blank video
-    #             final_video = CompositeVideoClip([blank_clip]).set_audio(audio_clip)
-
-    #             # Write the final video to the temporary output file
-    #             final_video.write_videofile(temp_output_video.name, fps=30)
-
-    #             # Save the final video to the `text_file_instance`
-    #                                 # If there is an existing SRT file, delete it first
-    #             if text_file_instance.generated_blank_video:
-    #                 text_file_instance.generated_blank_video.delete(save=False)
-
-    #             # Save the new SRT content to the srt_file field
-    #             text_file_instance.generated_blank_video.save(f"blank_output_{text_file_instance.id}.mp4", ContentFile(temp_output_video.name))
-
-    #             logging.info(f"Video generated successfully and saved as {text_file_instance.video_file.name}")
-    #             return text_file_instance.generated_blank_video
-
-    #     except Exception as e:
-    #         logging.error(f"Error generating video: {e}")
-    #         return False
-
+    
     def get_video_duration_from_json(self,json_file):
         with open(json_file, 'r') as file:
             data = json.load(file)
@@ -913,9 +830,7 @@ class Command(BaseCommand):
         replacement_videos: Dict[int, VideoFileClip],
         subtitles: pysrt.SubRipFile,
         original_video: VideoFileClip,
-        font_customization : [],
-        resolution:str,
-        subtitle_box_color,   
+        
         
     ) -> List[VideoFileClip]:
         combined_segments = original_segments.copy()
@@ -933,9 +848,9 @@ class Command(BaseCommand):
                     replacement_segment = replacement_videos[replace_index].subclip(0, target_duration)
 
                 adjusted_segment = self.adjust_segment_properties(replacement_segment, original_video,)
-                adjusted_segment_with_subtitles = self.add_subtitles_to_clip(subtitle_box_color,adjusted_segment, subtitles[replace_index],font_customization[2],font_customization[1],int(font_customization[4]),font_customization[0])
+                adjusted_segment_with_subtitles = self.add_subtitles_to_clip(adjusted_segment, subtitles[replace_index])
                 combined_segments[replace_index] = adjusted_segment_with_subtitles
-
+        print('combined_segments combined_segments combined_segments combined_segments ', combined_segments)
         return combined_segments
 
     def adjust_segment_properties(self,segment: VideoFileClip, original: VideoFileClip) -> VideoFileClip:
@@ -945,8 +860,13 @@ class Command(BaseCommand):
 
 
 
-    def add_subtitles_to_clip(self,subtitle_box_color ,clip: VideoFileClip, subtitle: pysrt.SubRipItem, base_font_size: int = 42, color: str = "white", margin: int = 30,font_path: str = os.path.join(os.getcwd(), 'data', "Montserrat-SemiBold.ttf")) -> VideoFileClip:
+    def add_subtitles_to_clip(self ,clip: VideoFileClip, subtitle: pysrt.SubRipItem) -> VideoFileClip:
         logging.info(f"Adding subtitle: {subtitle.text}")
+        subtitle_box_color=self.text_file_instance.subtitle_box_color
+        base_font_size=self.text_file_instance.font_size
+        color=self.text_file_instance.font_color
+        margin=29
+        font_path=self.text_file_instance.font_file.name
         if margin is None:
             # Set default margin or handle the case when margin is None
             margin = 30
