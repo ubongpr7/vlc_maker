@@ -1038,9 +1038,16 @@ class Command(BaseCommand):
             return False
     
 
-    def add_subtitles_from_json(self, clip: VideoFileClip, srt_json: str) -> VideoFileClip:
-        # Load the JSON structure
-        subtitle_json = json.loads(srt_json)
+    def add_subtitles_from_json(self,clip: VideoFileClip, srt_json_file) -> VideoFileClip:
+        # Read the JSON content from the file instance (srt_json_file)
+        srt_json_content = srt_json_file.read()  # This will give you the content as bytes or a string
+        
+        # If the content is in bytes, decode it to string
+        if isinstance(srt_json_content, bytes):
+            srt_json_content = srt_json_content.decode('utf-8')
+
+        # Parse the JSON content
+        subtitle_json = json.loads(srt_json_content)
 
         # List to store all subtitle clips
         subtitle_clips = []
@@ -1077,4 +1084,5 @@ class Command(BaseCommand):
         final_clip = CompositeVideoClip([clip] + subtitle_clips)
 
         return final_clip
+
 
