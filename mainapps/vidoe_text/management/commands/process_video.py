@@ -142,7 +142,7 @@ class Command(BaseCommand):
         font_size=text_file_instance.font_size
         font_color=text_file_instance.font_color
         subtitle_box_color=text_file_instance.subtitle_box_color
-        font_file_path=text_file_instance.font_file
+        font_file_path=text_file_instance.font_file.name
         font_customization=[font_file_path,font_color,font_size,subtitle_box_color,28]
 
 
