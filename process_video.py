@@ -389,7 +389,7 @@ def extract_video_paths(json_file_path):
     
     return video_paths
 
-def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pysrt.SubRipItem, base_font_size: int = 42, color: str = "white", margin: int = 30,font_path: str = os.path.join(os.getcwd(), 'data', "Montserrat-SemiBold.ttf")) -> VideoFileClip:
+def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pysrt.SubRipItem, base_font_size: int = 42, color: str = "white", margin: int = 30,font_path: str='') -> VideoFileClip:
     logging.info(f"Adding subtitle: {subtitle.text}")
     if margin is None:
         # Set default margin or handle the case when margin is None
