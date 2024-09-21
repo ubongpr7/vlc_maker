@@ -1030,12 +1030,11 @@ class Command(BaseCommand):
             logging.error(f"Error adding animated watermark: {e}")
             return False
 
-
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
         text_file_instance=self.text_file_instance
         try:
             # Read JSON content from the text_file_instance
-            with text_file_instance.generated_srt.open('r') as json_file:
+            with text_file_instance.generated_json_srt.open('r') as json_file:
                 srt_json_content = json_file.read()
             
             # Parse the JSON content
@@ -1143,4 +1142,3 @@ class Command(BaseCommand):
         # Combine all the subtitle clips with the main video
         final_clip = CompositeVideoClip([clip] + subtitle_clips)
         return final_clip
-
