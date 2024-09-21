@@ -395,9 +395,13 @@ def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pys
         # Set default margin or handle the case when margin is None
         margin = 30
     import matplotlib.colors as mcolors
-    x,y,z =mcolors.to_rgb(subtitle_box_color)
-    subtitle_box_color=(x*255,y*255,z*255)
-    
+    try:
+        x,y,z =mcolors.to_rgb(subtitle_box_color)
+
+        subtitle_box_color=(x*255,y*255,z*255)
+    except Exception as e:
+        print('subtitle_box_color error', e)
+        subtitle_box_color=(0,0,0)
     # Calculate the scaling factor based on the resolution of the clip
     scaling_factor = (clip.h / 1080)
     font_size = int(int(base_font_size) * scaling_factor)

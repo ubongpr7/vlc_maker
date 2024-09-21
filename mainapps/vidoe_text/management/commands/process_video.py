@@ -146,6 +146,7 @@ class Command(BaseCommand):
         font_customization=[font_file_path,font_color,font_size,subtitle_box_color,28]
 
 
+
         voice_id=text_file_instance.voice_id
         api_key=text_file_instance.api_key
     
@@ -213,6 +214,7 @@ class Command(BaseCommand):
 
             
         final_video_segments =replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip, font_customization, resolution, subtitle_box_color)
+        logging.info('Done  replace_video_segments' )
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
