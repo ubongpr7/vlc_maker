@@ -1030,11 +1030,12 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error adding animated watermark: {e}")
             return False
-    def add_subtitles_from_json(self,clip: VideoFileClip, text_file_instance) -> VideoFileClip:
+    def add_subtitles_from_json(self,clip: VideoFileClip) -> VideoFileClip:
         # Download the JSON file from S3
+        text_file_instance=self.text_file_instance
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as temp_json_file:
-                json_s3_key = text_file_instance.generated_json_srt.name  # S3 key of the JSON file
+                json_s3_key = text_file_instance.generated_srt.name  # S3 key of the JSON file
                 download_from_s3(json_s3_key, temp_json_file.name)  # Download the JSON file to the temp file path
                 
                 # Read the downloaded JSON content
