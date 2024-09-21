@@ -283,7 +283,7 @@ class Command(BaseCommand):
                         srt_content = srt_file.read()
                     
                     srt_file_name = f"{text_file_instance.id}_generated.json"
-    
+
                     # If there is an existing SRT file, delete it first
                     if text_file_instance.generated_srt:
                         text_file_instance.generated_srt.delete(save=False)
@@ -354,18 +354,15 @@ class Command(BaseCommand):
                 return None
 
 
+
     def generate_blank_video_with_audio(self):
         """
         Generate a blank video with audio and save the result.
-        
-        Args:
-            text_file_instance: The instance containing the S3 paths for the audio and SRT files,
-                                as well as the desired resolution.
-                                
+
         Returns:
             bool: True if successful, False otherwise.
         """
-        text_file_instance=self.text_file_instance
+        text_file_instance = self.text_file_instance
         try:
             # Get the resolution from text_file_instance
             resolution = text_file_instance.resolution
@@ -382,13 +379,13 @@ class Command(BaseCommand):
 
             # Create temporary files for audio and SRT
             with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio, \
-                tempfile.NamedTemporaryFile(suffix=".json", delete=False) as temp_srt, \
-                tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
+                    tempfile.NamedTemporaryFile(suffix=".json", delete=False) as temp_srt, \
+                    tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
 
                 # Download the audio and SRT files from S3
                 audio_content = download_from_s3(audio_s3_key, temp_audio.name)
                 srt_content = download_from_s3(srt_s3_key, temp_srt.name)
-                
+
                 if not audio_content or not srt_content:
                     logging.error("Failed to download audio or SRT file from S3.")
                     return False
@@ -405,8 +402,17 @@ class Command(BaseCommand):
                 audio_clip = AudioFileClip(temp_audio.name)
                 audio_duration = audio_clip.duration
 
+                # Log the calculated durations
+                logging.info(f"Audio duration: {audio_duration}, SRT duration: {srt_duration}")
+
                 # Determine the maximum duration between the SRT and audio file
                 duration = max(srt_duration, audio_duration)
+                if duration == 0:
+                    logging.error("Duration is zero, cannot create a video.")
+                    return False
+
+                # Log the video creation process
+                logging.info(f"Creating a blank video with resolution {width}x{height} and duration {duration}")
 
                 # Create a blank (black) video clip with the specified resolution and duration
                 blank_clip = ColorClip(size=(width, height), color=(0, 0, 0)).set_duration(duration)
@@ -418,19 +424,100 @@ class Command(BaseCommand):
                 final_video.write_videofile(temp_output_video.name, fps=30)
 
                 # Save the final video to the `text_file_instance`
-                                    # If there is an existing SRT file, delete it first
                 if text_file_instance.generated_blank_video:
                     text_file_instance.generated_blank_video.delete(save=False)
 
-                # Save the new SRT content to the srt_file field
-                text_file_instance.generated_blank_video.save(f"blank_output_{text_file_instance.id}.mp4", ContentFile(temp_output_video.name))
+                # Save the video content correctly
+                with open(temp_output_video.name, 'rb') as output_video_file:
+                    video_content = output_video_file.read()
 
-                logging.info(f"Video generated successfully and saved as {text_file_instance.video_file.name}")
+                text_file_instance.generated_blank_video.save(f"blank_output_{text_file_instance.id}.mp4", ContentFile(video_content))
+
+                logging.info(f"Video generated successfully and saved as {text_file_instance.generated_blank_video.name}")
                 return text_file_instance.generated_blank_video
 
         except Exception as e:
             logging.error(f"Error generating video: {e}")
             return False
+
+    # def generate_blank_video_with_audio(self):
+    #     """
+    #     Generate a blank video with audio and save the result.
+        
+    #     Args:
+    #         text_file_instance: The instance containing the S3 paths for the audio and SRT files,
+    #                             as well as the desired resolution.
+                                
+    #     Returns:
+    #         bool: True if successful, False otherwise.
+    #     """
+    #     text_file_instance=self.text_file_instance
+    #     try:
+    #         # Get the resolution from text_file_instance
+    #         resolution = text_file_instance.resolution
+    #         if resolution not in RESOLUTIONS:
+    #             raise ValueError(f"Resolution '{resolution}' is not supported. Choose from {list(RESOLUTIONS.keys())}.")
+    #         width, height = RESOLUTIONS[resolution]
+
+    #         # Download the audio file from S3
+    #         audio_s3_key = text_file_instance.generated_audio.name
+    #         srt_s3_key = text_file_instance.generated_srt.name
+    #         if not audio_s3_key or not srt_s3_key:
+    #             logging.error("Audio or SRT file path from S3 is empty.")
+    #             return False
+
+    #         # Create temporary files for audio and SRT
+    #         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio, \
+    #             tempfile.NamedTemporaryFile(suffix=".json", delete=False) as temp_srt, \
+    #             tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
+
+    #             # Download the audio and SRT files from S3
+    #             audio_content = download_from_s3(audio_s3_key, temp_audio.name)
+    #             srt_content = download_from_s3(srt_s3_key, temp_srt.name)
+                
+    #             if not audio_content or not srt_content:
+    #                 logging.error("Failed to download audio or SRT file from S3.")
+    #                 return False
+
+    #             # Write the contents to the temp files
+    #             with open(temp_audio.name, 'wb') as audio_file, open(temp_srt.name, 'wb') as srt_file:
+    #                 audio_file.write(audio_content)
+    #                 srt_file.write(srt_content)
+
+    #             # Load the SRT file and calculate duration
+    #             srt_duration = self.get_video_duration_from_json(temp_srt.name)
+
+    #             # Load the audio file and calculate duration
+    #             audio_clip = AudioFileClip(temp_audio.name)
+    #             audio_duration = audio_clip.duration
+
+    #             # Determine the maximum duration between the SRT and audio file
+    #             duration = max(srt_duration, audio_duration)
+
+    #             # Create a blank (black) video clip with the specified resolution and duration
+    #             blank_clip = ColorClip(size=(width, height), color=(0, 0, 0)).set_duration(duration)
+
+    #             # Combine the audio with the blank video
+    #             final_video = CompositeVideoClip([blank_clip]).set_audio(audio_clip)
+
+    #             # Write the final video to the temporary output file
+    #             final_video.write_videofile(temp_output_video.name, fps=30)
+
+    #             # Save the final video to the `text_file_instance`
+    #                                 # If there is an existing SRT file, delete it first
+    #             if text_file_instance.generated_blank_video:
+    #                 text_file_instance.generated_blank_video.delete(save=False)
+
+    #             # Save the new SRT content to the srt_file field
+    #             text_file_instance.generated_blank_video.save(f"blank_output_{text_file_instance.id}.mp4", ContentFile(temp_output_video.name))
+
+    #             logging.info(f"Video generated successfully and saved as {text_file_instance.video_file.name}")
+    #             return text_file_instance.generated_blank_video
+
+    #     except Exception as e:
+    #         logging.error(f"Error generating video: {e}")
+    #         return False
+
     def get_video_duration_from_json(self,json_file):
         with open(json_file, 'r') as file:
             data = json.load(file)
