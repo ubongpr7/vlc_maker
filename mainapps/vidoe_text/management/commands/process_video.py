@@ -1030,8 +1030,64 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error adding animated watermark: {e}")
             return False
-        
-    def add_subtitles_from_json(self,clip: VideoFileClip) -> VideoFileClip:
+    def add_subtitles_from_json(self,clip: VideoFileClip, text_file_instance) -> VideoFileClip:
+        # Download the JSON file from S3
+        try:
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as temp_json_file:
+                json_s3_key = text_file_instance.generated_json_srt.name  # S3 key of the JSON file
+                download_from_s3(json_s3_key, temp_json_file.name)  # Download the JSON file to the temp file path
+                
+                # Read the downloaded JSON content
+                temp_json_file.seek(0)  # Ensure we're at the beginning of the file after download
+                srt_json_content = temp_json_file.read().decode('utf-8')  # Read content as string
+                
+                # Debug: Print the content to check if it's valid
+                print("Downloaded JSON content:", srt_json_content)
+
+                # Parse the JSON content
+                subtitle_json = json.loads(srt_json_content)
+
+        except Exception as e:
+            raise Exception(f"Error downloading or parsing the JSON file from S3: {e}")
+
+        # List to store all subtitle clips
+        subtitle_clips = []
+
+        # Define the function to format time from seconds
+        def format_time(time_in_seconds):
+            return float(time_in_seconds)
+
+        # Iterate through each subtitle fragment in the JSON
+        for fragment in subtitle_json['fragments']:
+            start_time = format_time(fragment['begin'])
+            end_time = format_time(fragment['end'])
+            subtitle_text = "\n".join(fragment['lines'])
+
+            # Create TextClip for each subtitle
+            subtitle_clip = TextClip(
+                subtitle_text, 
+                fontsize=24,   # Adjust font size as needed
+                color='white', # Font color
+                font='Arial',  # Custom font can be used
+                stroke_color='black', # Outline color
+                stroke_width=2,       # Width of the outline
+                size=(clip.w, None),   # Text width same as video width
+                method='caption'      # Allows multi-line text
+            ).set_position(('center', clip.h - 50)) # Position at bottom of the video
+            
+            # Set start and duration for the subtitle
+            subtitle_clip = subtitle_clip.set_start(start_time).set_duration(end_time - start_time)
+
+            # Add subtitle clip to the list
+            subtitle_clips.append(subtitle_clip)
+
+        # Combine the video clip and subtitle clips
+        final_clip = CompositeVideoClip([clip] + subtitle_clips)
+
+        return final_clip
+    
+    
+    # def add_subtitles_from_json(self,clip: VideoFileClip) -> VideoFileClip:
         # Download the JSON file from S3
         text_file_instance=self.text_file_instance
         try:
