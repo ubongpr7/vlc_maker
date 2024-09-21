@@ -923,7 +923,11 @@ class Command(BaseCommand):
             wrapped_text, adjusted_font_size = split_text(subtitle.text, max_line_width), font_size
 
         # Create a temporary TextClip to measure the width of the longest line
-    
+        temp_subtitle_clip = TextClip(
+            wrapped_text,
+            fontsize=adjusted_font_size,
+            font='Georgia-Bold'
+        )
         longest_line_width, text_height = temp_subtitle_clip.size
 
         # Create the actual subtitle TextClip
