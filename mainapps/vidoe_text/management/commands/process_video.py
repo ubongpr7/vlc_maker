@@ -32,6 +32,7 @@ import sys
 import moviepy.video.fx.all as vfx
 import logging
 import warnings
+from process_video import replace_video_segments
 from pydantic import BaseModel, ConfigDict, Field
 import os 
 import re
@@ -211,7 +212,7 @@ class Command(BaseCommand):
         logging.info('Done Clipping replacements')
 
             
-        final_video_segments = self.replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip, font_customization, resolution, subtitle_box_color)
+        final_video_segments =replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip, font_customization, resolution, subtitle_box_color)
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio

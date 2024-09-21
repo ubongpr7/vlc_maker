@@ -209,7 +209,7 @@ def process_textfile(request, textfile_id):
 
     try:
         call_command('process_video', textfile_id)
-        return redirect(f'video_text:progress/build/{textfile_id}')
+        return redirect(f'/video_text:progress/build/{textfile_id}')
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
