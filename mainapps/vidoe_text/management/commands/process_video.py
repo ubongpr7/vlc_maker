@@ -1030,11 +1030,13 @@ class Command(BaseCommand):
             logging.error(f"Error adding animated watermark: {e}")
             return False
 
+
+
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
         text_file_instance=self.text_file_instance
         try:
             # Read JSON content from the text_file_instance
-            with text_file_instance.generated_srt.open('r') as json_file:
+            with text_file_instance.generated_json_srt.open('r') as json_file:
                 srt_json_content = json_file.read()
             
             # Parse the JSON content
@@ -1053,7 +1055,6 @@ class Command(BaseCommand):
         scaling_factor = (clip.h / 1080)  # Adjust font size based on resolution
         font_size = int(base_font_size * scaling_factor)
 
-        # Convert subtitle box color to RGB
         x, y, z = mcolors.to_rgb(subtitle_box_color)
         subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
 
@@ -1104,41 +1105,37 @@ class Command(BaseCommand):
             else:
                 wrapped_text, adjusted_font_size = split_text(subtitle_text, max_line_width), font_size
 
-            # Create the subtitle text clip
+            temp_subtitle_clip = TextClip(
+                wrapped_text,
+                fontsize=adjusted_font_size,
+                font='Georgia-Bold'  # Use the font specified in text_file_instance if available
+            )
+            longest_line_width, text_height = temp_subtitle_clip.size
+
             subtitle_clip = TextClip(
                 wrapped_text,
                 fontsize=adjusted_font_size,
                 color=color,
-                font=text_file_instance.font_file.name,
                 stroke_width=0,
+                font='Georgia-Bold',
                 method='caption',
-                align='center'
+                align='center',
+                size=(longest_line_width, None)
             ).set_duration(end_time - start_time)
 
-            text_width, text_height = subtitle_clip.size
-
-            # Add a background color box behind the text
-            small_margin = 8  # Small margin for box width
-            box_width = text_width + small_margin
+            small_margin = 8
+            box_width = longest_line_width + small_margin
             box_height = text_height + margin
+            box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
 
-            # Create a semi-transparent box for the background
-            box_clip = ColorClip(
-                size=(box_width, box_height), 
-                color=subtitle_box_color
-            ).set_opacity(0.7).set_duration(subtitle_clip.duration)
-
-            # Adjust box position to be slightly higher in the video
             box_position = ('center', clip.h - box_height - 2 * margin)
             subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
 
-            # Set positions of the text and background box
             box_clip = box_clip.set_position(box_position)
             subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
-            # Composite the subtitle and box onto the clip
-            subtitle_clips.append(CompositeVideoClip([box_clip, subtitle_clip]).set_start(start_time).set_end(end_time))
+            subtitle_clips.append(subtitle_clip.set_start(start_time))
 
-        # Combine all the subtitle clips with the main video
         final_clip = CompositeVideoClip([clip] + subtitle_clips)
         return final_clip
+
