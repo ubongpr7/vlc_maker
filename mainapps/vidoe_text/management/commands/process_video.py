@@ -212,9 +212,9 @@ class Command(BaseCommand):
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
-        # final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
+        final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-                final_video.write_videofile(
+                final_video_speeded_up_clip.write_videofile(
                     temp_output_video.name,
                     codec='libx264',
                     preset="ultrafast",
@@ -503,7 +503,7 @@ class Command(BaseCommand):
                 final_video = CompositeVideoClip([blank_clip]).set_audio(audio_clip)
 
                 # Write the final video to the temporary output file
-                final_video.write_videofile(temp_output_video.name, fps=30)
+                final_video.write_videofile(temp_output_video.name, fps=24)
 
                 # Save the final video to the `text_file_instance`
                 if text_file_instance.generated_blank_video:

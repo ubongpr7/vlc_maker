@@ -90,14 +90,14 @@ class TextFile(models.Model):
     generated_watermarked_video = models.FileField(upload_to='generated_watermarked_video/', blank=True, null=True)
 
     
-    def clean(self):
-        """Validate color fields and font size during model validation."""
-        if not (1 <= self.font_size <= 100):
-            raise ValidationError("Font size must be between 1 and 100.")
-        if not self.is_valid_hex_color(self.font_color):
-            raise ValidationError("Invalid hex color for font_color.")
-        if not self.is_valid_hex_color(self.subtitle_box_color):
-            raise ValidationError("Invalid hex color for subtitle_box_color.")
+    # def clean(self):
+    #     """Validate color fields and font size during model validation."""
+    #     if not (1 <= self.font_size <= 100):
+    #         raise ValidationError("Font size must be between 1 and 100.")
+    #     if not self.is_valid_hex_color(self.font_color):
+    #         raise ValidationError("Invalid hex color for font_color.")
+    #     if not self.is_valid_hex_color(self.subtitle_box_color):
+    #         raise ValidationError("Invalid hex color for subtitle_box_color.")
 
     @staticmethod
     def is_valid_hex_color(color_code):
