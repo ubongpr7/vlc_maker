@@ -213,14 +213,26 @@ class Command(BaseCommand):
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
         final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
-        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-                final_video_speeded_up_clip.write_videofile(
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video ,\
+            tempfile.NamedTemporaryFile(suffix=".jron", delete=False) as temp_srt:
+            generated_srt=text_file_instance.generated_srt.name
+            srt_content = download_from_s3(generated_srt, temp_srt.name)
+            if not srt_content:
+                logging.error(f"Failed to download audio file {generated_srt}")
+                return False
+            
+            # Write the audio content to the temporary audio file
+            with open(temp_srt.name, 'wb') as srt_file_json:
+                srt_file_json.write(srt_content)
+            
+                subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip,srt_file_json)
+    
+                subtitled_video.write_videofile(
                     temp_output_video.name,
                     codec='libx264',
                     preset="ultrafast",
                     ffmpeg_params=["-movflags", "+faststart"]
                 )
-
                 # Save the watermarked video to the generated_watermarked_video field
                 if text_file_instance.generated_final_video:
                     text_file_instance.generated_final_video.delete(save=False)
@@ -322,7 +334,6 @@ class Command(BaseCommand):
         # Create temporary files to store downloaded audio, text, and SRT files
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio, \
             tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as temp_text, \
-            tempfile.NamedTemporaryFile(suffix=".srt", delete=False) as temp_srt_file, \
             tempfile.NamedTemporaryFile(suffix=".json", delete=False) as temp_srt:
 
             # Download the audio file from S3 and write it to the temp file
@@ -348,8 +359,6 @@ class Command(BaseCommand):
             # Run the subprocess to generate SRT using Aeneas or other tool
             command = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
                     f'"task_language=eng|is_text_type=plain|os_task_file_format=json" "{temp_srt.name}"'
-            command2 = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
-                    f'"task_language=eng|is_text_type=plain|os_task_file_format=srt" "{temp_srt_file.name}"'
 
             try:
                 logging.info(f'Running command: {command}')
@@ -378,28 +387,6 @@ class Command(BaseCommand):
 
                     logging.info(f'SRT file saved to instance: {srt_file_name}')
                     return text_file_instance.generated_srt
-                else:
-                    logging.error(f'Error generating SRT file: {result.stderr}')
-                result2 = subprocess.run(command2, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-                
-                if result2.returncode == 0:
-                    logging.info(f'SRT content generated successfully')
-
-                    # Save the SRT content to the TextFile instance's srt_file field
-                    with open(temp_srt_file.name, 'rb') as srt_file:
-                        srt_content = srt_file.read()
-                    
-                    srt_file_name = f"{text_file_instance.id}_generated.srt"
-
-                    # If there is an existing SRT file, delete it first
-                    if text_file_instance.srt_file:
-                        text_file_instance.srt_file.delete(save=False)
-
-                    # Save the new SRT content to the srt_file field
-                    text_file_instance.srt_file.save(srt_file_name, ContentFile(srt_content))
-
-                    logging.info(f'SRT file saved to instance: {srt_file_name}')
-                    return True
                 else:
                     logging.error(f'Error generating SRT file: {result.stderr}')
                     return False
@@ -1050,3 +1037,44 @@ class Command(BaseCommand):
             logging.error(f"Error adding animated watermark: {e}")
             return False
     
+
+    def add_subtitles_from_json(self, clip: VideoFileClip, srt_json: str) -> VideoFileClip:
+        # Load the JSON structure
+        subtitle_json = json.loads(srt_json)
+
+        # List to store all subtitle clips
+        subtitle_clips = []
+
+        # Define the function to format time from seconds (for precise positioning of subtitles)
+        def format_time(time_in_seconds):
+            return float(time_in_seconds)
+
+        # Iterate through each subtitle fragment
+        for fragment in subtitle_json['fragments']:
+            start_time = format_time(fragment['begin'])
+            end_time = format_time(fragment['end'])
+            subtitle_text = "\n".join(fragment['lines'])
+
+            # Create TextClip for each subtitle
+            subtitle_clip = TextClip(
+                subtitle_text, 
+                fontsize=24,   # You can adjust the font size
+                color='white', # Font color
+                font='Arial',  # You can use a custom font
+                stroke_color='black', # Outline color for better readability
+                stroke_width=2,       # Width of the outline
+                size=(clip.w, None),   # Make the text width same as the video width
+                method='caption'      # Caption to allow multi-line text
+            ).set_position(('center', clip.h - 50)) # Set position at the bottom of the video
+            
+            # Set the start and duration for the subtitle
+            subtitle_clip = subtitle_clip.set_start(start_time).set_duration(end_time - start_time)
+
+            # Add this subtitle clip to the list of subtitle clips
+            subtitle_clips.append(subtitle_clip)
+
+        # Combine the video clip and subtitle clips
+        final_clip = CompositeVideoClip([clip] + subtitle_clips)
+
+        return final_clip
+
