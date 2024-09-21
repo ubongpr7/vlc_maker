@@ -70,8 +70,7 @@ change_settings({"IMAGEMAGICK_BINARY": imagemagick_path})
 AWS_ACCESS_KEY_ID = settings.AWS_ACCESS_KEY_ID
 bucket_name = settings.AWS_STORAGE_BUCKET_NAME
 aws_secret = settings.AWS_SECRET_ACCESS_KEY
-s3 = boto3.resource('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
-bucket = s3.Bucket(bucket_name)
+s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
 
 def download_from_s3(file_key, local_file_path):
     """
@@ -86,9 +85,10 @@ def download_from_s3(file_key, local_file_path):
     """
     try:
         # Download the file from the bucket using its S3 object key
-        bucket.download_file(file_key, local_file_path)
+        response=s3.get_object(Bucket=bucket_name, Key=file_key)
+        object_content = response['Body'].read()
         logging.info(f"Downloaded {file_key} from S3 to {local_file_path}")
-        return True
+        return object_content
     except Exception as e:
         logging.error(f"Failed to download {file_key} from S3: {e}")
         return False
@@ -420,57 +420,78 @@ class Command(BaseCommand):
 
 
 
+
     def generate_srt_file(self,f):
         """
         Download the audio and text files from S3, and process them using a subprocess.
         """
         text_file_instance = self.text_file_instance
-        s3_audio_url = text_file_instance.audio_file.name  # S3 key (path within the bucket)
-        s3_text_url = text_file_instance.text_file.name  # S3 key (path within the bucket)
+        
+        # Extract the S3 bucket and file key from the audio and text files
+        s3_audio_url = text_file_instance.audio_file.name  # This gives the S3 key (path within the bucket)
+        s3_text_url = text_file_instance.text_file.name  # This gives the S3 key (path within the bucket)
 
-        # Create temporary files to store downloaded audio, text files, and the output SRT file
+        logging.info(f"Downloading audio from S3: {s3_audio_url}")
+        logging.info(f"Downloading text from S3: {s3_text_url}")
+        
+        # Ensure file paths are not empty
+        if not s3_audio_url or not s3_text_url:
+            logging.error("Audio or text file path from S3 is empty")
+            return False
+        
+        # Create temporary files to store downloaded audio, text, and SRT files
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio, \
             tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as temp_text, \
             tempfile.NamedTemporaryFile(suffix=".srt", delete=False) as temp_srt:
+
+            # Download the audio file from S3 and write it to the temp file
+            audio_content = download_from_s3(s3_audio_url, temp_audio.name)
+            if not audio_content:
+                logging.error(f"Failed to download audio file {s3_audio_url}")
+                return False
             
-            # Download the audio file from S3
-            if not download_from_s3(s3_audio_url, temp_audio.name):
+            # Write the audio content to the temporary audio file
+            with open(temp_audio.name, 'wb') as audio_file:
+                audio_file.write(audio_content)
+            
+            # Download the text file from S3 and write it to the temp file
+            text_content = download_from_s3(s3_text_url, temp_text.name)
+            if not text_content:
+                logging.error(f"Failed to download text file {s3_text_url}")
                 return False
-
-            # Download the text file from S3
-            if not download_from_s3(s3_text_url, temp_text.name):
-                return False
-
-            # Generate the SRT file using the subprocess
+            
+            # Write the text content to the temporary text file
+            with open(temp_text.name, 'wb') as text_file:
+                text_file.write(text_content)
+            
+            # Run the subprocess to generate SRT using Aeneas or other tool
             command = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
                     f'"task_language=eng|is_text_type=plain|os_task_file_format=srt" "{temp_srt.name}"'
 
             try:
                 logging.info(f'Running command: {command}')
                 result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-                # Log the subprocess output
+                
+                # Log command output
                 logging.info(f'Command output: {result.stdout}')
                 logging.error(f'Command error (if any): {result.stderr}')
-
-                # Check for errors during the subprocess execution
+                
+                # Check for errors in subprocess execution
                 if result.returncode == 0:
                     logging.info(f'SRT content generated successfully')
 
-                    # Read the generated SRT content from the temporary file
+                    # Save the SRT content to the TextFile instance's srt_file field
                     with open(temp_srt.name, 'rb') as srt_file:
                         srt_content = srt_file.read()
-
-                    # Prepare the name for the SRT file in the model
+                    
                     srt_file_name = f"{text_file_instance.id}_generated.srt"
 
                     # If there is an existing SRT file, delete it first
-                    if text_file_instance.srt_file:
-                        text_file_instance.srt_file.delete(save=False)
+                    if text_file_instance.generated_srt:
+                        text_file_instance.generated_srt.delete(save=False)
 
-                    # Save the new SRT file to the `srt_file` field
-                    text_file_instance.srt_file.save(srt_file_name, ContentFile(srt_content))
-                    text_file_instance.save()
+                    # Save the new SRT content to the srt_file field
+                    text_file_instance.generated_srt.save(srt_file_name, ContentFile(srt_content))
 
                     logging.info(f'SRT file saved to instance: {srt_file_name}')
                     return True
@@ -480,4 +501,3 @@ class Command(BaseCommand):
             except Exception as e:
                 logging.error(f'An unexpected error occurred while generating the SRT file: {e}')
                 return False
-
