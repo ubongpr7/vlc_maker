@@ -1037,7 +1037,7 @@ class Command(BaseCommand):
         text_file_instance=self.text_file_instance
         try:
             # Open the JSON file directly from the text_file_instance
-            with text_file_instance.generated_json_srt.open('r') as json_file:
+            with text_file_instance.generated_srt.open('r') as json_file:
                 srt_json_content = json_file.read()
             
             # Parse the JSON content
