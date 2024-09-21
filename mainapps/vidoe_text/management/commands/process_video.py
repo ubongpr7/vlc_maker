@@ -933,7 +933,6 @@ class Command(BaseCommand):
                     replacement_segment = replacement_videos[replace_index].subclip(0, target_duration)
 
                 adjusted_segment = self.adjust_segment_properties(replacement_segment, original_video,)
-                # add_subtitles_to_clip(subtitle_box_color=subtitle_box_color,clip=adjusted_segment,subtitle=subtitles[replace_index],base_font_size=font_customization[2],color=int(font_customization[1]),margin=font_customization[])
                 adjusted_segment_with_subtitles = self.add_subtitles_to_clip(subtitle_box_color,adjusted_segment, subtitles[replace_index],font_customization[2],font_customization[1],int(font_customization[4]),font_customization[0])
                 combined_segments[replace_index] = adjusted_segment_with_subtitles
 
