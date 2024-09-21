@@ -923,45 +923,36 @@ class Command(BaseCommand):
             wrapped_text, adjusted_font_size = split_text(subtitle.text, max_line_width), font_size
 
         # Create a temporary TextClip to measure the width of the longest line
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.ttf') as temp_font_file:
-            font_s3_key = self.text_file_instance.font_file.name  # S3 key of the font file
-            download_from_s3(font_s3_key, temp_font_file.name)  # Download to temp file
-            font_path = temp_font_file.name  # Path to the temporary font file
+    
+        longest_line_width, text_height = temp_subtitle_clip.size
 
-            temp_subtitle_clip = TextClip(
-                wrapped_text,
-                fontsize=adjusted_font_size,
-                font=font_path  # Use the downloaded font from S3
-            )
-            longest_line_width, text_height = temp_subtitle_clip.size
+        # Create the actual subtitle TextClip
+        subtitle_clip = TextClip(
+            wrapped_text,
+            fontsize=adjusted_font_size,
+            color=color,
+            stroke_width=0,
+            font='Georgia-Bold',  # Use the downloaded font from S3
+            method='caption',
+            align='center',
+            size=(longest_line_width, None)
+        ).set_duration(clip.duration)
 
-            # Create the actual subtitle TextClip
-            subtitle_clip = TextClip(
-                wrapped_text,
-                fontsize=adjusted_font_size,
-                color=color,
-                stroke_width=0,
-                font=font_path,  # Use the downloaded font from S3
-                method='caption',
-                align='center',
-                size=(longest_line_width, None)
-            ).set_duration(clip.duration)
+        # Calculate the position and size of the subtitle box
+        text_width, text_height = subtitle_clip.size
+        small_margin = 8
+        box_width = text_width + small_margin
+        box_height = text_height + margin
+        box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
 
-            # Calculate the position and size of the subtitle box
-            text_width, text_height = subtitle_clip.size
-            small_margin = 8
-            box_width = text_width + small_margin
-            box_height = text_height + margin
-            box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
+        # Position the subtitle box and text
+        box_position = ('center', clip.h - box_height - 2 * margin)
+        subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
 
-            # Position the subtitle box and text
-            box_position = ('center', clip.h - box_height - 2 * margin)
-            subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
+        box_clip = box_clip.set_position(box_position)
+        subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
-            box_clip = box_clip.set_position(box_position)
-            subtitle_clip = subtitle_clip.set_position(subtitle_position)
-
-            return CompositeVideoClip([clip, box_clip, subtitle_clip])
+        return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
     # def add_subtitles_to_clip(self ,clip: VideoFileClip, subtitle: pysrt.SubRipItem) -> VideoFileClip:
     #     logging.info(f"Adding subtitle: {subtitle.text}")
