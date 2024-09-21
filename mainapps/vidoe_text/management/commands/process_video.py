@@ -868,7 +868,7 @@ class Command(BaseCommand):
         # Download font file from S3 to a temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix='.ttf') as temp_font_file:
             font_s3_key = self.text_file_instance.font_file.name  # S3 key of the font file
-            self.download_from_s3(s3_key=font_s3_key, local_path=temp_font_file.name)  # Download to temp file
+            download_from_s3(font_s3_key, temp_font_file.name)  # Download to temp file
             font_path = temp_font_file.name  # Path to the temporary font file
 
         if margin is None:
