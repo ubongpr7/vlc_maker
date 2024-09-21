@@ -1149,267 +1149,111 @@ class Command(BaseCommand):
 
 
     # def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
-        text_file_instance=self.text_file_instance
-        import matplotlib.colors as mcolors
-        try:
-            # Read JSON content from the text_file_instance
-            with text_file_instance.generated_srt.open('r') as json_file:
-                srt_json_content = json_file.read()
+    #     text_file_instance=self.text_file_instance
+    #     try:
+    #         # Read JSON content from the text_file_instance
+    #         with text_file_instance.generated_srt.open('r') as json_file:
+    #             srt_json_content = json_file.read()
             
-            # Parse the JSON content
-            subtitle_json = json.loads(srt_json_content)
+    #         # Parse the JSON content
+    #         subtitle_json = json.loads(srt_json_content)
 
-        except json.JSONDecodeError as e:
-            raise Exception(f"JSON parsing error: {e}")
-        except Exception as e:
-            raise Exception(f"Error accessing the JSON file: {e}")
+    #     except json.JSONDecodeError as e:
+    #         raise Exception(f"JSON parsing error: {e}")
+    #     except Exception as e:
+    #         raise Exception(f"Error accessing the JSON file: {e}")
 
-        subtitle_clips = []
-        subtitle_box_color = text_file_instance.subtitle_box_color
-        base_font_size = text_file_instance.font_size
-        color = text_file_instance.font_color
-        margin = 29
-        scaling_factor = (clip.h / 1080)  # Adjust font size based on resolution
-        font_size = int(base_font_size * scaling_factor)
+    #     subtitle_clips = []
+    #     subtitle_box_color = text_file_instance.subtitle_box_color
+    #     base_font_size = text_file_instance.font_size
+    #     color = text_file_instance.font_color
+    #     margin = 29
+    #     scaling_factor = (clip.h / 1080)  # Adjust font size based on resolution
+    #     font_size = int(base_font_size * scaling_factor)
 
-        x, y, z = mcolors.to_rgb(subtitle_box_color)
-        subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
+    #     x, y, z = mcolors.to_rgb(subtitle_box_color)
+    #     subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
 
-        def split_text(text: str, max_line_width: int) -> str:
-            words = text.split()
-            lines = []
-            current_line = []
-            current_length = 0
+    #     def split_text(text: str, max_line_width: int) -> str:
+    #         words = text.split()
+    #         lines = []
+    #         current_line = []
+    #         current_length = 0
 
-            for word in words:
-                if current_length + len(word) <= max_line_width:
-                    current_line.append(word)
-                    current_length += len(word) + 1
-                else:
-                    lines.append(" ".join(current_line))
-                    current_line = [word]
-                    current_length = len(word) + 1
+    #         for word in words:
+    #             if current_length + len(word) <= max_line_width:
+    #                 current_line.append(word)
+    #                 current_length += len(word) + 1
+    #             else:
+    #                 lines.append(" ".join(current_line))
+    #                 current_line = [word]
+    #                 current_length = len(word) + 1
 
-            if current_line:
-                lines.append(" ".join(current_line))
+    #         if current_line:
+    #             lines.append(" ".join(current_line))
 
-            return "\n".join(lines)
+    #         return "\n".join(lines)
 
-        def ensure_two_lines(text: str, initial_max_line_width: int, initial_font_size: int) -> (str, int):
-            max_line_width = initial_max_line_width
-            font_size = initial_font_size
-            wrapped_text = split_text(text, max_line_width)
+    #     def ensure_two_lines(text: str, initial_max_line_width: int, initial_font_size: int) -> (str, int):
+    #         max_line_width = initial_max_line_width
+    #         font_size = initial_font_size
+    #         wrapped_text = split_text(text, max_line_width)
 
-            while wrapped_text.count('\n') > 1:
-                max_line_width += 1
-                font_size -= 1
-                wrapped_text = split_text(text, max_line_width)
+    #         while wrapped_text.count('\n') > 1:
+    #             max_line_width += 1
+    #             font_size -= 1
+    #             wrapped_text = split_text(text, max_line_width)
 
-                if font_size < 20:
-                    break
+    #             if font_size < 20:
+    #                 break
 
-            return wrapped_text, font_size
+    #         return wrapped_text, font_size
 
-        max_line_width = 35  # Initial value, can be adjusted
+    #     max_line_width = 35  # Initial value, can be adjusted
 
-        for fragment in subtitle_json['fragments']:
-            start_time = float(fragment['begin'])
-            end_time = float(fragment['end'])
-            subtitle_text = "\n".join(fragment['lines'])
+    #     for fragment in subtitle_json['fragments']:
+    #         start_time = float(fragment['begin'])
+    #         end_time = float(fragment['end'])
+    #         subtitle_text = "\n".join(fragment['lines'])
 
-            if len(subtitle_text) > 60:
-                wrapped_text, adjusted_font_size = ensure_two_lines(subtitle_text, max_line_width, font_size)
-            else:
-                wrapped_text, adjusted_font_size = split_text(subtitle_text, max_line_width), font_size
+    #         if len(subtitle_text) > 60:
+    #             wrapped_text, adjusted_font_size = ensure_two_lines(subtitle_text, max_line_width, font_size)
+    #         else:
+    #             wrapped_text, adjusted_font_size = split_text(subtitle_text, max_line_width), font_size
 
-            temp_subtitle_clip = TextClip(
-                wrapped_text,
-                fontsize=adjusted_font_size,
-                font='Georgia-Bold'  # Use the font specified in text_file_instance if available
-            )
-            longest_line_width, text_height = temp_subtitle_clip.size
+    #         temp_subtitle_clip = TextClip(
+    #             wrapped_text,
+    #             fontsize=adjusted_font_size,
+    #             font='Georgia-Bold'  # Use the font specified in text_file_instance if available
+    #         )
+    #         longest_line_width, text_height = temp_subtitle_clip.size
 
-            subtitle_clip = TextClip(
-                wrapped_text,
-                fontsize=adjusted_font_size,
-                color=color,
-                stroke_width=0,
-                font='Georgia-Bold',
-                method='caption',
-                align='center',
-                size=(longest_line_width, None)
-            ).set_duration(end_time - start_time)
+    #         subtitle_clip = TextClip(
+    #             wrapped_text,
+    #             fontsize=adjusted_font_size,
+    #             color=color,
+    #             stroke_width=0,
+    #             font='Georgia-Bold',
+    #             method='caption',
+    #             align='center',
+    #             size=(longest_line_width, None)
+    #         ).set_duration(end_time - start_time)
 
-            small_margin = 8
-            box_width = longest_line_width + small_margin
-            box_height = text_height + margin
-            box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
+    #         small_margin = 8
+    #         box_width = longest_line_width + small_margin
+    #         box_height = text_height + margin
+    #         box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
 
-            box_position = ('center', clip.h - box_height - 2 * margin)
-            subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
+    #         box_position = ('center', clip.h - box_height - 2 * margin)
+    #         subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
 
-            box_clip = box_clip.set_position(box_position)
-            subtitle_clip = subtitle_clip.set_position(subtitle_position)
+    #         box_clip = box_clip.set_position(box_position)
+    #         subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
-            subtitle_clips.append(subtitle_clip.set_start(start_time))
+    #         subtitle_clips.append(subtitle_clip.set_start(start_time))
 
-        final_clip = CompositeVideoClip([clip] + subtitle_clips)
-        return final_clip
+    #     final_clip = CompositeVideoClip([clip] + subtitle_clips)
+    #     return final_clip
 
 
-    # def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
-        text_file_instance=self.text_file_instance
-        try:
-            # Open the JSON file directly from the text_file_instance
-            with text_file_instance.generated_srt.open('r') as json_file:
-                srt_json_content = json_file.read()
-            
-            # Parse the JSON content
-            subtitle_json = json.loads(srt_json_content)
-
-        except json.JSONDecodeError as e:
-            raise Exception(f"JSON parsing error: {e}")
-        except Exception as e:
-            raise Exception(f"Error accessing the JSON file: {e}")
-
-        # List to store all subtitle clips
-        subtitle_clips = []
-
-        def format_time(time_in_seconds):
-            return float(time_in_seconds)
-
-        # Iterate through each subtitle fragment in the JSON
-        for fragment in subtitle_json['fragments']:
-            start_time = format_time(fragment['begin'])
-            end_time = format_time(fragment['end'])
-            subtitle_text = "\n".join(fragment['lines'])
-
-            # Create TextClip for each subtitle
-            subtitle_clip = TextClip(
-                subtitle_text, 
-                fontsize=24,
-                color='white',
-                font='Arial',
-                stroke_color='black',
-                stroke_width=2,
-                size=(clip.w, None),
-                method='caption'
-            ).set_position(('center', clip.h - 50))
-            
-            subtitle_clip = subtitle_clip.set_start(start_time).set_duration(end_time - start_time)
-            subtitle_clips.append(subtitle_clip)
-
-        final_clip = CompositeVideoClip([clip] + subtitle_clips)
-
-        return final_clip
-
-        # Download the JSON file from S3
-        text_file_instance=self.text_file_instance
-        try:
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as temp_json_file:
-                json_s3_key = text_file_instance.generated_srt.name  # S3 key of the JSON file
-                download_from_s3(json_s3_key, temp_json_file.name)  # Download the JSON file to the temp file path
-                
-                # Read the downloaded JSON content
-                temp_json_file.seek(0)  # Ensure we're at the beginning of the file after download
-                srt_json_content = temp_json_file.read().decode('utf-8')  # Read content as string
-                
-                # Debug: Print the content to check if it's valid
-                print("Downloaded JSON content:", srt_json_content)
-
-                # Parse the JSON content
-                subtitle_json = json.loads(srt_json_content)
-
-        except Exception as e:
-            raise Exception(f"Error downloading or parsing the JSON file from S3: {e}")
-
-        # List to store all subtitle clips
-        subtitle_clips = []
-
-        # Define the function to format time from seconds
-        def format_time(time_in_seconds):
-            return float(time_in_seconds)
-
-        # Iterate through each subtitle fragment in the JSON
-        for fragment in subtitle_json['fragments']:
-            start_time = format_time(fragment['begin'])
-            end_time = format_time(fragment['end'])
-            subtitle_text = "\n".join(fragment['lines'])
-
-            # Create TextClip for each subtitle
-            subtitle_clip = TextClip(
-                subtitle_text, 
-                fontsize=24,   # Adjust font size as needed
-                color='white', # Font color
-                font='Arial',  # Custom font can be used
-                stroke_color='black', # Outline color
-                stroke_width=2,       # Width of the outline
-                size=(clip.w, None),   # Text width same as video width
-                method='caption'      # Allows multi-line text
-            ).set_position(('center', clip.h - 50)) # Position at bottom of the video
-            
-            # Set start and duration for the subtitle
-            subtitle_clip = subtitle_clip.set_start(start_time).set_duration(end_time - start_time)
-
-            # Add subtitle clip to the list
-            subtitle_clips.append(subtitle_clip)
-
-        # Combine the video clip and subtitle clips
-        final_clip = CompositeVideoClip([clip] + subtitle_clips)
-
-        return final_clip
-    
-    
-    # def add_subtitles_from_json(self,clip: VideoFileClip) -> VideoFileClip:
-        # Download the JSON file from S3
-        text_file_instance=self.text_file_instance
-        try:
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as temp_json_file:
-                json_s3_key = text_file_instance.generated_srt.name  # S3 key of the JSON file
-                download_from_s3(json_s3_key, temp_json_file.name)  # Download the JSON file to the temp file path
-                
-                # Read the downloaded JSON content
-                temp_json_file.seek(0)  # Ensure we're at the beginning of the file after download
-                srt_json_content = temp_json_file.read().decode('utf-8')  # Read content as string
-                
-                # Parse the JSON content
-                subtitle_json = json.loads(srt_json_content)
-
-        except Exception as e:
-            raise Exception(f"Error downloading or parsing the JSON file from S3: {e}")
-
-        # List to store all subtitle clips
-        subtitle_clips = []
-
-        # Define the function to format time from seconds (for precise positioning of subtitles)
-        def format_time(time_in_seconds):
-            return float(time_in_seconds)
-
-        # Iterate through each subtitle fragment in the JSON
-        for fragment in subtitle_json['fragments']:
-            start_time = format_time(fragment['begin'])
-            end_time = format_time(fragment['end'])
-            subtitle_text = "\n".join(fragment['lines'])
-
-            # Create TextClip for each subtitle
-            subtitle_clip = TextClip(
-                subtitle_text, 
-                fontsize=24,   # You can adjust the font size
-                color='white', # Font color
-                font='Arial',  # You can use a custom font
-                stroke_color='black', # Outline color for better readability
-                stroke_width=2,       # Width of the outline
-                size=(clip.w, None),   # Make the text width same as the video width
-                method='caption'      # Caption to allow multi-line text
-            ).set_position(('center', clip.h - 50)) # Set position at the bottom of the video
-            
-            # Set the start and duration for the subtitle
-            subtitle_clip = subtitle_clip.set_start(start_time).set_duration(end_time - start_time)
-
-            # Add this subtitle clip to the list of subtitle clips
-            subtitle_clips.append(subtitle_clip)
-
-        # Combine the video clip and subtitle clips
-        final_clip = CompositeVideoClip([clip] + subtitle_clips)
-
-        return final_clip
+     
