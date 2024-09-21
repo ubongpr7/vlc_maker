@@ -151,6 +151,7 @@ class Command(BaseCommand):
         else:
             return
         aligned_output=self.process_srt_file('g')
+        blank_video=self.generate_blank_video_with_audio()
         print('aligned_output: ',aligned_output)
         text_clips= TextLineVideoClip.objects.filter(text_file=self.text_file_instance)
         num_segments=len(text_clips)
@@ -281,8 +282,8 @@ class Command(BaseCommand):
                     with open(temp_srt.name, 'rb') as srt_file:
                         srt_content = srt_file.read()
                     
-                    srt_file_name = f"{text_file_instance.id}_generated.srt"
-
+                    srt_file_name = f"{text_file_instance.id}_generated.json"
+    
                     # If there is an existing SRT file, delete it first
                     if text_file_instance.generated_srt:
                         text_file_instance.generated_srt.delete(save=False)
