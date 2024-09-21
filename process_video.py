@@ -378,6 +378,7 @@ def adjust_segment_duration(segment: VideoFileClip, duration: float) -> VideoFil
     elif current_duration > duration:
         return segment.subclip(0, duration)
     return segment
+
 def extract_video_paths(json_file_path):
     # Load the JSON file
     with open(json_file_path, 'r') as file:
@@ -627,7 +628,7 @@ def convert_to_webm(input_video_path, output_webm_path):
 # Usage example
 
 
-from moviepy.editor import VideoFileClip, ImageClip
+from moviepy.editor import ImageClip
 import numpy as np
 
 def add_animated_watermark(video_path, output_path):
