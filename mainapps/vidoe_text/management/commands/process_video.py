@@ -1033,7 +1033,8 @@ class Command(BaseCommand):
 
 
 
-    def add_subtitles_from_json(self, text_file_instance, clip: VideoFileClip) -> VideoFileClip:
+    def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
+        text_file_instance=self.text_file_instance
         try:
             # Open the JSON file directly from the text_file_instance
             with text_file_instance.generated_json_srt.open('r') as json_file:
