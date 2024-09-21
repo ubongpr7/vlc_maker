@@ -152,13 +152,10 @@ class Command(BaseCommand):
         output_audio_file = os.path.join(base_path,'audio',f'{timestamp}_{text_file_id}_audio.mp3')
 
         audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
-        # print(f'audio_file: ',audio_file)
-        # text_file_instance.generated_audio=audio_file
-        # text_file_instance.save()
+        
         logging.info('done with audio file ')
         output_srt_file_path = os.path.join(base_path, 'srt_files', f'{text_file_id}_generated_srt_output.json')
 
-        # srt_file_path = self.generate_srt_file(audio_file, text_file, output_srt_file_path)
         if audio_file:
 
             srt_file=self.generate_srt_file()
@@ -1007,7 +1004,7 @@ class Command(BaseCommand):
         temp_subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
-            # font=font_path
+            font='Courier'
         )
         longest_line_width, text_height = temp_subtitle_clip.size
 
@@ -1017,7 +1014,7 @@ class Command(BaseCommand):
             color=color,
             # stroke_color="white",
             stroke_width=0,
-            # font=font_path,
+            font='Courier',
             method='caption',
             align='center',
             size=(longest_line_width, None)  # Use the measured width for the longest line
