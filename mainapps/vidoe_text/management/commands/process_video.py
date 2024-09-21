@@ -1055,9 +1055,6 @@ class Command(BaseCommand):
         scaling_factor = (clip.h / 1080)  # Adjust font size based on resolution
         font_size = int(base_font_size * scaling_factor)
 
-        x, y, z = mcolors.to_rgb(subtitle_box_color)
-        subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
-
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
             lines = []
@@ -1117,11 +1114,16 @@ class Command(BaseCommand):
                 fontsize=adjusted_font_size,
                 color=color,
                 stroke_width=0,
+                bg_color=subtitle_box_color,
                 font='Georgia-Bold',
                 method='caption',
                 align='center',
                 size=(longest_line_width, None)
             ).set_duration(end_time - start_time)
+            
+            x, y, z = mcolors.to_rgb(subtitle_box_color)
+            subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
+
 
             small_margin = 8
             box_width = longest_line_width + small_margin
