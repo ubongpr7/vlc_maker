@@ -322,6 +322,7 @@ class Command(BaseCommand):
         # Create temporary files to store downloaded audio, text, and SRT files
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio, \
             tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as temp_text, \
+            tempfile.NamedTemporaryFile(suffix=".srt", delete=False) as temp_srt_file, \
             tempfile.NamedTemporaryFile(suffix=".json", delete=False) as temp_srt:
 
             # Download the audio file from S3 and write it to the temp file
@@ -347,6 +348,8 @@ class Command(BaseCommand):
             # Run the subprocess to generate SRT using Aeneas or other tool
             command = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
                     f'"task_language=eng|is_text_type=plain|os_task_file_format=json" "{temp_srt.name}"'
+            command2 = f'python3.10 -m aeneas.tools.execute_task "{temp_audio.name}" "{temp_text.name}" ' \
+                    f'"task_language=eng|is_text_type=plain|os_task_file_format=srt" "{temp_srt_file.name}"'
 
             try:
                 logging.info(f'Running command: {command}')
@@ -375,6 +378,28 @@ class Command(BaseCommand):
 
                     logging.info(f'SRT file saved to instance: {srt_file_name}')
                     return text_file_instance.generated_srt
+                else:
+                    logging.error(f'Error generating SRT file: {result.stderr}')
+                result2 = subprocess.run(command2, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                
+                if result2.returncode == 0:
+                    logging.info(f'SRT content generated successfully')
+
+                    # Save the SRT content to the TextFile instance's srt_file field
+                    with open(temp_srt_file.name, 'rb') as srt_file:
+                        srt_content = srt_file.read()
+                    
+                    srt_file_name = f"{text_file_instance.id}_generated.srt"
+
+                    # If there is an existing SRT file, delete it first
+                    if text_file_instance.srt_file:
+                        text_file_instance.srt_file.delete(save=False)
+
+                    # Save the new SRT content to the srt_file field
+                    text_file_instance.srt_file.save(srt_file_name, ContentFile(srt_content))
+
+                    logging.info(f'SRT file saved to instance: {srt_file_name}')
+                    return True
                 else:
                     logging.error(f'Error generating SRT file: {result.stderr}')
                     return False
@@ -643,7 +668,7 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error loading subtitles from text_file_instance: {e}")
             raise
-
+    
     def convert_seconds_to_subrip_time(self,seconds):
         """Helper function to convert seconds into SubRipTime."""
         ms = int((seconds % 1) * 1000)
@@ -1024,3 +1049,4 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error adding animated watermark: {e}")
             return False
+    
