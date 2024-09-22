@@ -980,6 +980,9 @@ class Command(BaseCommand):
                     logging.error(f"Failed to download logo from S3 at {logo_s3_path}.")
                     return False
 
+                # Close the temp file so MoviePy can access it
+                temp_logo.close()
+
                 # Load and resize the watermark
                 watermark = ImageClip(temp_logo.name).resize(width=int(video.w * 0.6)).set_opacity(0.5)
 
