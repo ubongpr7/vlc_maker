@@ -239,7 +239,8 @@ class Command(BaseCommand):
                 )
             
 
-            watermarked= self.add_animated_watermark_to_instance(subtitled_video)
+            # watermarked= self.add_animated_watermark_to_instance(subtitled_video)
+        add_animated_watermark(text_file_instance)
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
 
@@ -1185,19 +1186,14 @@ def soft_wrap_text(
     wrapped_text = textwrap.fill(text, width=max_chars)
     return wrapped_text
 
-import cv2
-import numpy as np
-import os
-import tempfile
-import logging
-from django.core.files.base import ContentFile
 
-def add_animated_watermark(video_s3_path, watermark_s3_path, text_file_instance):
+def add_animated_watermark(text_file_instance):
     # Create temporary paths for downloaded files
     video_temp_path = tempfile.mktemp(suffix=".mp4")
     watermark_temp_path = tempfile.mktemp(suffix=".png")
-
+    video_s3_path=text_file_instance.generated_final_video.name
     # Download video and watermark from S3
+    watermark_s3_path=LogoModel.objects.first().logo.name
     download_from_s3(video_s3_path, video_temp_path)
     download_from_s3(watermark_s3_path, watermark_temp_path)
 
