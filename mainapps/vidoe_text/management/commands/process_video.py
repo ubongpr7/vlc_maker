@@ -239,7 +239,7 @@ class Command(BaseCommand):
                 )
 
 
-        watermarked= self.add_animated_watermark_to_instance()
+            watermarked= self.add_animated_watermark_to_instance()
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
 
