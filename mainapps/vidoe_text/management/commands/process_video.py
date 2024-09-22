@@ -1124,7 +1124,7 @@ class Command(BaseCommand):
                 color=color,
                 stroke_width=0,
                 bg_color=subtitle_box_color,
-                font='Georgia-Bold',
+                font=os.path.join(os.getcwd(),'fonts','31692f02-5637-4cd2-b973-99a09e542b83.ttf'),
                 method='caption',
                 align='center',
                 # kerning=12,
