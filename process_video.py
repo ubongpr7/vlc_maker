@@ -30,7 +30,7 @@ from typing import List, Dict
 import pysrt
 from pysrt import  SubRipTime,SubRipFile,SubRipItem
 
-from django.conf import settings
+# from django.conf import settings
 
 # Suppress specific Pydantic warnings
 warnings.filterwarnings("ignore", category=UserWarning, )
@@ -47,10 +47,10 @@ imagemagick_path = "/usr/bin/convert" # Set the path to the ImageMagick executab
 os.environ['IMAGEMAGICK_BINARY'] = imagemagick_path
 change_settings({"IMAGEMAGICK_BINARY": imagemagick_path})
 
-AWS_ACCESS_KEY_ID = settings.AWS_ACCESS_KEY_ID
-bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-aws_secret = settings.AWS_SECRET_ACCESS_KEY
-s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
+# AWS_ACCESS_KEY_ID = settings.AWS_ACCESS_KEY_ID
+# bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+# aws_secret = settings.AWS_SECRET_ACCESS_KEY
+# s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
 
 def download_from_s3(file_key, local_file_path):
     """
