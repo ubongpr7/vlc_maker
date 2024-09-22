@@ -1033,14 +1033,20 @@ class Command(BaseCommand):
     #         if 'temp_logo' in locals() and os.path.exists(temp_logo.name):
     #             os.remove(temp_logo.name)
 
+
+
     def add_animated_watermark_to_instance(self, video):
         """
         Add an animated watermark to the video from text_file_instance and save the result.
         """
         text_file_instance = self.text_file_instance
 
-        # Use download_from_s3 to get the logo file
-        logo_path = download_from_s3('media/logo.png')
+        # Create a temporary file for the logo
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_logo:
+            logo_path = temp_logo.name
+
+        # Download the logo file from S3
+        download_from_s3('media/logo.png', logo_path)
 
         # Read the logo using imageio
         try:
@@ -1094,9 +1100,10 @@ class Command(BaseCommand):
             return False
 
         finally:
-            # Clean up the temporary logo file if it exists
+            # Clean up the temporary files
             if os.path.exists(logo_path):
                 os.remove(logo_path)
+
 
 
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
