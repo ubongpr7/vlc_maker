@@ -166,3 +166,7 @@ class TextLineVideoClip(models.Model):
         
         # Set default ordering by line_number, then by text_file
         ordering = ['line_number', 'text_file']
+
+
+class LogoModel(models.Model):
+    logo=models.FileField(upload_to='/logos')
