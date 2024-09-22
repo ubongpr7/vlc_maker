@@ -1123,11 +1123,11 @@ class Command(BaseCommand):
                 size=(longest_line_width, None)
             ).set_duration(end_time - start_time)
             
-            x, y, z = mcolors.to_rgb(subtitle_box_color)
-            subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
+            # x, y, z = mcolors.to_rgb(subtitle_box_color)
+            # subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
 
 
-            small_margin = 8
+            small_margin = 100
             box_width = longest_line_width + small_margin
             box_height = text_height + margin
             box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
