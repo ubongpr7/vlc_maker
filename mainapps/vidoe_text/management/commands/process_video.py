@@ -877,8 +877,8 @@ class Command(BaseCommand):
         if margin is None:
             # Set default margin or handle the case when margin is None
             margin = 30
-        # x,y,z =mcolors.to_rgb(subtitle_box_color)
-        # subtitle_box_color=(x*255,y*255,z*255)
+        x,y,z =mcolors.to_rgb(subtitle_box_color)
+        subtitle_box_color=(x*255,y*255,z*255)
         
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = (clip.h / 1080)
@@ -1098,7 +1098,7 @@ class Command(BaseCommand):
             start_time = float(fragment['begin'])
             end_time = float(fragment['end'])
             subtitle_text = "\n".join(fragment['lines'])
-
+            subtitle_box_color=self.text_file_instance.subtitle_box_color
             if len(subtitle_text) > 60:
                 wrapped_text, adjusted_font_size = ensure_two_lines(subtitle_text, max_line_width, font_size)
             else:
@@ -1123,8 +1123,8 @@ class Command(BaseCommand):
                 size=(longest_line_width, None)
             ).set_duration(end_time - start_time)
             
-            # x, y, z = mcolors.to_rgb(subtitle_box_color)
-            # subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
+            x, y, z = mcolors.to_rgb(subtitle_box_color)
+            subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
 
 
             small_margin = 8
