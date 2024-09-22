@@ -877,8 +877,8 @@ class Command(BaseCommand):
         if margin is None:
             # Set default margin or handle the case when margin is None
             margin = 30
-        x,y,z =mcolors.to_rgb(subtitle_box_color)
-        subtitle_box_color=(x*255,y*255,z*255)
+        # x,y,z =mcolors.to_rgb(subtitle_box_color)
+        # subtitle_box_color=(x*255,y*255,z*255)
         
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = (clip.h / 1080)
@@ -1127,7 +1127,7 @@ class Command(BaseCommand):
             # subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
 
 
-            small_margin = 100
+            small_margin = 8
             box_width = longest_line_width + small_margin
             box_height = text_height + margin
             box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
