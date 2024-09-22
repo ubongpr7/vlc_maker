@@ -169,7 +169,7 @@ STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'
 MEDIA_URL = 'media/'  # This will be overridden for S3
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
 # AWS S3 configuration
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
