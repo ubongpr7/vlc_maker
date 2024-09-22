@@ -983,8 +983,8 @@ class Command(BaseCommand):
 
             # Save the logo to the root directory
             logo_file = logo_instance.logo.open('rb')
-            with open(logo_path, 'wb') as temp_logo:
-                temp_logo.write(logo_file.read())
+            with logo_instance.logo.open('rb') as f:
+                f.write(logo_file.read())
 
             # Open the logo with Pillow to ensure it's in the correct format
             pil_image = Image.open(logo_path).convert("RGBA")
@@ -1184,4 +1184,91 @@ def soft_wrap_text(
     max_chars = max_width / letter_width
     wrapped_text = textwrap.fill(text, width=max_chars)
     return wrapped_text
+
+import cv2
+import numpy as np
+import os
+import tempfile
+import logging
+from django.core.files.base import ContentFile
+
+def add_animated_watermark(video_s3_path, watermark_s3_path, text_file_instance):
+    # Create temporary paths for downloaded files
+    video_temp_path = tempfile.mktemp(suffix=".mp4")
+    watermark_temp_path = tempfile.mktemp(suffix=".png")
+
+    # Download video and watermark from S3
+    download_from_s3(video_s3_path, video_temp_path)
+    download_from_s3(watermark_s3_path, watermark_temp_path)
+
+    # Load the video
+    cap = cv2.VideoCapture(video_temp_path)
+    
+    if not cap.isOpened():
+        logging.error(f"Error opening video file: {video_temp_path}")
+        return
+
+    # Get video properties
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # Load the watermark
+    watermark = cv2.imread(watermark_temp_path, cv2.IMREAD_UNCHANGED)
+    if watermark is None:
+        logging.error(f"Error loading watermark image: {watermark_temp_path}")
+        return
+
+    watermark = cv2.resize(watermark, (int(width * 0.6), int(height * 0.6)))  # Resize watermark
+    watermark_height, watermark_width = watermark.shape[:2]
+
+    # Create VideoWriter to save the output
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec
+    output_temp_path = tempfile.mktemp(suffix=".mp4")  # Temporary output path
+    out = cv2.VideoWriter(output_temp_path, fourcc, fps, (width, height))
+
+    # Position variables
+    pos_x, pos_y = 0, 0
+    speed_x, speed_y = 5, 3  # Speed of the watermark
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # Draw the watermark on the frame
+        frame[pos_y:pos_y + watermark_height, pos_x:pos_x + watermark_width] = watermark
+
+        # Update watermark position
+        pos_x += speed_x
+        pos_y += speed_y
+
+        # Bounce the watermark off the edges
+        if pos_x + watermark_width > width or pos_x < 0:
+            speed_x = -speed_x
+        if pos_y + watermark_height > height or pos_y < 0:
+            speed_y = -speed_y
+
+        # Write the frame with the watermark
+        out.write(frame)
+
+    # Release resources
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+
+    # Save the output video to the model field
+    with open(output_temp_path, 'rb') as temp_file:
+        text_file_instance.generated_watermarked_video.save(
+            f"watermarked_output_{text_file_instance.id}.mp4",
+            ContentFile(temp_file.read())
+        )
+
+    # Clean up temporary files
+    os.remove(video_temp_path)
+    os.remove(watermark_temp_path)
+    os.remove(output_temp_path)
+
+    logging.info("Watermarked video generated successfully and saved to the model.")
+
 
