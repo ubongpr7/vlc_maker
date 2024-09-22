@@ -97,10 +97,14 @@ def serve_file(request, file_name):
 @login_required  
 def process_background_music(request, textfile_id):
     
+    textfile = TextFile.objects.get(pk=textfile_id)
+    if textfile.background_musics:
+        for bg in BackgroundMusic.objects().filter(test_file=textfile):
+            bg.delete()
+
     if request.method == 'POST':
         try:
             # Fetch the TextFile instance
-            textfile = TextFile.objects.get(pk=textfile_id)
             if textfile.user != request.user:
                 messages.error(request,'You Do Not have access to the Resources You Requested ')
 
