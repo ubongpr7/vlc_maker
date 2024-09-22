@@ -1110,9 +1110,16 @@ class Command(BaseCommand):
                 font='Georgia-Bold'  # Use the font specified in text_file_instance if available
             )
             longest_line_width, text_height = temp_subtitle_clip.size
+            ne_text=soft_wrap_text(
+                    wrapped_text,
 
+                    font_family=os.path.join(os.getcwd(),'fonts','31692f02-5637-4cd2-b973-99a09e542b83.ttf'),
+                    fontsize=font_size,
+                    letter_spacing=12,
+                    max_width=clip.w * .8  # *0.8 for some padding
+                )
             subtitle_clip = TextClip(
-                wrapped_text,
+                ne_text,
                 fontsize=adjusted_font_size,
                 color=color,
                 stroke_width=0,
@@ -1120,6 +1127,7 @@ class Command(BaseCommand):
                 font='Georgia-Bold',
                 method='caption',
                 align='center',
+                # kerning=12,
                 size=(longest_line_width, None)
             ).set_duration(end_time - start_time)
             
