@@ -974,7 +974,7 @@ class Command(BaseCommand):
 
         # Define the path where the logo will be temporarily stored
         logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
-        k
+        
         try:
             watermark = ImageClip(logo_path).resize(width=video.w * 0.6).set_opacity(0.5)
         except Exception as e:
