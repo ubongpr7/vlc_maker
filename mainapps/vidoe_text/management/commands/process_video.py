@@ -1121,8 +1121,8 @@ class Command(BaseCommand):
                 size=(longest_line_width, None)
             ).set_duration(end_time - start_time)
             
-            x, y, z = mcolors.to_rgb(subtitle_box_color)
-            subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
+            # x, y, z = mcolors.to_rgb(subtitle_box_color)
+            # subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
 
 
             small_margin = 8
