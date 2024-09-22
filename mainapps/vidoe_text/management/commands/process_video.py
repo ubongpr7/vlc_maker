@@ -973,7 +973,7 @@ class Command(BaseCommand):
         text_file_instance = self.text_file_instance
 
         # Define the path where the logo will be temporarily stored
-        logo_path = os.path.join(as.getcwd(),'media','vlc','logo.png')
+        logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
 
         # Load the logo image as a watermark
         try:
