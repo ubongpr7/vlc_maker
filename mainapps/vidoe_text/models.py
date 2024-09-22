@@ -169,4 +169,4 @@ class TextLineVideoClip(models.Model):
 
 
 class LogoModel(models.Model):
-    logo=models.FileField(upload_to='/logos')
+    logo=models.FileField(upload_to='logos/')
