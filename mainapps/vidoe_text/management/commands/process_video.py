@@ -3,10 +3,10 @@ from mainapps.vidoe_text.models import TextFile, TextLineVideoClip
 import sys
 import time
 import matplotlib.colors as mcolors
-
+from django.templatetags.static import static
 from moviepy.editor import ImageClip
 import numpy as np
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 import textwrap
 from PIL import ImageFont
 
@@ -1088,11 +1088,19 @@ class Command(BaseCommand):
         """
         Add an animated watermark to the video from text_file_instance and save the result.
         """
-        watermark_path = os.path.join(os.getcwd(), 'media', 'logo.png')
+        text_file_instance=self.text_file_instance
+        logo_url = static('media/logo.png')
+
+        # Download the logo file from S3
+        response = requests.get(logo_url)
+        if response.status_code == 200:
+            with open('temp_logo.png', 'wb') as f:
+                f.write(response.content)
+
 
         try:
             # Load and resize the watermark
-            watermark = ImageClip(watermark_path).resize(width=video.w * 0.6).set_opacity(0.5)
+            watermark = ImageClip('temp_logo.png').resize(width=video.w * 0.6).set_opacity(0.5)
         except Exception as e:
             logging.error(f"Error loading watermark image: {e}")
             return False
@@ -1112,10 +1120,10 @@ class Command(BaseCommand):
         watermark = watermark.set_position(moving_watermark, relative=False)
         watermark = watermark.set_duration(video.duration)
     # Overlay the animated watermark on the video
-        watermaked = CompositeVideoClip([video, watermark], size=video.size)
+        watermarked = CompositeVideoClip([video, watermark], size=video.size)
 
 
-        watermaked.set_duration(video.duration)
+        watermarked.set_duration(video.duration)
 
         # Save the output to a temporary file
         try:
