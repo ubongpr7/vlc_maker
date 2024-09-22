@@ -9,3 +9,4 @@ dj-stripe
 django-smtp-ssl
 django-storages
 boto3
+av
