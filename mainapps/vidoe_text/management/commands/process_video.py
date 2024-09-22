@@ -1099,17 +1099,23 @@ class Command(BaseCommand):
 
         # Function to calculate the new position of the watermark over time
         def moving_watermark(t):
+            # Speed in pixels per second (modify to adjust speed)
             speed_x, speed_y = 250, 200
+            
+            # Calculate the new position (bouncing around the screen)
             pos_x = np.abs((speed_x * t) % (2 * video.w) - video.w)
             pos_y = np.abs((speed_y * t) % (2 * video.h) - video.h)
+            
             return (pos_x, pos_y)
 
-        # Animate the watermark
-        watermark = watermark.set_position(moving_watermark, relative=False).set_duration(video.duration)
+        # Animate the watermark by changing its position over time
+        watermark = watermark.set_position(moving_watermark, relative=False)
+        watermark = watermark.set_duration(video.duration)
+    # Overlay the animated watermark on the video
+        watermaked = CompositeVideoClip([video, watermark], size=video.size)
 
-        # Overlay the animated watermark on the video
-        watermarked = CompositeVideoClip([video, watermark], size=video.size)
-        watermarked.set_duration(video.duration)
+
+        watermaked.set_duration(video.duration)
 
         # Save the output to a temporary file
         try:
