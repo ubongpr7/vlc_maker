@@ -1084,7 +1084,6 @@ class Command(BaseCommand):
     #         return False
 
 
-
     def add_animated_watermark_to_instance(self):
         """
         Add an animated watermark to the video from text_file_instance and save the result.
@@ -1092,14 +1091,8 @@ class Command(BaseCommand):
         text_file_instance = self.text_file_instance
 
         try:
-            # Open the video file from the text_file_instance, and copy it to a temporary file
-            with text_file_instance.generated_final_video.open('rb') as video_file:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file:
-                    shutil.copyfileobj(video_file, temp_video_file)  # Copy the file contents to temp file
-                    temp_video_file_path = temp_video_file.name
-
-            # Now load the video using VideoFileClip from the temp file
-            video = VideoFileClip(temp_video_file_path)
+            # Load the video using the helper function
+            video = load_video_from_file_field(text_file_instance.generated_final_video)
 
         except Exception as e:
             logging.error(f"Error loading video: {e}")
@@ -1159,8 +1152,86 @@ class Command(BaseCommand):
 
         finally:
             # Clean up the temporary video file if it exists
-            if os.path.exists(temp_video_file_path):
-                os.remove(temp_video_file_path)
+            if os.path.exists(temp_output_video.name):
+                os.remove(temp_output_video.name)
+
+
+    # def add_animated_watermark_to_instance(self):
+    #     """
+    #     Add an animated watermark to the video from text_file_instance and save the result.
+    #     """
+    #     text_file_instance = self.text_file_instance
+
+    #     try:
+    #         # Open the video file from the text_file_instance, and copy it to a temporary file
+    #         with text_file_instance.generated_final_video.open('rb') as video_file:
+    #             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file:
+    #                 shutil.copyfileobj(video_file, temp_video_file)  # Copy the file contents to temp file
+    #                 temp_video_file_path = temp_video_file.name
+
+    #         # Now load the video using VideoFileClip from the temp file
+    #         video = VideoFileClip(temp_video_file_path)
+
+    #     except Exception as e:
+    #         logging.error(f"Error loading video: {e}")
+    #         return False
+
+    #     # Path to the watermark image (assuming the image is stored locally or served)
+    #     watermark_path = os.path.join(os.getcwd(), 'media', 'vlc', 'logo.png')
+
+    #     try:
+    #         # Load and resize the watermark
+    #         watermark = ImageClip(watermark_path).resize(width=video.w * 0.6).set_opacity(0.5)
+    #     except Exception as e:
+    #         logging.error(f"Error loading watermark image: {e}")
+    #         return False
+
+    #     # Function to calculate the new position of the watermark over time
+    #     def moving_watermark(t):
+    #         speed_x, speed_y = 250, 200
+    #         pos_x = np.abs((speed_x * t) % (2 * video.w) - video.w)
+    #         pos_y = np.abs((speed_y * t) % (2 * video.h) - video.h)
+    #         return (pos_x, pos_y)
+
+    #     # Animate the watermark
+    #     watermark = watermark.set_position(moving_watermark, relative=False).set_duration(video.duration)
+
+    #     # Overlay the animated watermark on the video
+    #     watermarked = CompositeVideoClip([video, watermark], size=video.size)
+    #     watermarked.set_duration(video.duration)
+
+    #     # Save the output to a temporary file
+    #     try:
+    #         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
+    #             watermarked.write_videofile(
+    #                 temp_output_video.name,
+    #                 codec='libx264',
+    #                 preset="ultrafast",
+    #                 ffmpeg_params=["-movflags", "+faststart"]
+    #             )
+
+    #             # Save the watermarked video to the model field
+    #             if text_file_instance.generated_watermarked_video:
+    #                 text_file_instance.generated_watermarked_video.delete(save=False)
+
+    #             # Save the file to the generated_watermarked_video field
+    #             with open(temp_output_video.name, 'rb') as temp_file:
+    #                 text_file_instance.generated_watermarked_video.save(
+    #                     f"watermarked_output_{text_file_instance.id}.mp4",
+    #                     ContentFile(temp_file.read())
+    #                 )
+
+    #         logging.info("Watermarked video generated successfully.")
+    #         return True
+
+    #     except Exception as e:
+    #         logging.error(f"Error generating watermarked video: {e}")
+    #         return False
+
+    #     finally:
+    #         # Clean up the temporary video file if it exists
+    #         if os.path.exists(temp_video_file_path):
+    #             os.remove(temp_video_file_path)
 
 
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
