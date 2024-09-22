@@ -982,7 +982,7 @@ class Command(BaseCommand):
                 return False
 
             # Save the logo to the root directory
-            logo_file = logo_instance.logo.open()
+            logo_file = logo_instance.logo.open('rb')
             with open(logo_path, 'wb') as temp_logo:
                 temp_logo.write(logo_file.read())
 
