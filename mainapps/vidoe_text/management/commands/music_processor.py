@@ -150,7 +150,7 @@ class Command(BaseCommand):
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
 
-
+        self.add_animated_watermark_to_instance(video_clip)
         video_clip.close()
         for clip in background_clips:
             clip.close()
@@ -215,11 +215,6 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error generating watermarked video: {e}")
             return False
-
-        finally:
-            # Clean up the logo image after processing
-            if os.path.exists(logo_path):
-                os.remove(logo_path)
 
 
 

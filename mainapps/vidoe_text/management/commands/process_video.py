@@ -974,8 +974,7 @@ class Command(BaseCommand):
 
         # Define the path where the logo will be temporarily stored
         logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
-
-        # Load the logo image as a watermark
+        k
         try:
             watermark = ImageClip(logo_path).resize(width=video.w * 0.6).set_opacity(0.5)
         except Exception as e:
@@ -1022,11 +1021,6 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error generating watermarked video: {e}")
             return False
-
-        finally:
-            # Clean up the logo image after processing
-            if os.path.exists(logo_path):
-                os.remove(logo_path)
 
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
         text_file_instance=self.text_file_instance
@@ -1170,12 +1164,12 @@ def soft_wrap_text(
 def add_animated_watermark(text_file_instance):
     # Create temporary paths for downloaded files
     video_temp_path = tempfile.mktemp(suffix=".mp4")
-    watermark_temp_path = tempfile.mktemp(suffix=".png")
     video_s3_path=text_file_instance.generated_final_video.name
     # Download video and watermark from S3
+    watermark_temp_path = tempfile.mktemp(suffix=".png")
     watermark_s3_path=LogoModel.objects.first().logo.name
-    download_from_s3(video_s3_path, video_temp_path)
     download_from_s3(watermark_s3_path, watermark_temp_path)
+    download_from_s3(video_s3_path, video_temp_path)
 
     # Load the video
     cap = cv2.VideoCapture(video_temp_path)

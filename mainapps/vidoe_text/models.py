@@ -90,6 +90,7 @@ class TextFile(models.Model):
     generated_final_video = models.FileField(upload_to='generated_final_video/', blank=True, null=True)
     generated_watermarked_video = models.FileField(upload_to='generated_watermarked_video/', blank=True, null=True)
     generated_final_bgm_video = models.FileField(upload_to='generated_bgm_video/', blank=True, null=True)
+    generated_final_bgmw_video = models.FileField(upload_to='generated_bgmw_video/', blank=True, null=True)
 
     
     # def clean(self):
