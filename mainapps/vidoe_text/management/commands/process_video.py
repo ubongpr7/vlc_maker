@@ -1088,7 +1088,7 @@ class Command(BaseCommand):
         """
         Add an animated watermark to the video from text_file_instance and save the result.
         """
-        watermark_path = os.path.join(os.getcwd(), 'media', 'vlc', 'logo.png')
+        watermark_path = os.path.join(os.getcwd(), 'media', 'logo.png')
 
         try:
             # Load and resize the watermark
