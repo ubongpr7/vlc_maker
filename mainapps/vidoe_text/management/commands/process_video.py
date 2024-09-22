@@ -968,29 +968,27 @@ class Command(BaseCommand):
         Add an animated watermark to the video from text_file_instance and save the result.
         """
         text_file_instance = self.text_file_instance
-        logo_url = static('media/logo.png')
+        logo_s3_path = 'media/logo.png'  # Update this to the actual S3 path of your logo
 
         try:
-            # Download the logo file from S3 and process it in a temporary file
+            # Create a temporary file for the logo
             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_logo:
-                response = requests.get(logo_url)
-                if response.status_code == 200:
-                    temp_logo.write(response.content)
-                    temp_logo_path = temp_logo.name
-                else:
-                    logging.error(f"Failed to download logo from {logo_url}, status code {response.status_code}")
+                # Download the logo file from S3
+                logo_downloaded = download_from_s3(logo_s3_path, temp_logo.name)
+                if not logo_downloaded:
+                    logging.error(f"Failed to download logo from S3 at {logo_s3_path}.")
                     return False
-
+                
                 # Validate the logo image using PIL
                 try:
-                    with Image.open(temp_logo_path) as img:
+                    with Image.open(temp_logo.name) as img:
                         img.verify()  # Verify that it's a valid image
                 except Exception as e:
                     logging.error(f"Downloaded file is not a valid image: {e}")
                     return False
 
                 # Load and resize the watermark
-                watermark = ImageClip(temp_logo_path).resize(width=int(video.w * 0.6)).set_opacity(0.5)
+                watermark = ImageClip(temp_logo.name).resize(width=int(video.w * 0.6)).set_opacity(0.5)
 
                 # Function to calculate the new position of the watermark over time
                 def moving_watermark(t):
@@ -999,7 +997,7 @@ class Command(BaseCommand):
                     pos_y = np.abs((speed_y * t) % (2 * video.h) - video.h)
                     return (pos_x, pos_y)
 
-                # Animate the watermark by changing its position over time
+                # Animate the watermark
                 watermark = watermark.set_position(moving_watermark, relative=False).set_duration(video.duration)
 
                 # Overlay the animated watermark on the video
@@ -1035,9 +1033,8 @@ class Command(BaseCommand):
             # Clean up temporary files if they exist
             if 'temp_output_video' in locals() and os.path.exists(temp_output_video.name):
                 os.remove(temp_output_video.name)
-            if 'temp_logo_path' in locals() and os.path.exists(temp_logo_path):
-                os.remove(temp_logo_path)
-
+            if 'temp_logo' in locals() and os.path.exists(temp_logo.name):
+                os.remove(temp_logo.name)
 
 
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
