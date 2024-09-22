@@ -991,7 +991,7 @@ class Command(BaseCommand):
 
             # Function to calculate the new position of the watermark
             def moving_watermark(t):
-                speed_x, speed_y = 250, 200
+                speed_x, speed_y = 300, 280
                 pos_x = np.abs((speed_x * t) % (2 * video.w) - video.w)
                 pos_y = np.abs((speed_y * t) % (2 * video.h) - video.h)
                 return (pos_x, pos_y)
