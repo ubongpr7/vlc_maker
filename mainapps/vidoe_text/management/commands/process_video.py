@@ -239,8 +239,8 @@ class Command(BaseCommand):
                 )
             
 
-            # watermarked= self.add_animated_watermark_to_instance(subtitled_video)
-        add_animated_watermark(text_file_instance)
+            watermarked= self.add_animated_watermark_to_instance(subtitled_video)
+        # add_animated_watermark(text_file_instance)
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
 
@@ -973,27 +973,7 @@ class Command(BaseCommand):
         text_file_instance = self.text_file_instance
 
         # Define the path where the logo will be temporarily stored
-        logo_path = os.path.join(os.path.dirname(__file__), f'{text_file_instance.id}temp_logo.png')
-
-        # Fetch the logo from the LogoModel
-        try:
-            logo_instance = LogoModel.objects.first()  # Fetch the specific logo
-            if not logo_instance or not logo_instance.logo:
-                logging.error("No logo found in LogoModel.")
-                return False
-
-            # Save the logo to the root directory
-            logo_file = logo_instance.logo.open('rb')
-            with logo_instance.logo.open('rb') as f:
-                f.write(logo_file.read())
-
-            # Open the logo with Pillow to ensure it's in the correct format
-            pil_image = Image.open(logo_path).convert("RGBA")
-            pil_image.save(logo_path)  # Save back to ensure compatibility
-
-        except Exception as e:
-            logging.error(f"Error loading logo: {e}")
-            return False
+        logo_path = os.path.join(as.getcwd(),'media','vlc','logo.png')
 
         # Load the logo image as a watermark
         try:

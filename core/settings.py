@@ -164,7 +164,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = 'static/'  # This will be overridden for S3
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'
+# STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'
 # Media files (uploads by users)
 MEDIA_URL = 'media/'  # This will be overridden for S3
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -177,11 +177,11 @@ AWS_STORAGE_BUCKET_NAME = 'vlsmlsaker'
 AWS_S3_REGION_NAME = 'eu-north-1'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_FILES_OVERWRITE=False
-# STORAGES={
-#     "default":{
-#         'BACKEND':'storages.backends.s3boto3.S3Boto3Storage'
-#     },
-#     # "staticfiles":{
-#     #     'BACKEND':'storages.backends.s3boto3.S3Boto3Storage'
-#     # },
-# }
+STORAGES={
+    "default":{
+        'BACKEND':'storages.backends.s3boto3.S3Boto3Storage'
+    },
+    "staticfiles":{
+        'BACKEND':'storages.backends.s3boto3.S3Boto3Storage'
+    },
+}

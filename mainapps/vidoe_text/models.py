@@ -145,9 +145,9 @@ class TextLineVideoClip(models.Model):
     timestamp_end = models.FloatField(null=True, blank=True)  # End time for where this clip ends in the final video
     def to_dict(self):
         if self.video_file:
-            video_path = self.video_file.video_file.path # Use .url to get the S3 or local URL
+            video_path = self.video_file.video_file # Use .url to get the S3 or local URL
         elif self.video_file_path:
-            video_path = self.video_file_path.path # Use .url for the FileField as well
+            video_path = self.video_file_path# Use .url for the FileField as well
         else:
             video_path = ''  # Fallback to an empty string if no video path is available
 

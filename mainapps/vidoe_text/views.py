@@ -192,27 +192,27 @@ def progress_page(request,al_the_way,text_file_id):
     return render(request,'vlc/progress.html',{"al_the_way":al_the_way,'text_file_id':text_file_id})
 
 
-# @login_required
-# def process_textfile(request, textfile_id):
-#     try:
-#         # Fetch the TextFile instance
-#         textfile = TextFile.objects.get(pk=textfile_id)
-#         if textfile.user != request.user:
-#             messages.error(request,'You Do Not have access to the Resources You Requested ')
+@login_required
+def process_textfile(request, textfile_id):
+    try:
+        # Fetch the TextFile instance
+        textfile = TextFile.objects.get(pk=textfile_id)
+        if textfile.user != request.user:
+            messages.error(request,'You Do Not have access to the Resources You Requested ')
 
-#             return render(request,'permission_denied.html')
-#     except TextFile.DoesNotExist:
-#         return Http404("Text file not found")
+            return render(request,'permission_denied.html')
+    except TextFile.DoesNotExist:
+        return Http404("Text file not found")
 
-#     if not textfile_id:
-#         return JsonResponse({'error': 'text_file_id is required.'}, status=400)
+    if not textfile_id:
+        return JsonResponse({'error': 'text_file_id is required.'}, status=400)
 
-#     try:
-#         call_command('process_video', textfile_id)
-#         return redirect(f'/text/progress_page/build/{textfile_id}')
+    try:
+        call_command('process_video', textfile_id)
+        return redirect(f'/text/progress_page/build/{textfile_id}')
 
-#     except Exception as e:
-#         return JsonResponse({'error': str(e)}, status=500)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 
