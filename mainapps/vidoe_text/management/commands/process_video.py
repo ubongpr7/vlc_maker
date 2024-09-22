@@ -237,9 +237,9 @@ class Command(BaseCommand):
                 f"final_{text_file_instance.id}_{timestamp}.mp4",
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
+            
 
-
-            watermarked= self.add_animated_watermark_to_instance()
+            watermarked= self.add_animated_watermark_to_instance(subtitled_video)
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
 
@@ -1084,21 +1084,10 @@ class Command(BaseCommand):
     #         return False
 
 
-    def add_animated_watermark_to_instance(self):
+    def add_animated_watermark_to_instance(self,video):
         """
         Add an animated watermark to the video from text_file_instance and save the result.
         """
-        text_file_instance = self.text_file_instance
-
-        try:
-            # Load the video using the helper function
-            video = self.load_video_from_file_field(text_file_instance.generated_final_video)
-
-        except Exception as e:
-            logging.error(f"Error loading video: {e}")
-            return False
-
-        # Path to the watermark image (assuming the image is stored locally or served)
         watermark_path = os.path.join(os.getcwd(), 'media', 'vlc', 'logo.png')
 
         try:
