@@ -22,7 +22,7 @@ import time
 from django.utils import timezone
 from django.conf import settings
 import boto3
-
+t TextFile, TextLineVideoClip ,LogoModel
 
 base_path = settings.MEDIA_ROOT
 
@@ -166,11 +166,22 @@ class Command(BaseCommand):
         text_file_instance = self.text_file_instance
 
         # Define the path where the logo will be temporarily stored
-        logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
+        
+        watermark_s3_path=LogoModel.objects.first().logo.name
 
-        # Load the logo image as a watermark
+        text_file_instance = self.text_file_instance
+
+        # Define the path where the logo will be temporarily stored
+        # logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
+
+            content=download_from_s3(watermark_s3_path, watermark_temp_path.name) 
+
+            with open(watermark_temp_path.name, 'wb') as png_file:
+                    png_file.write(content)   
         try:
-            watermark = ImageClip(logo_path).resize(width=video.w * 0.6).set_opacity(0.5)
+            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.6).set_opacity(0.5)
+
         except Exception as e:
             logging.error(f"Error loading watermark image: {e}")
             return False
