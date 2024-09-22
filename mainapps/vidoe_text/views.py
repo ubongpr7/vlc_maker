@@ -22,7 +22,9 @@ from django.http import FileResponse, Http404
 import requests
 from django.contrib.auth.decorators import login_required
 from django.core.management import call_command
-
+import io
+from django.core.files.base import ContentFile
+from mainapps.accounts.models import Credit,VlcPlan
 
 def is_api_key_valid(api_key,voice_id):
     """
@@ -63,7 +65,6 @@ def is_api_key_valid(api_key,voice_id):
         
     return x,y
 
-from mainapps.accounts.models import Credit,VlcPlan
 
 def convert_to_seconds(time_str):
     try:
@@ -92,6 +93,148 @@ def serve_file(request, file_name):
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
 
+
+@login_required  
+def process_background_music(request, textfile_id):
+    context = {
+        'media_url': settings.MEDIA_URL,
+    }
+    if request.method == 'POST':
+        try:
+            # Fetch the TextFile instance
+            textfile = TextFile.objects.get(pk=textfile_id)
+            if textfile.user != request.user:
+                messages.error(request,'You Do Not have access to the Resources You Requested ')
+
+                return render(request,'permission_denied.html')
+        except TextFile.DoesNotExist:
+            return Http404("Text file not found")
+        no_of_mp3 = int(request.POST.get('no_of_mp3', 0))  # Number of MP3 files
+    
+        # Check if the necessary fields are present in TextFile
+        if not textfile.text_file:
+            return JsonResponse({"error": "Text file is missing."}, status=400)
+        music_files = [request.FILES.get(f'bg_music_{i}') for i in range(1, no_of_mp3 +1)]  # Adjust based on your inputs
+        start_times_str = {f'bg_music_{i}': request.POST.get(f'from_when_{i}') for i in range(1, no_of_mp3 +1)}
+        end_times_str = {f'bg_music_{i}': request.POST.get(f'to_when_{i}') for i in range(1, no_of_mp3+1)}
+        start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
+        end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
+
+        # Save music files and their paths
+        music_paths = []
+        bg_musics=[]
+        for i, music_file in enumerate(music_files, start=1):
+            if music_file:
+                bg_music=BackgroundMusic(
+                        text_file=textfile,
+                        music_file=music_file,
+                        start_time=start_times[i-1],
+                        end_time=end_times[i-1],
+                    )
+                
+                bg_musics.append(bg_music)
+                # Perform bulk creation
+        if bg_musics:
+            BackgroundMusic.objects.bulk_create(bg_musics)
+
+        lines = []
+        for bg_music in bg_musics:
+            start_time_str = bg_music.start_time
+            end_time_str = bg_music.end_time
+            lines.append(f"{bg_music.music_file.name} {start_time_str} {end_time_str}")
+
+        content = "\n".join(lines)
+        
+        # Save the content to a text file
+        file_name = f'background_music_info_{textfile_id}_.txt'
+
+        textfile.bg_music_text.save(file_name, ContentFile(content))
+
+
+        try:
+            call_command('music_processor', textfile_id)
+            return redirect(f'/text/progress_page/build/{textfile_id}')
+
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return render(request,'vlc/add_music.html',{'textfile_id':textfile_id})
+
+# @login_required  
+# def process_background_music(request, textfile_id):
+#     context = {
+#         'media_url': settings.MEDIA_URL,
+#     }
+#     if request.method == 'POST':
+#         try:
+#             # Fetch the TextFile instance
+#             textfile = TextFile.objects.get(pk=textfile_id)
+#             if textfile.user != request.user:
+#                 messages.error(request,'You Do Not have access to the Resources You Requested ')
+
+#                 return render(request,'permission_denied.html')
+#         except TextFile.DoesNotExist:
+#             return Http404("Text file not found")
+#         no_of_mp3 = int(request.POST.get('no_of_mp3', 0))  # Number of MP3 files
+    
+#         # Check if the necessary fields are present in TextFile
+#         if not textfile.text_file:
+#             return JsonResponse({"error": "Text file is missing."}, status=400)
+#         music_files = [request.FILES.get(f'bg_music_{i}') for i in range(1, no_of_mp3 +1)]  # Adjust based on your inputs
+#         start_times_str = {f'bg_music_{i}': request.POST.get(f'from_when_{i}') for i in range(1, no_of_mp3 +1)}
+#         end_times_str = {f'bg_music_{i}': request.POST.get(f'to_when_{i}') for i in range(1, no_of_mp3+1)}
+#         start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
+#         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
+
+#         # Save music files and their paths
+#         music_paths = []
+#         bg_musics=[]
+#         for i, music_file in enumerate(music_files, start=1):
+#             if music_file:
+#                 bg_music=BackgroundMusic(
+#                         text_file=textfile,
+#                         music_file=music_file,
+#                         start_time=start_times[i-1],
+#                         end_time=end_times[i-1],
+#                     )
+                
+#                 bg_musics.append(bg_music)
+#                 # Perform bulk creation
+#         if bg_musics:
+#             BackgroundMusic.objects.bulk_create(bg_musics)
+
+#         lines = []
+#         for bg_music in bg_musics:
+#             start_time_str = bg_music.start_time
+#             end_time_str = bg_music.end_time
+#             lines.append(f"{bg_music.music_file.name} {start_time_str} {end_time_str}")
+
+#         content = "\n".join(lines)
+        
+#         # Save the content to a text file
+#         file_name = f'background_music_info_{textfile_id}.txt'
+#         base_path = settings.MEDIA_ROOT
+#         output_video_file_ = os.path.join(base_path, 'final', f"final_output_{textfile_id}.mp4")
+        
+#         music_info_path = os.path.join(base_path,'bg_music', file_name)  # Adjust path as needed
+            
+#         if os.path.exists(music_info_path):
+#             os.remove(music_info_path)
+
+#         # Create the necessary directories if they do not exist
+#         os.makedirs(os.path.dirname(music_info_path), exist_ok=True)
+#         with open(music_info_path, 'w') as file:
+#             file.write(content)
+#         cmd = f'python3.10 music_processor.py "{output_video_file_}" "{music_info_path}" "{str(textfile_id)}" "{base_path}"'
+#         process = subprocess.Popen(cmd, shell=True)
+
+
+
+
+#         return redirect(reverse('video:add_scenes', args=[textfile_id]))
+
+#     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id})
 
 @login_required  
 def process_background_music(request, textfile_id):

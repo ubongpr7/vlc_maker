@@ -147,10 +147,10 @@ class Command(BaseCommand):
         voice_id=text_file_instance.voice_id
         api_key=text_file_instance.api_key
         audio_file=None
-        if not text_file_instance.generated_audio:
-            output_audio_file = os.path.join(base_path,'audio',f'{timestamp}_{text_file_id}_audio.mp3')
+        # if not text_file_instance.generated_audio:
+        output_audio_file = os.path.join(base_path,'audio',f'{timestamp}_{text_file_id}_audio.mp3')
 
-            audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
+        audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
         
         logging.info('done with audio file ')
 
