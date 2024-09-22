@@ -417,7 +417,9 @@ def extract_video_paths(json_file_path):
 
 def add_subtitles_to_clip(subtitle_box_color ,clip: VideoFileClip, subtitle: pysrt.SubRipItem, base_font_size: int = 42, color: str = "white", margin: int = 30,font_path: str='') -> VideoFileClip:
     logging.info(f"Adding subtitle: {subtitle.text}")
+    font_path=os.path.join(os.getcwd(),'fonts','31692f02-5637-4cd2-b973-99a09e542b83.ttf')
     if margin is None:
+
         # Set default margin or handle the case when margin is None
         margin = 30
     import matplotlib.colors as mcolors
