@@ -978,7 +978,10 @@ class Command(BaseCommand):
         # logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
 
-            download_from_s3(watermark_s3_path, watermark_temp_path.name)    
+            content=download_from_s3(watermark_s3_path, watermark_temp_path.name) 
+
+            with open(watermark_temp_path.name, 'wb') as png_file:
+                    png_file.write(content)   
             try:
                 watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.6).set_opacity(0.5)
             except Exception as e:
