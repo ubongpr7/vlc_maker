@@ -1092,7 +1092,7 @@ class Command(BaseCommand):
 
         try:
             # Load the video using the helper function
-            video = load_video_from_file_field(text_file_instance.generated_final_video)
+            video = self.load_video_from_file_field(text_file_instance.generated_final_video)
 
         except Exception as e:
             logging.error(f"Error loading video: {e}")
