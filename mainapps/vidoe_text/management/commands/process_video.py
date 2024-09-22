@@ -971,22 +971,24 @@ class Command(BaseCommand):
         """
         text_file_instance = self.text_file_instance
 
-        # Fetch the logo from LogoModel
+        # Define the path where the logo will be temporarily stored
+        logo_path = os.path.join(os.path.dirname(__file__), f'{text_file_instance.id}temp_logo.png')
+
+        # Fetch the logo from the LogoModel
         try:
-            logo_instance = LogoModel.objects.first()  # Adjust this to fetch the specific logo you need
+            logo_instance = LogoModel.objects.first()  # Fetch the specific logo
             if not logo_instance or not logo_instance.logo:
                 logging.error("No logo found in LogoModel.")
                 return False
 
-            # Load the logo into a temporary file
+            # Save the logo to the root directory
             logo_file = logo_instance.logo.open()
-            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_logo:
+            with open(logo_path, 'wb') as temp_logo:
                 temp_logo.write(logo_file.read())
-                logo_path = temp_logo.name
 
             # Open the logo with Pillow to ensure it's in the correct format
-            pil_image = Image.open(logo_path).convert("RGBA")  # Convert to RGBA
-            pil_image.save(logo_path)  # Save it back to ensure format compatibility
+            pil_image = Image.open(logo_path).convert("RGBA")
+            pil_image.save(logo_path)  # Save back to ensure compatibility
 
         except Exception as e:
             logging.error(f"Error loading logo: {e}")
@@ -1041,7 +1043,7 @@ class Command(BaseCommand):
             return False
 
         finally:
-            # Clean up the temporary logo file
+            # Clean up the logo image after processing
             if os.path.exists(logo_path):
                 os.remove(logo_path)
 
