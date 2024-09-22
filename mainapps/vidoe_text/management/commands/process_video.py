@@ -963,6 +963,7 @@ class Command(BaseCommand):
 
         return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
+
     def add_animated_watermark_to_instance(self, video):
         """
         Add an animated watermark to the video from text_file_instance and save the result.
@@ -977,14 +978,6 @@ class Command(BaseCommand):
                 logo_downloaded = download_from_s3(logo_s3_path, temp_logo.name)
                 if not logo_downloaded:
                     logging.error(f"Failed to download logo from S3 at {logo_s3_path}.")
-                    return False
-                
-                # Validate the logo image using PIL
-                try:
-                    with Image.open(temp_logo.name) as img:
-                        img.verify()  # Verify that it's a valid image
-                except Exception as e:
-                    logging.error(f"Downloaded file is not a valid image: {e}")
                     return False
 
                 # Load and resize the watermark
