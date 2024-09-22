@@ -8,8 +8,7 @@ from moviepy.editor import ImageClip
 import numpy as np
 from django.contrib.staticfiles.storage import staticfiles_storage
 import textwrap
-from PIL import ImageFont
-
+from PIL import ImageFont,Image
 from pathlib import Path
 from moviepy.editor import (
     AudioFileClip, ColorClip, CompositeVideoClip, concatenate_videoclips, CompositeAudioClip,
