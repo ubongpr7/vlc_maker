@@ -965,7 +965,6 @@ class Command(BaseCommand):
         return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
 
-
     def add_animated_watermark_to_instance(self, video):
         """
         Add an animated watermark to the video from text_file_instance and save the result.
@@ -985,11 +984,15 @@ class Command(BaseCommand):
                 temp_logo.write(logo_file.read())
                 logo_path = temp_logo.name
 
+            # Open the logo with Pillow to ensure it's in the correct format
+            pil_image = Image.open(logo_path).convert("RGBA")  # Convert to RGBA
+            pil_image.save(logo_path)  # Save it back to ensure format compatibility
+
         except Exception as e:
             logging.error(f"Error loading logo: {e}")
             return False
 
-        # Load the logo image
+        # Load the logo image as a watermark
         try:
             watermark = ImageClip(logo_path).resize(width=video.w * 0.6).set_opacity(0.5)
         except Exception as e:
@@ -1041,7 +1044,6 @@ class Command(BaseCommand):
             # Clean up the temporary logo file
             if os.path.exists(logo_path):
                 os.remove(logo_path)
-
 
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
         text_file_instance=self.text_file_instance
