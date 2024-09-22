@@ -226,10 +226,6 @@ def process_textfile(request, textfile_id):
 
             return render(request,'permission_denied.html')
 
-
-    try:
-        # Fetch the TextFile instance
-        textfile = TextFile.objects.get(pk=textfile_id)
     except TextFile.DoesNotExist:
         return Http404("Text file not found")
 
