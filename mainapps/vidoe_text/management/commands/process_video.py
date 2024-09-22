@@ -7,6 +7,8 @@ import matplotlib.colors as mcolors
 from moviepy.editor import ImageClip
 import numpy as np
 
+import textwrap
+from PIL import ImageFont
 
 from pathlib import Path
 from moviepy.editor import (
@@ -1121,8 +1123,8 @@ class Command(BaseCommand):
                 size=(longest_line_width, None)
             ).set_duration(end_time - start_time)
             
-            # x, y, z = mcolors.to_rgb(subtitle_box_color)
-            # subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
+            x, y, z = mcolors.to_rgb(subtitle_box_color)
+            subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
 
 
             small_margin = 8
@@ -1140,4 +1142,25 @@ class Command(BaseCommand):
 
         final_clip = CompositeVideoClip([clip] + subtitle_clips)
         return final_clip
+
+def soft_wrap_text(
+    text: str, 
+    fontsize: int, 
+    letter_spacing: int, 
+    font_family: str, 
+    max_width: int,
+):
+    # Note that font_family has to be an absolut path to your .ttf/.otf
+    image_font = ImageFont.truetype(font_family, fontsize) 
+
+    # I am not sure my letter spacing calculation is accurate
+    text_width = image_font.getlength(text) + (len(text)-1) * letter_spacing 
+    letter_width = text_width / len(text)
+
+    if text_width < max_width:
+        return text
+
+    max_chars = max_width / letter_width
+    wrapped_text = textwrap.fill(text, width=max_chars)
+    return wrapped_text
 
