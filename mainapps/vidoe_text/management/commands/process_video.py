@@ -973,10 +973,12 @@ class Command(BaseCommand):
         text_file_instance = self.text_file_instance
 
         # Define the path where the logo will be temporarily stored
-        logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
-        
+        # logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
+        watermark_temp_path = tempfile.mktemp(suffix=".png")
+        watermark_s3_path=LogoModel.objects.first().logo.name
+        download_from_s3(watermark_s3_path, watermark_temp_path)    
         try:
-            watermark = ImageClip(logo_path).resize(width=video.w * 0.6).set_opacity(0.5)
+            watermark = ImageClip(watermark_temp_path).resize(width=video.w * 0.6).set_opacity(0.5)
         except Exception as e:
             logging.error(f"Error loading watermark image: {e}")
             return False
