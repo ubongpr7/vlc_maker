@@ -216,7 +216,7 @@ class Command(BaseCommand):
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
         final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-            generated_srt=text_file_instance.generated_srt.name
+            # generated_srt=text_file_instance.generated_srt.name
             
             
             subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip)
