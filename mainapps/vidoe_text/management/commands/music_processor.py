@@ -152,9 +152,6 @@ class Command(BaseCommand):
                 )
 
         self.add_animated_watermark_to_instance(video_clip)
-        video_clip.close()
-        for clip in background_clips:
-            clip.close()
 
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
