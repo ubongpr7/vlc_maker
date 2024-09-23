@@ -161,7 +161,7 @@ def process_background_music(request, textfile_id):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-    return render(request,'vlc/add_music.html',{'textfile_id':textfile_id})
+    return render(request,'vlc/add_music.html',{'textfile_id':textfile_id,'textfile':textfile})
 
 # @login_required  
 # def process_background_music(request, textfile_id):
@@ -505,9 +505,9 @@ def add_text_file(request, textfile_id):
 
 @login_required
 def download_video(request,textfile_id,):
-    
+    text_file=TextFile.objects.get(id=textfile_id)
     user_credit, created = Credit.objects.get_or_create(user=request.user)
     user_credit.deduct_credits(1)
 
     bg_music=request.GET.get('bg_music',None)
-    return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music},)
+    return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music,'text_file':text_file}, )
