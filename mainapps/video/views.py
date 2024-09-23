@@ -13,6 +13,27 @@ import json
 from django.urls import reverse
 
 
+# views.py
+from django.shortcuts import render, get_object_or_404
+
+def category_view(request, category_id=None):
+    if category_id:
+        # If a category is clicked, fetch the current category and its subcategories and videos
+        current_category = get_object_or_404(ClipCategory, id=category_id,user=request.user)
+        subcategories = current_category.subcategories.all()
+        videos = current_category.videos.all()
+    else:
+        # If no category_id is provided, display the root categories (categories without a parent)
+        current_category = None
+        subcategories = ClipCategory.objects.filter(parent__isnull=True)
+        videos = VideoClip.objects.filter(category__isnull=True)
+
+    context = {
+        'current_category': current_category,
+        'subcategories': subcategories,
+        'videos': videos
+    }
+    return render(request, 'category_view.html', context)
 
 @login_required
 def upload_video_folder(request):

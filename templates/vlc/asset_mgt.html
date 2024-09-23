@@ -62,6 +62,61 @@
     background-color: rgba(0, 0, 0, 0.8);
   }
 </style>
+<!-- templates/category_view.html -->
+<div class="breadcrumb-nav">
+    <ul>
+        {% if current_category %}
+            <li><a href="{% url 'category_view' %}">Root</a></li>
+            {% for parent in current_category.get_ancestors %}
+                <li><a href="{% url 'category_view' parent.id %}">{{ parent.name }}</a></li>
+            {% endfor %}
+            <li>{{ current_category.name }}</li>
+        {% else %}
+            <li>Root</li>
+        {% endif %}
+    </ul>
+</div>
+
+<div class="folder-grid">
+    <!-- Subcategories (Folders) -->
+    {% for subcategory in subcategories %}
+        <div class="card folder-card">
+            <div class="card-body">
+                <i class="fas fa-folder fa-4x"></i>
+                <h5 class="card-title">{{ subcategory.name }}</h5>
+                <a href="{% url 'category_view' subcategory.id %}">Open</a>
+                <span class="three-dots-menu">
+                    <i class="fas fa-ellipsis-v"></i>
+                    <!-- Options: Delete, Rename -->
+                </span>
+            </div>
+        </div>
+    {% empty %}
+        <p>No subcategories found.</p>
+    {% endfor %}
+</div>
+
+<div class="video-grid">
+    <!-- Videos -->
+    {% for video in videos %}
+        <div class="card video-card">
+            <div class="card-body">
+                <div class="video-thumbnail">
+                    <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}">
+                    <a href="{% url 'play_video' video.id %}" class="play-btn"><i class="fas fa-play"></i></a>
+                </div>
+                <h5 class="card-title">{{ video.title }}</h5>
+                <span class="three-dots-menu">
+                    <i class="fas fa-ellipsis-v"></i>
+                    <!-- Options: Delete, Rename, Move -->
+                </span>
+            </div>
+        </div>
+    {% empty %}
+        <p>No videos found in this category.</p>
+    {% endfor %}
+</div>
+
 <div class="container">
     <div class="breadcrumb-nav">
       <ul>
