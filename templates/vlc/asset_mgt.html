@@ -1,0 +1,124 @@
+<style>
+.container {
+    padding: 20px;
+  }
+  
+  .breadcrumb-nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+  }
+  
+  .breadcrumb-nav ul li {
+    margin-right: 10px;
+  }
+  
+  .folder-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card {
+    width: 200px;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .folder-card:hover, .video-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .three-dots-menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .video-thumbnail {
+    position: relative;
+  }
+  
+  .video-thumbnail img {
+    width: 100%;
+    border-radius: 5px;
+  }
+  
+  .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .play-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+</style>
+<div class="container">
+    <div class="breadcrumb-nav">
+      <ul>
+        <li><a href="#">Root</a></li>
+        <li><a href="#">Folder1</a></li>
+        <li>Subfolder1</li>
+      </ul>
+    </div>
+  
+    <div class="folder-grid">
+      <!-- Folder Card -->
+      <div class="card folder-card">
+        <div class="card-body">
+          <i class="fas fa-folder fa-4x"></i>
+          <h5 class="card-title">Folder Name</h5>
+          <span class="three-dots-menu">
+            <i class="fas fa-ellipsis-v"></i>
+          </span>
+        </div>
+      </div>
+  
+      <!-- Video Card -->
+      <div class="card video-card">
+        <div class="card-body">
+          <div class="video-thumbnail">
+            <img src="thumbnail.jpg" alt="Video Thumbnail">
+            <button class="play-btn"><i class="fas fa-play"></i></button>
+          </div>
+          <h5 class="card-title">Video Title</h5>
+          <span class="three-dots-menu">
+            <i class="fas fa-ellipsis-v"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <script>
+    // Handle folder click to navigate
+$('.folder-card').on('click', function() {
+  // Implement your AJAX or transition here to load subfolder content
+  // Example transition:
+  $(this).addClass('animate-out');
+  $('.folder-grid').addClass('slide-in-new');
+});
+
+// Play video inside the card
+$('.play-btn').on('click', function() {
+  let videoUrl = $(this).data('video-url'); // Get the video URL
+  $('#main-video-card').html(`<video controls autoplay src="${videoUrl}"></video>`);
+});
+
+// Handle three-dots menu actions
+$('.three-dots-menu').on('click', function() {
+  // Show options for delete, rename, etc.
+  $(this).find('.dropdown-menu').toggle();
+});
+
+  </script>

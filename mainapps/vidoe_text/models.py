@@ -116,8 +116,12 @@ class TextFile(models.Model):
             return False
     
     def track_progress(self,increase):
-        if  increase >100:
+        if  increase >=100:
+            self.progress=100
+            self.save()
+            time.sleep(0.5)
             self.progress=0
+            
         else:
             self.progress=increase
 

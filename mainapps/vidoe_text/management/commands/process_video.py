@@ -250,6 +250,7 @@ class Command(BaseCommand):
                 preset="ultrafast",
                 ffmpeg_params=["-movflags", "+faststart"]
             )
+            self.text_file_instance.track_progress(95)
             
                 # Save the watermarked video to the generated_watermarked_video field
             if text_file_instance.generated_final_video:
@@ -261,9 +262,9 @@ class Command(BaseCommand):
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
             self.text_file_instance.track_progress(100)
+            logging.info('generated_final_video successful')
             
 
-        # add_animated_watermark(text_file_instance)
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
 
