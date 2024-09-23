@@ -6,7 +6,7 @@ import json
 import moviepy.video.fx.all as vfx
 from moviepy.config import change_settings
 from django.core.management.base import BaseCommand
-
+from moviepy.audio.fx.all import loop
 import os
 import tempfile
 import logging
@@ -112,10 +112,20 @@ class Command(BaseCommand):
 
         logging.info('Done loading music')
 
-        if original_audio is not None:
-            final_audio = CompositeAudioClip([original_audio.volumex(1.0), background_audio.volumex(0.1)])
+            # If it's longer, trim it to match the original audio duration
+        original_duration = original_audio.duration
+
+        if background_audio.duration < original_duration:
+            background_audio = loop(background_audio, duration=original_duration)
         else:
-            final_audio = background_audio
+            background_audio = background_audio.subclip(0, original_duration)
+
+        # Combine the two audio clips
+        final_audio = CompositeAudioClip([
+            original_audio.volumex(1.0), 
+            background_audio.volumex(0.1)
+        ])
+
 
         if final_audio.duration < video_duration:
             # Loop the audio if it's shorter than the video duration
