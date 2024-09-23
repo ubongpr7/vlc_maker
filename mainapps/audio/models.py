@@ -21,5 +21,5 @@ class BackgroundMusic(models.Model):
     # video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='background_music')
 
     def __str__(self):
-        return self.title
+        return f'{self.text_file} {self.start_time}-{self.end_time}'
 
