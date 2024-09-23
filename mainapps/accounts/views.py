@@ -38,6 +38,22 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+
+from django.contrib.auth import logout
+
+def logout_view(request):
+    """
+    Logs out the user and redirects to the login page or homepage.
+    """
+    # Log the user out
+    logout(request)
+    
+    # Add a success message
+    messages.success(request, "You have been successfully logged out.")
+    
+    # Redirect to the login page or homepage
+    return redirect('/')  # Replace 'login' with the name of the URL to redirect to (e.g., 'home' or 'login')
+
 def send_registration_email(user, password, request):
     subject = 'Welcome to Our Platform!'
     from_email = 'no-reply@example.com'

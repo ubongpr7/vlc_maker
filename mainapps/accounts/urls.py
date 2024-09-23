@@ -6,7 +6,7 @@ urlpatterns=[
     path('login/',login,name='signin'),
     path('pricing/',embedded_pricing_page,name='embedded_pricing_page'),
     path('confirm-subscription/',subscription_confirm,name='subscription_confirm'),
-    
+    path('logout/', logout_view, name='logout'),  
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
