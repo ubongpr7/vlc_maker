@@ -143,7 +143,7 @@ def process_background_music(request, textfile_id):
         for bg_music in bg_musics:
             start_time_str = bg_music.start_time
             end_time_str = bg_music.end_time
-            lines.append(f"{bg_music.music.name} {start_time_str} {end_time_str}")
+            lines.append(f"{bg_music.music} {start_time_str} {end_time_str}")
 
         content = "\n".join(lines)
         
