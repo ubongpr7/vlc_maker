@@ -260,7 +260,6 @@ class Command(BaseCommand):
                 f"final_{text_file_instance.id}_{timestamp}.mp4",
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
-            time.sleep(5)
             self.text_file_instance.track_progress(100)
             
 
