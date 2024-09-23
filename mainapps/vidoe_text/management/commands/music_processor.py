@@ -299,13 +299,13 @@ class Command(BaseCommand):
         """
         try:
             # Ensure that the file field is valid
-            if not file_field or not file_field.name:
+            if not file_field or not file_field:
                 raise ValueError("File field is empty or invalid.")
 
             # Create a temporary file to store the downloaded audio
             with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio:
                 # Download the audio file from S3 and save it to the temporary file
-                audio_content = download_from_s3(file_field.name, temp_audio.name)
+                audio_content = download_from_s3(file_field, temp_audio.name)
 
                 if not audio_content:
                     raise ValueError("Failed to download the audio from S3.")
