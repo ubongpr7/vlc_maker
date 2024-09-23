@@ -1,3 +1,4 @@
+from mainapps.vidoe_text.models import LogoModel
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_audioclips, CompositeAudioClip, CompositeVideoClip
 import os
 import sys
@@ -14,6 +15,9 @@ from moviepy.editor import AudioFileClip
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
+from moviepy.editor import VideoFileClip, ImageClip
+import numpy as np
+
 
 import tempfile
 from django.core.files.base import ContentFile
@@ -22,7 +26,6 @@ import time
 from django.utils import timezone
 from django.conf import settings
 import boto3
-t TextFile, TextLineVideoClip ,LogoModel
 
 base_path = settings.MEDIA_ROOT
 
@@ -66,9 +69,6 @@ def update_progress(progress,dir_s):
         f.write(str(progress))
 
 
-from moviepy.editor import VideoFileClip, ImageClip
-import numpy as np
-
 
 
 
@@ -88,7 +88,7 @@ class Command(BaseCommand):
 
         # Load the original audio from the video
         original_audio = video_clip.audio
-            background_clips = []
+        background_clips = []
 
         for line in music_info:
             music_path, start_time, end_time = line.strip().split(' ')
@@ -103,7 +103,7 @@ class Command(BaseCommand):
             # music_path=os.path.join('app',music_path)
             music_path=music_path.strip()
     
-            background_clip = load_audio_from_file_field(music_path).subclip(0, duration)
+            background_clip = self.load_audio_from_file_field(music_path).subclip(0, duration)
             background_clip = background_clip.set_start(start_time_seconds)
 
             # Append the processed background clip to the list
@@ -143,10 +143,10 @@ class Command(BaseCommand):
             
                 # Save the watermarked video to the generated_watermarked_video field
             if self.text_file_instance.generated_final_bgm_video:
-                text_file_instance.generated_final_bgm_video.delete(save=False)
+                self.text_file_instance.generated_final_bgm_video.delete(save=False)
 
             self.text_file_instance.generated_final_video.save(
-                f"final_{text_file_instance.id}_{timestamp}.mp4",
+                f"final_{self.text_file_instance.id}_.mp4",
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
 
@@ -155,7 +155,7 @@ class Command(BaseCommand):
         for clip in background_clips:
             clip.close()
 
-    self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
+        self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
 
     
