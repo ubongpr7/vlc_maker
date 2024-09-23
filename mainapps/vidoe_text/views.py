@@ -98,11 +98,12 @@ def serve_file(request, file_name):
 def process_background_music(request, textfile_id):
     
     textfile = TextFile.objects.get(pk=textfile_id)
-    if textfile.background_musics:
-        for bg in BackgroundMusic.objects.filter(text_file=textfile):
-            bg.delete()
+    
 
     if request.method == 'POST':
+        if textfile.background_musics:
+            for bg in BackgroundMusic.objects.filter(text_file=textfile):
+                bg.delete()
         try:
             # Fetch the TextFile instance
             if textfile.user != request.user:
