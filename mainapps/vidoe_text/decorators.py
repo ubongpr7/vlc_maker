@@ -2,7 +2,9 @@ from functools import wraps
 from django.shortcuts import redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse
-from .models import TextFile, Credit
+
+from mainapps.accounts.models import Credit
+from .models import TextFile
 
 def check_credits_and_ownership(textfile_id_param, credits_required):
     """
