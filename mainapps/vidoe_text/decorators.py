@@ -69,6 +69,8 @@ def check_user_credits(minimum_credits_required):
                 # Not enough credits, redirect to pricing page
                 messages.error(request, "You don't have enough credits to create a new file. Please subscribe to any of our plans listed below.")
                 return redirect(reverse('accounts:embedded_pricing_page'))
+            return view_func(request, *args, **kwargs)
+            
 
         return _wrapped_view
     return decorator
