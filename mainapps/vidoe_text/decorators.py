@@ -52,7 +52,7 @@ def check_credits_and_ownership(textfile_id_param, credits_required):
 
 
 
-def check_user_credits(minimum_credits_required):
+def check_user_credits(minimum_credits_required,deduct=False):
     """
     Decorator to check if a user has enough credits to create a TextFile.
     Redirects to the pricing page if they don't have enough credits.
@@ -69,12 +69,14 @@ def check_user_credits(minimum_credits_required):
                 return redirect(reverse('accounts:embedded_pricing_page'))
 
             # Deduct the required credits
-            if user_credit.deduct_credits(minimum_credits_required):
-                return view_func(request, *args, **kwargs)
-            else:
-                # Handle case where credit deduction failed
-                messages.error(request, "An error occurred while processing your credits.")
-                return redirect(reverse('accounts:embedded_pricing_page'))
-        
+            if deduct:
+
+                if user_credit.deduct_credits(minimum_credits_required):
+                    return view_func(request, *args, **kwargs)
+                else:
+                    # Handle case where credit deduction failed
+                    messages.error(request, "An error occurred while processing your credits.")
+                    return redirect(reverse('accounts:embedded_pricing_page'))
+            
         return _wrapped_view
     return decorator
