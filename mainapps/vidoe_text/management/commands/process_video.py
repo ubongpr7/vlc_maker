@@ -168,6 +168,7 @@ class Command(BaseCommand):
         self.text_file_instance.track_progress(27)
 
         blank_video=self.generate_blank_video_with_audio()
+        time.sleep(4)
         blank_vide_clip=self.load_video_from_instance(text_file_instance,'generated_blank_video')
         self.text_file_instance.track_progress(29)
 
