@@ -141,6 +141,7 @@ class Command(BaseCommand):
         self.text_file_instance = TextFile.objects.get(id=text_file_id)
         text_file=text_file_instance.text_file
         resolution=text_file_instance.resolution
+        self.text_file_instance.track_progress(2)
         
 
 
@@ -151,24 +152,35 @@ class Command(BaseCommand):
         output_audio_file = os.path.join(base_path,'audio',f'{timestamp}_{text_file_id}_audio.mp3')
 
         audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
+        self.text_file_instance.track_progress(10)
         
         logging.info('done with audio file ')
 
         if audio_file or text_file_instance.generated_audio:
 
             srt_file=self.generate_srt_file()
+            self.text_file_instance.track_progress(25)
+
             
         else:
             return
         aligned_output=self.process_srt_file()
+        self.text_file_instance.track_progress(27)
+
         blank_video=self.generate_blank_video_with_audio()
         blank_vide_clip=self.load_video_from_instance(text_file_instance,'generated_blank_video')
+        self.text_file_instance.track_progress(29)
+
         subtitles=self.load_subtitles_from_text_file_instance()
+        self.text_file_instance.track_progress(32)
+
         print(subtitles)
         print('aligned_output: ',aligned_output)
         blank_video_segments, subtitle_segments = self.get_segments_using_srt(blank_vide_clip, subtitles)
+        self.text_file_instance.track_progress(36)
         
         text_clips= TextLineVideoClip.objects.filter(text_file=self.text_file_instance)
+
         num_segments=len(text_clips)
         output_video_segments = []
         start = 0
@@ -180,8 +192,10 @@ class Command(BaseCommand):
             
             output_video_segments.append(new_video_segment.without_audio())
             start = end
+        self.text_file_instance.track_progress(39)
         
         replacement_video_files=self.get_video_paths_for_text_file()
+        self.text_file_instance.track_progress(40)
 
         replacement_videos_per_combination=[]
         
@@ -193,10 +207,14 @@ class Command(BaseCommand):
                 if len(replacement_videos_per_combination) < len(replacement_video_files):
                     replacement_videos_per_combination.append({})
         logging.info('Concatination Done')
+        self.text_file_instance.track_progress(48)
+
         
         final_blank_video = self.concatenate_clips(blank_video_segments,target_resolution=MAINRESOLUTIONS[text_file_instance.resolution],target_fps=30)
         try:    
             final__blank_audio = final_blank_video.audio
+            self.text_file_instance.track_progress(50)
+
         except Exception as e:
             logging.error(f"Error loading background music: {e}")
             return
@@ -208,7 +226,8 @@ class Command(BaseCommand):
 
         logging.info('Done Clipping replacements')
 
-            
+        self.text_file_instance.track_progress(54)
+        
         final_video_segments =self.replace_video_segments(output_video_segments, replacement_video_clips, subtitles, blank_vide_clip)
         logging.info('Done  replace_video_segments' )
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
@@ -219,6 +238,7 @@ class Command(BaseCommand):
 
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
             # generated_srt=text_file_instance.generated_srt.name
+            self.text_file_instance.track_progress(72)
             
             
             # subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip)
@@ -234,11 +254,14 @@ class Command(BaseCommand):
                 # Save the watermarked video to the generated_watermarked_video field
             if text_file_instance.generated_final_video:
                 text_file_instance.generated_final_video.delete(save=False)
+                self.text_file_instance.track_progress(74)
 
             text_file_instance.generated_final_video.save(
                 f"final_{text_file_instance.id}_{timestamp}.mp4",
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
+            time.sleep(5)
+            self.text_file_instance.track_progress(100)
             
 
         # add_animated_watermark(text_file_instance)
@@ -269,6 +292,7 @@ class Command(BaseCommand):
             with text_file_path.open('r') as f:
                 text = f.read().strip()
                 logging.info(f'Read text for TTS: {text[:50]}...')  # Log first 50 characters
+                self.text_file_instance.track_progress(5)
             
             # Initialize the ElevenLabs client
             client = ElevenLabs(api_key=api_key)
@@ -281,6 +305,8 @@ class Command(BaseCommand):
                     settings=VoiceSettings(stability=0.71, similarity_boost=0.5, style=0.0, use_speaker_boost=True)
                 )
             )
+            self.text_file_instance.track_progress(7)
+
 
             # Convert the generator to bytes
             audio_data = b''.join(audio_data_generator)
@@ -296,6 +322,7 @@ class Command(BaseCommand):
 
             # Save the new file to Django's FileField (linked to S3 storage)
             self.text_file_instance.generated_audio.save(audio_file_name, ContentFile(audio_data))
+            self.text_file_instance.track_progress(8)
 
         # Return the URL to
             return self.text_file_instance.generated_audio  # This will return the URL managed by Django's FileField
@@ -323,6 +350,7 @@ class Command(BaseCommand):
 
         logging.info(f"Downloading audio from S3: {s3_audio_url}")
         logging.info(f"Downloading text from S3: {s3_text_url}")
+        self.text_file_instance.track_progress(12)
         
         # Ensure file paths are not empty
         if not s3_audio_url or not s3_text_url:
@@ -333,6 +361,7 @@ class Command(BaseCommand):
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio, \
             tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as temp_text, \
             tempfile.NamedTemporaryFile(suffix=".json", delete=False) as temp_srt:
+            self.text_file_instance.track_progress(14)
 
             # Download the audio file from S3 and write it to the temp file
             audio_content = download_from_s3(s3_audio_url, temp_audio.name)
@@ -346,6 +375,8 @@ class Command(BaseCommand):
             
             # Download the text file from S3 and write it to the temp file
             text_content = download_from_s3(s3_text_url, temp_text.name)
+            self.text_file_instance.track_progress(16)
+
             if not text_content:
                 logging.error(f"Failed to download text file {s3_text_url}")
                 return False
@@ -361,6 +392,7 @@ class Command(BaseCommand):
             try:
                 logging.info(f'Running command: {command}')
                 result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                self.text_file_instance.track_progress(20)
                 
                 # Log command output
                 logging.info(f'Command output: {result.stdout}')
@@ -379,12 +411,16 @@ class Command(BaseCommand):
                     # If there is an existing SRT file, delete it first
                     if text_file_instance.generated_srt:
                         text_file_instance.generated_srt.delete(save=False)
+                        self.text_file_instance.track_progress(22)
 
                     # Save the new SRT content to the srt_file field
                     text_file_instance.generated_srt.save(srt_file_name, ContentFile(srt_content))
 
                     logging.info(f'SRT file saved to instance: {srt_file_name}')
+                    self.text_file_instance.track_progress(24)
+
                     return text_file_instance.generated_srt
+                
                 else:
                     logging.error(f'Error generating SRT file: {result.stderr}')
                     return False
@@ -980,11 +1016,14 @@ class Command(BaseCommand):
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
 
             content=download_from_s3(watermark_s3_path, watermark_temp_path.name) 
+            self.text_file_instance.track_progress(56)
 
             with open(watermark_temp_path.name, 'wb') as png_file:
                     png_file.write(content)   
             try:
                 watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.6).set_opacity(0.5)
+                self.text_file_instance.track_progress(58)
+
             except Exception as e:
                 logging.error(f"Error loading watermark image: {e}")
                 return False
@@ -998,10 +1037,12 @@ class Command(BaseCommand):
 
             # Animate the watermark
             watermark = watermark.set_position(moving_watermark, relative=False).set_duration(video.duration)
+            self.text_file_instance.track_progress(60)
 
             # Overlay the animated watermark on the video
             watermarked = CompositeVideoClip([video, watermark], size=video.size)
             watermarked.set_duration(video.duration)
+            self.text_file_instance.track_progress(63)
 
             # Save the output to a temporary file
             try:
@@ -1012,16 +1053,20 @@ class Command(BaseCommand):
                         preset="ultrafast",
                         ffmpeg_params=["-movflags", "+faststart"]
                     )
+                    self.text_file_instance.track_progress(68)
 
                     # Save the watermarked video to the model field
                     if text_file_instance.generated_watermarked_video:
                         text_file_instance.generated_watermarked_video.delete(save=False)
+                        self.text_file_instance.track_progress(69)
 
                     with open(temp_output_video.name, 'rb') as temp_file:
                         text_file_instance.generated_watermarked_video.save(
                             f"watermarked_output_{text_file_instance.id}.mp4",
                             ContentFile(temp_file.read())
                         )
+                        self.text_file_instance.track_progress(70)
+
 
                 logging.info("Watermarked video generated successfully.")
                 return True

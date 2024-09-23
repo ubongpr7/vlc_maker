@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 app_name='accounts'
 urlpatterns=[
     path('login/',login,name='signin'),
-    path('embedded_pricing_page/',embedded_pricing_page,name='embedded_pricing_page'),
+    path('pricing/',embedded_pricing_page,name='embedded_pricing_page'),
     path('confirm-subscription/',subscription_confirm,name='subscription_confirm'),
     
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

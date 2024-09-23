@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 import logging
 import pysrt
 import io
-
+import time
 from pathlib import Path
 from typing import List, Dict
 import os
@@ -72,6 +72,8 @@ class TextFile(models.Model):
 
     text_file = models.FileField(upload_to=text_file_upload_path,null=True,blank=True)
     voice_id = models.CharField(max_length=100)
+    processed=models.BooleanField(default=False)
+    progress=models.IntegerField(default=1)
     api_key = models.CharField(max_length=200)
     resolution = models.CharField(max_length=50)
     font_file = models.FileField(upload_to=font_file_upload_path, blank=True, null=True)
@@ -112,7 +114,14 @@ class TextFile(models.Model):
             return True
         except ValueError:
             return False
+    
+    def track_progress(self,increase):
+        if  increase >100:
+            self.progress=0
+        else:
+            self.progress=increase
 
+        self.save()
     def process_text_file(self):
         """Process the uploaded text file and return lines stripped of extra spaces."""
         if not self.text_file:

@@ -4,6 +4,7 @@ from django.contrib import messages
 
 from mainapps.audio.models import BackgroundMusic
 from mainapps.vidoe_text.color_converter import convert_color_input_to_normalized_rgb
+from mainapps.vidoe_text.decorators import check_credits_and_ownership
 from .models import TextFile
 import subprocess
 import os
@@ -48,7 +49,7 @@ def is_api_key_valid(api_key,voice_id):
     try:
         response = requests.get(endpoint_url, headers=headers)
         response.raise_for_status()  # Raises an HTTPError for bad responses (4xx and 5xx)
-        # Check the response content or status code to determine validity
+        # Check p response content or status code to determine validity
         if response.status_code == 200:
             x=True
             
@@ -93,7 +94,7 @@ def serve_file(request, file_name):
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
 
-
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required  
 def process_background_music(request, textfile_id):
     
@@ -320,45 +321,66 @@ def clean_progress_file(text_file_id):
         os.remove(f'{settings.MEDIA_ROOT}/{text_file_id}_progress.txt')
 
 def progress(request,text_file_id):
-    base_path = settings.MEDIA_ROOT
-
-    try:
-        with open(f'{base_path}/{text_file_id}_progress.txt', 'r') as f:
-            progress = f.read()
-            if progress == '100':
-                # Start a timer to clean up the file after 3 seconds
-                Timer(3.0, clean_progress_file,args=(text_file_id,)).start()
-        return JsonResponse({'progress': progress})
-    except FileNotFoundError:
-        return JsonResponse({'progress': 0})
+        text_file=TextFile.objects.get(id=text_file_id)
+    
+        return JsonResponse({'progress': text_file.progress})
 
 @login_required
 def progress_page(request,al_the_way,text_file_id):
 
     return render(request,'vlc/progress.html',{"al_the_way":al_the_way,'text_file_id':text_file_id})
 
-
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required
 def process_textfile(request, textfile_id):
     try:
         # Fetch the TextFile instance
         textfile = TextFile.objects.get(pk=textfile_id)
         if textfile.user != request.user:
-            messages.error(request,'You Do Not have access to the Resources You Requested ')
-
-            return render(request,'permission_denied.html')
+            messages.error(request, 'You do not have access to the resources you requested.')
+            return render(request, 'permission_denied.html')
     except TextFile.DoesNotExist:
-        return Http404("Text file not found")
+        raise Http404("Text file not found")
 
     if not textfile_id:
         return JsonResponse({'error': 'text_file_id is required.'}, status=400)
 
-    try:
-        call_command('process_video', textfile_id)
-        return redirect(f'/text/progress_page/build/{textfile_id}')
+    # Run process_video command in a new thread
+    def run_process_command(textfile_id):
+        try:
+            call_command('process_video', textfile_id)
+        except Exception as e:
+            # Handle the exception as needed (e.g., log it)
+            print(f"Error processing video: {e}")
 
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+    # Start the background process
+    thread = threading.Thread(target=run_process_command, args=(textfile_id,))
+    thread.start()
+
+    # Redirect to another page while the process runs in the background
+    return redirect(f'/text/progress_page/build/{textfile_id}')
+
+
+# def process_textfile(request, textfile_id):
+#     try:
+#         # Fetch the TextFile instance
+#         textfile = TextFile.objects.get(pk=textfile_id)
+#         if textfile.user != request.user:
+#             messages.error(request,'You Do Not have access to the Resources You Requested ')
+
+#             return render(request,'permission_denied.html')
+#     except TextFile.DoesNotExist:
+#         return Http404("Text file not found")
+
+#     if not textfile_id:
+#         return JsonResponse({'error': 'text_file_id is required.'}, status=400)
+
+#     try:
+#         call_command('process_video', textfile_id)
+#         return redirect(f'/text/progress_page/build/{textfile_id}')
+
+#     except Exception as e:
+#         return JsonResponse({'error': str(e)}, status=500)
 
 
 
@@ -452,7 +474,7 @@ def process_textfile(request, textfile_id):
 #     # Return success message
 #     return redirect(f'/text/progress_page/build/{textfile_id}')
 
-
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required
 def add_text(request):
     if request.method == 'POST':
@@ -498,12 +520,14 @@ def add_text(request):
         
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required
 def add_text_file(request, textfile_id):
     text_file_present=False
     text_file_obj= get_object_or_404(TextFile,get_object_or_404)
     return render(request,'vlc/frontend/VLSMaker/index.html',{"textfile_id":textfile_id,})
 
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required
 def download_video(request,textfile_id,):
     text_file=TextFile.objects.get(id=textfile_id)

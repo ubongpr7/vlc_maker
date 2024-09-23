@@ -83,14 +83,16 @@ class Command(BaseCommand):
         self.text_file_instance = TextFile.objects.get(id=text_file_id)
         with self.text_file_instance.bg_music_text.open('r') as f:
             music_info = f.readlines()
+            self.text_file_instance.track_progress(2)
         video_clip = self.load_video_from_instance(self.text_file_instance,'generated_final_video')
         video_duration = video_clip.duration
 
         # Load the original audio from the video
         original_audio = video_clip.audio
         background_clips = []
-
+        self.text_file_instance.track_progress(8)
         for line in music_info:
+        
             music_path, start_time, end_time = line.strip().split(' ')
             start_time_seconds = float(start_time)
             end_time_seconds = float(end_time)
@@ -108,6 +110,8 @@ class Command(BaseCommand):
 
             # Append the processed background clip to the list
             background_clips.append(background_clip)
+        self.text_file_instance.track_progress(40)
+        
         background_audio = CompositeAudioClip(background_clips)
 
         logging.info('Done loading music')
@@ -117,14 +121,17 @@ class Command(BaseCommand):
             final_audio = CompositeAudioClip([original_audio.volumex(1.0), background_audio.volumex(0.1)])
         else:
             final_audio = background_audio
+        self.text_file_instance.track_progress(56)
 
         if final_audio.duration < video_duration:
             # Loop the audio if it's shorter than the video duration
             num_loops = int(video_duration / final_audio.duration) + 1
             final_audio = concatenate_audioclips([final_audio] * num_loops).subclip(0, video_duration)
+
         else:
             # Trim the audio if it's longer than the video duration
             final_audio = final_audio.subclip(0, video_duration)
+        self.text_file_instance.track_progress(68)
 
         # Set the final audio to the video clip
         video_clip = video_clip.set_audio(final_audio)
@@ -133,7 +140,8 @@ class Command(BaseCommand):
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
             # generated_srt=text_file_instance.generated_srt.name
             
-            
+            self.text_file_instance.track_progress(70)
+        
 
             video_clip.write_videofile(
                 temp_output_video.name,
@@ -150,6 +158,8 @@ class Command(BaseCommand):
                 f"final_{self.text_file_instance.id}_.mp4",
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
+            self.text_file_instance.track_progress(80)
+            
 
         self.add_animated_watermark_to_instance(video_clip)
 
@@ -185,6 +195,8 @@ class Command(BaseCommand):
             return False
 
         # Function to calculate the new position of the watermark
+        self.text_file_instance.track_progress(82)
+
         def moving_watermark(t):
             speed_x, speed_y = 250, 200
             pos_x = np.abs((speed_x * t) % (2 * video.w) - video.w)
@@ -197,6 +209,7 @@ class Command(BaseCommand):
         # Overlay the animated watermark on the video
         watermarked = CompositeVideoClip([video, watermark], size=video.size)
         watermarked.set_duration(video.duration)
+        self.text_file_instance.track_progress(88)
 
         # Save the output to a temporary file
         try:
@@ -207,6 +220,7 @@ class Command(BaseCommand):
                     preset="ultrafast",
                     ffmpeg_params=["-movflags", "+faststart"]
                 )
+                self.text_file_instance.track_progress(95)
 
                 # Save the watermarked video to the model field
                 if text_file_instance.generated_final_bgmw_video:
@@ -219,6 +233,10 @@ class Command(BaseCommand):
                     )
 
             logging.info("Watermarked video generated successfully.")
+            time.sleep(5)
+
+            self.text_file_instance.track_progress(100)
+
             return True
 
         except Exception as e:
