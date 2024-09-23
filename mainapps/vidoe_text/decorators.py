@@ -8,7 +8,7 @@ from mainapps.accounts.models import Credit
 from .models import TextFile
 
 
-def check_credits_and_ownership(textfile_id_param, credits_required):
+def check_credits_and_ownership(textfile_id_param, credits_required,deduct=False):
     """
     A decorator to check if a user has enough credits and if they own the TextFile.
 
@@ -36,13 +36,15 @@ def check_credits_and_ownership(textfile_id_param, credits_required):
                 return redirect(reverse('accounts:embedded_pricing_page'))
 
             # Reset credits if necessary (monthly reset)
-            user_credit.reset_credits(monthly_credits=10)  # Example monthly credit limit
+            # user_credit.reset_credits(monthly_credits=10)  # Example monthly credit limit
 
             # Check if the user has enough credits
-            if not user_credit.deduct_credits(credits_required):
-                # Redirect to pricing page with a relevant message
-                messages.warning(request, "You do not have enough credits. Please subscribe to one of our plans.")
-                return redirect(reverse('accounts:embedded_pricing_page'))
+            if deduct:
+
+                if not user_credit.deduct_credits(credits_required):
+                    # Redirect to pricing page with a relevant message
+                    messages.warning(request, "You do not have enough credits. Please subscribe to one of our plans.")
+                    return redirect(reverse('accounts:embedded_pricing_page'))
 
             # If checks pass, call the original view
             return view_func(request, *args, **kwargs)
@@ -52,7 +54,7 @@ def check_credits_and_ownership(textfile_id_param, credits_required):
 
 
 
-def check_user_credits(minimum_credits_required,deduct=False):
+def check_user_credits(minimum_credits_required):
     """
     Decorator to check if a user has enough credits to create a TextFile.
     Redirects to the pricing page if they don't have enough credits.
@@ -68,15 +70,5 @@ def check_user_credits(minimum_credits_required,deduct=False):
                 messages.error(request, "You don't have enough credits to create a new file. Please subscribe to any of our plans listed below.")
                 return redirect(reverse('accounts:embedded_pricing_page'))
 
-            # Deduct the required credits
-            if deduct:
-
-                if user_credit.deduct_credits(minimum_credits_required):
-                    return view_func(request, *args, **kwargs)
-                else:
-                    # Handle case where credit deduction failed
-                    messages.error(request, "An error occurred while processing your credits.")
-                    return redirect(reverse('accounts:embedded_pricing_page'))
-            
         return _wrapped_view
     return decorator
