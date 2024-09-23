@@ -1,4 +1,5 @@
 import json
+import threading
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
 
@@ -98,6 +99,16 @@ def serve_file(request, file_name):
 @login_required  
 def process_background_music(request, textfile_id):
     
+    # Run process_video command in a new thread
+    def run_process_command(textfile_id):
+        try:
+            call_command('music_processor', textfile_id)
+        except Exception as e:
+            # Handle the exception as needed (e.g., log it)
+            print(f"Error processing video: {e}")
+
+    
+    
     textfile = TextFile.objects.get(pk=textfile_id)
     
 
@@ -156,7 +167,10 @@ def process_background_music(request, textfile_id):
 
 
         try:
-            call_command('music_processor', textfile_id)
+            # call_command('music_processor', textfile_id)
+            # # Start the background process/
+            thread = threading.Thread(target=run_process_command, args=(textfile_id,))
+            thread.start()
             return redirect(f'/text/progress_page/bg_music/{textfile_id}')
 
 
