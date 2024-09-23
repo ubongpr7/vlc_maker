@@ -538,7 +538,7 @@ def add_text(request):
 @login_required
 def add_text_file(request, textfile_id):
     text_file_present=False
-    text_file_obj= get_object_or_404(TextFile,get_object_or_404)
+    text_file_obj= get_object_or_404(TextFile,id=textfile_id)
     return render(request,'vlc/frontend/VLSMaker/index.html',{"textfile_id":textfile_id,})
 
 @check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
