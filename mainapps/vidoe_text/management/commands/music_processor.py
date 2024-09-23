@@ -146,7 +146,7 @@ class Command(BaseCommand):
             if self.text_file_instance.generated_final_bgm_video:
                 self.text_file_instance.generated_final_bgm_video.delete(save=False)
 
-            self.text_file_instance.generated_final_video.save(
+            self.text_file_instance.generated_final_bgm_video.save(
                 f"final_{self.text_file_instance.id}_.mp4",
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
