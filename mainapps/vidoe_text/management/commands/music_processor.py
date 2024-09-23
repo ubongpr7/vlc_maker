@@ -6,7 +6,10 @@ import json
 import moviepy.video.fx.all as vfx
 from moviepy.config import change_settings
 from django.core.management.base import BaseCommand
-from moviepy.audio.fx.all import loop
+# from moviepy.audio.fx.all import loop
+from moviepy.video.fx.loop import loop
+# from moviepy.audio.tools.cuts import audioloop
+
 import os
 import tempfile
 import logging
