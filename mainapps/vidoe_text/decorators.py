@@ -7,6 +7,7 @@ from django.contrib import messages
 from mainapps.accounts.models import Credit
 from .models import TextFile
 
+
 def check_credits_and_ownership(textfile_id_param, credits_required):
     """
     A decorator to check if a user has enough credits and if they own the TextFile.
@@ -23,20 +24,25 @@ def check_credits_and_ownership(textfile_id_param, credits_required):
 
             # Check if the logged-in user is the owner of the TextFile
             if textfile.user != request.user:
+                messages.error(request, "You do not have permission to access this file.")
                 raise PermissionDenied("You do not have permission to access this file.")
 
             # Check if the user has an associated Credit object
             try:
                 user_credit = request.user.credit
             except Credit.DoesNotExist:
-                return redirect(reverse('accounts:embedded_pricing_page'))  # Redirect to pricing if no credit exists
+                # Redirect to pricing page with a relevant message
+                messages.error(request, "You need to subscribe to one of our plans to gain access.")
+                return redirect(reverse('accounts:embedded_pricing_page'))
 
             # Reset credits if necessary (monthly reset)
             user_credit.reset_credits(monthly_credits=10)  # Example monthly credit limit
 
             # Check if the user has enough credits
             if not user_credit.deduct_credits(credits_required):
-                return redirect(reverse('accounts:embedded_pricing_page'))  # Redirect to pricing if not enough credits
+                # Redirect to pricing page with a relevant message
+                messages.warning(request, "You do not have enough credits. Please subscribe to one of our plans.")
+                return redirect(reverse('accounts:embedded_pricing_page'))
 
             # If checks pass, call the original view
             return view_func(request, *args, **kwargs)
@@ -59,7 +65,7 @@ def check_user_credits(minimum_credits_required):
             
             if not user_credit or user_credit.credits < minimum_credits_required:
                 # Not enough credits, redirect to pricing page
-                messages.error(request, "You don't have enough credits to create a new file. Please purchase more credits.")
+                messages.error(request, "You don't have enough credits to create a new file. Please subscribe  any of our plans listed below.")
                 return redirect(reverse('accounts:embedded_pricing_page'))
 
             # Deduct the required credits
