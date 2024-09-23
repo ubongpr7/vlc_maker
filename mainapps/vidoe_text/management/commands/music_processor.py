@@ -1,4 +1,4 @@
-from mainapps.vidoe_text.models import LogoModel
+from mainapps.vidoe_text.models import LogoModel,TextFile
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_audioclips, CompositeAudioClip, CompositeVideoClip
 import os
 import sys
