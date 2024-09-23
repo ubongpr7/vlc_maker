@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from mainapps.audio.models import BackgroundMusic
 from mainapps.vidoe_text.color_converter import convert_color_input_to_normalized_rgb
-from mainapps.vidoe_text.decorators import check_credits_and_ownership
+from mainapps.vidoe_text.decorators import check_credits_and_ownership, check_user_credits
 from .models import TextFile
 import subprocess
 import os
@@ -488,7 +488,7 @@ def process_textfile(request, textfile_id):
 #     # Return success message
 #     return redirect(f'/text/progress_page/build/{textfile_id}')
 
-@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
+@check_user_credits(minimum_credits_required=1)
 @login_required
 def add_text(request):
     if request.method == 'POST':

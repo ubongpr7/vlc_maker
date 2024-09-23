@@ -2,6 +2,7 @@ from functools import wraps
 from django.shortcuts import redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse
+from django.contrib import messages
 
 from mainapps.accounts.models import Credit
 from .models import TextFile
@@ -40,5 +41,34 @@ def check_credits_and_ownership(textfile_id_param, credits_required):
             # If checks pass, call the original view
             return view_func(request, *args, **kwargs)
 
+        return _wrapped_view
+    return decorator
+
+
+
+def check_user_credits(minimum_credits_required):
+    """
+    Decorator to check if a user has enough credits to create a TextFile.
+    Redirects to the pricing page if they don't have enough credits.
+    """
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            # Get the user's credit object
+            user_credit = Credit.objects.filter(user=request.user).first()
+            
+            if not user_credit or user_credit.credits < minimum_credits_required:
+                # Not enough credits, redirect to pricing page
+                messages.error(request, "You don't have enough credits to create a new file. Please purchase more credits.")
+                return redirect(reverse('accounts:embedded_pricing_page'))
+
+            # Deduct the required credits
+            if user_credit.deduct_credits(minimum_credits_required):
+                return view_func(request, *args, **kwargs)
+            else:
+                # Handle case where credit deduction failed
+                messages.error(request, "An error occurred while processing your credits.")
+                return redirect(reverse('accounts:embedded_pricing_page'))
+        
         return _wrapped_view
     return decorator
