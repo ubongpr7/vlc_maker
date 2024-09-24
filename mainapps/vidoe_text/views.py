@@ -28,6 +28,13 @@ import io
 from django.core.files.base import ContentFile
 from mainapps.accounts.models import Credit,VlcPlan
 
+
+import boto3
+from django.http import HttpResponse
+from django.conf import settings
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+
+
 def is_api_key_valid(api_key,voice_id):
     """
     Checks if the given ElevenLabs API key is valid.
@@ -286,9 +293,37 @@ def add_text(request):
 @login_required
 def download_video(request,textfile_id,):
     text_file=TextFile.objects.get(id=textfile_id)
-    user_credit, created = Credit.objects.get_or_create(user=request.user)
-    user_credit.credits-=1
-    user_credit.save()
+    if not text_file.processed:
+
+        user_credit = Credit.objects.get(user=request.user)
+        user_credit.credits-=1
+        user_credit.save()
+    text_file.processed=True
 
     bg_music=request.GET.get('bg_music',None)
     return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music,'text_file':text_file}, )
+
+
+
+def download_file_from_s3(request, file_key):
+    # Initialize the S3 client
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+    )
+
+    try:
+        # Get the file from S3
+        s3_response = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_key)
+
+        # Set the appropriate headers for file download
+        response = HttpResponse(s3_response['Body'].read(), content_type=s3_response['ContentType'])
+        response['Content-Disposition'] = f'attachment; filename="{file_key.split("/")[-1]}"'
+        response['Content-Length'] = s3_response['ContentLength']
+
+        return response
+    except s3.exceptions.NoSuchKey:
+        return HttpResponse("File not found.", status=404)
+    except (NoCredentialsError, PartialCredentialsError):
+        return HttpResponse("Credentials not available.", status=403)
