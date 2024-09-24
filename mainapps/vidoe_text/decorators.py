@@ -41,7 +41,7 @@ def check_credits_and_ownership(textfile_id_param, credits_required,deduct=False
             # Check if the user has enough credits
             if not request.user.is_superuser:
 
-                if not user_credit.credits>1
+                if not user_credit.credits>1:
                     # Redirect to pricing page with a relevant message
                     messages.warning(request, "You do not have enough credits. Please subscribe to one of our plans.")
                     return redirect(reverse('accounts:embedded_pricing_page'))
