@@ -168,13 +168,14 @@ class Command(BaseCommand):
         self.text_file_instance.track_progress(27)
 
         blank_video=self.generate_blank_video_with_audio()
+        
         if blank_video:
-            blank_vide_clip=self.load_video_from_instance(text_file_instance,'generated_blank_video')
+            blank_vide_clip=self.load_video_from_file_field(self.text_file_instance.generated_blank_video)
             logging.info('Blank Video clip loaded')
 
         else:
             logging.error('Blank video file could not be loaded')
-            self.text_file_instance.track_progress('erroee')
+            self.text_file_instance.track_progress('error')
 
             return
         self.text_file_instance.track_progress(29)
