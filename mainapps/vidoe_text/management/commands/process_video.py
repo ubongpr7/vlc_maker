@@ -263,14 +263,14 @@ class Command(BaseCommand):
             self.text_file_instance.track_progress(70)
             
                 # Save the watermarked video to the generated_watermarked_video field
-            if text_file_instance.generated_final_video:
-                text_file_instance.generated_final_video.delete(save=False)
+            if `self.text_file_instance.generated_final_video:
+                self.text_file_instance.generated_final_video.delete(save=False)
                 self.text_file_instance.track_progress(74)
         
             with open(temp_output_video.name, 'rb') as output_video_file:
                 video_content = output_video_file.read()
 
-                text_file_instance.generated_final_video.save(
+                self.text_file_instance.generated_final_video.save(
                     f"final_{text_file_instance.id}_{timestamp}.mp4",
                     ContentFile(video_content)
                     )
