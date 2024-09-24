@@ -263,7 +263,7 @@ class Command(BaseCommand):
             self.text_file_instance.track_progress(70)
             
                 # Save the watermarked video to the generated_watermarked_video field
-            if `self.text_file_instance.generated_final_video:
+            if self.text_file_instance.generated_final_video:
                 self.text_file_instance.generated_final_video.delete(save=False)
                 self.text_file_instance.track_progress(74)
         
