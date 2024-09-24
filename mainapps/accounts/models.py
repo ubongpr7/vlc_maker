@@ -76,11 +76,8 @@ class Credit(models.Model):
     @classmethod
     def deduct_credits(self, amount):
         current_credits = self.credits  # This fetches the actual value
-        if current_credits >= amount:
-            self.credits = current_credits - amount
-            self.save()
-        else:
-            raise ValueError("Not enough credits to deduct.")
+        self.credits = current_credits - amount
+        self.save()
 
     def reset_credits(self, monthly_credits):
         if (now() - self.last_reset) >= timedelta(days=30):
