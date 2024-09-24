@@ -42,15 +42,15 @@
 
     .folder-header div:first-child {
         flex-grow: 1;
-        font-weight: 600;
+        /* font-weight: 600; */
         font-size: 16px;
         text-align: left;
     }
 
-    .folder-header div:nth-child(2),
-    .folder-header div:nth-child(3) {
-        font-weight: 600;
-        font-size: 16px;
+    .folder-header div:nth-child(3),
+    .folder-header div:nth-child(4) {
+        /* font-weight: 600; */
+        /* font-size: 16px; */
         text-align: right;
         margin-left: 20px; /* space between "Items" and "Modified" */
     }
@@ -160,9 +160,11 @@
 <body>
     <div class="folder-card">
         <div class="folder-header">
-            <div>Folder Name</div>
+                <input type="checkbox">
+                <div> Folder Name</div>
             <div>Items</div>
             <div>Modified</div>
+            <div></div>
         </div>
         <div class="folder-item">
             <div class="folder-left">
