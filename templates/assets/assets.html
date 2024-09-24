@@ -145,10 +145,17 @@
 
     </div>
 
-    <script>
+     <script>
         function toggleDropdown(element) {
+            // Close all other dropdowns
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.style.display = 'none';
+            });
+
+            // Open the clicked dropdown
             const dropdown = element.nextElementSibling;
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            dropdown.style.display = 'block';
         }
 
         window.onclick = function(event) {
