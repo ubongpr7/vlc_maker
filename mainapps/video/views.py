@@ -34,7 +34,7 @@ def category_view(request, category_id=None):
         'subcategories': subcategories,
         'videos': videos
     }
-    return render(request, 'vsl/asset_mgt.html', context)
+    return render(request, 'vcl/asset_mgt.html', context)
 
 @login_required
 def upload_video_folder(request):
