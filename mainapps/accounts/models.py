@@ -73,7 +73,7 @@ class Credit(models.Model):
     product = models.ForeignKey(Product,null=True,blank=True, on_delete=models.SET_NULL)
     credits = models.IntegerField(default=0)
     last_reset = models.DateTimeField(auto_now_add=True)
-
+    @classmethod
     def deduct_credits(self, amount):
         if self.credits >= amount:
             self.credits -= amount
