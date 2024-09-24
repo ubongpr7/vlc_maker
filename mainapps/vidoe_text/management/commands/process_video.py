@@ -236,6 +236,16 @@ class Command(BaseCommand):
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
         final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
 
+        logging.info('generated_final_video successful')
+        final_video=self.save_final_video(final_video_speeded_up_clip)
+        watermarked= self.add_animated_watermark_to_instance(final_video_speeded_up_clip)
+        self.text_file_instance.track_progress(100)
+            
+
+        self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
+    
+    def save_final_video(self,clip):
+        
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
             # generated_srt=text_file_instance.generated_srt.name
             self.text_file_instance.track_progress(60)
@@ -244,7 +254,7 @@ class Command(BaseCommand):
             # subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip)
             # Write the audio content to the temporary audio file
 
-            final_video_speeded_up_clip.write_videofile(
+            clip.write_videofile(
                 temp_output_video.name,
                 codec='libx264',
                 preset="ultrafast",
@@ -265,14 +275,7 @@ class Command(BaseCommand):
                     ContentFile(video_content)
                     )
             self.text_file_instance.track_progress(75)
-            logging.info('generated_final_video successful')
-        
-        watermarked= self.add_animated_watermark_to_instance(final_video_speeded_up_clip)
-        self.text_file_instance.track_progress(100)
-            
-
-        self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
-    
+            return True
 
     def speed_up_video_with_audio(self,input_video, speed_factor):
         
