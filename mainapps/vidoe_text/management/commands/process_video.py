@@ -235,11 +235,10 @@ class Command(BaseCommand):
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
         final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
-        watermarked= self.add_animated_watermark_to_instance(final_video_speeded_up_clip)
 
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
             # generated_srt=text_file_instance.generated_srt.name
-            self.text_file_instance.track_progress(72)
+            self.text_file_instance.track_progress(60)
             
             
             # subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip)
@@ -251,7 +250,7 @@ class Command(BaseCommand):
                 preset="ultrafast",
                 ffmpeg_params=["-movflags", "+faststart"]
             )
-            self.text_file_instance.track_progress(95)
+            self.text_file_instance.track_progress(70)
             
                 # Save the watermarked video to the generated_watermarked_video field
             if text_file_instance.generated_final_video:
@@ -262,8 +261,11 @@ class Command(BaseCommand):
                 f"final_{text_file_instance.id}_{timestamp}.mp4",
                 ContentFile(open(temp_output_video.name, 'rb').read())
                 )
-            self.text_file_instance.track_progress(100)
+            self.text_file_instance.track_progress(75)
             logging.info('generated_final_video successful')
+        
+        watermarked= self.add_animated_watermark_to_instance(final_video_speeded_up_clip)
+        self.text_file_instance.track_progress(100)
             
 
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
@@ -1018,13 +1020,13 @@ class Command(BaseCommand):
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
 
             content=download_from_s3(watermark_s3_path, watermark_temp_path.name) 
-            self.text_file_instance.track_progress(56)
+            self.text_file_instance.track_progress(78)
 
             with open(watermark_temp_path.name, 'wb') as png_file:
                     png_file.write(content)   
             try:
                 watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.6).set_opacity(0.5)
-                self.text_file_instance.track_progress(58)
+                self.text_file_instance.track_progress(79)
 
             except Exception as e:
                 logging.error(f"Error loading watermark image: {e}")
@@ -1039,12 +1041,12 @@ class Command(BaseCommand):
 
             # Animate the watermark
             watermark = watermark.set_position(moving_watermark, relative=False).set_duration(video.duration)
-            self.text_file_instance.track_progress(60)
+            self.text_file_instance.track_progress(82)
 
             # Overlay the animated watermark on the video
             watermarked = CompositeVideoClip([video, watermark], size=video.size)
             watermarked.set_duration(video.duration)
-            self.text_file_instance.track_progress(63)
+            self.text_file_instance.track_progress(83)
 
             # Save the output to a temporary file
             try:
@@ -1055,19 +1057,19 @@ class Command(BaseCommand):
                         preset="ultrafast",
                         ffmpeg_params=["-movflags", "+faststart"]
                     )
-                    self.text_file_instance.track_progress(68)
+                    self.text_file_instance.track_progress(94)
 
                     # Save the watermarked video to the model field
                     if text_file_instance.generated_watermarked_video:
                         text_file_instance.generated_watermarked_video.delete(save=False)
-                        self.text_file_instance.track_progress(69)
+                        self.text_file_instance.track_progress(97)
 
                     with open(temp_output_video.name, 'rb') as temp_file:
                         text_file_instance.generated_watermarked_video.save(
                             f"watermarked_output_{text_file_instance.id}.mp4",
                             ContentFile(temp_file.read())
                         )
-                        self.text_file_instance.track_progress(70)
+                        self.text_file_instance.track_progress(99)
 
 
                 logging.info("Watermarked video generated successfully.")
