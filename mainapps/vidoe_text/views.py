@@ -545,7 +545,7 @@ def add_text(request):
 def download_video(request,textfile_id,):
     text_file=TextFile.objects.get(id=textfile_id)
     user_credit, created = Credit.objects.get_or_create(user=request.user)
-    user_credit.deduct_credits(1)
+    user_credit.credits-=1
 
     bg_music=request.GET.get('bg_music',None)
     return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music,'text_file':text_file}, )
