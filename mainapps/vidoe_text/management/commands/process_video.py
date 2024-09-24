@@ -168,8 +168,12 @@ class Command(BaseCommand):
         self.text_file_instance.track_progress(27)
 
         blank_video=self.generate_blank_video_with_audio()
-        time.sleep(4)
-        blank_vide_clip=self.load_video_from_instance(text_file_instance,'generated_blank_video')
+        if blank_video:
+            blank_vide_clip=self.load_video_from_instance(text_file_instance,'generated_blank_video')
+            logging.info('Blank Video clip loaded')
+        else:
+            logging.error('Blank video file could not be loaded')
+            return
         self.text_file_instance.track_progress(29)
 
         subtitles=self.load_subtitles_from_text_file_instance()
@@ -572,7 +576,10 @@ class Command(BaseCommand):
                 text_file_instance.generated_blank_video.save(f"blank_output_{text_file_instance.id}.mp4", ContentFile(video_content))
                 time.sleep(2)
                 logging.info(f"Video generated successfully and saved as {text_file_instance.generated_blank_video.name}")
-                return text_file_instance.generated_blank_video
+                time.sleep(4)
+
+                return True
+            
 
         except Exception as e:
             logging.error(f"Error generating video: {e}")

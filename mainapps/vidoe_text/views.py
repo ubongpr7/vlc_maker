@@ -187,8 +187,12 @@ def clean_progress_file(text_file_id):
 
 def progress(request,text_file_id):
         text_file=TextFile.objects.get(id=text_file_id)
+        try:
+
     
-        return JsonResponse({'progress': text_file.progress})
+            return JsonResponse({'progress': int(text_file.progress)})
+        except:
+            return JsonResponse({'progress': text_file.progress})
 
 @login_required
 def progress_page(request,al_the_way,text_file_id):

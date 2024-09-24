@@ -73,7 +73,7 @@ class TextFile(models.Model):
     text_file = models.FileField(upload_to=text_file_upload_path,null=True,blank=True)
     voice_id = models.CharField(max_length=100)
     processed=models.BooleanField(default=False)
-    progress=models.IntegerField(default=1)
+    progress=models.CharField(default='0',max_length=100)
     api_key = models.CharField(max_length=200)
     resolution = models.CharField(max_length=50)
     font_file = models.FileField(upload_to=font_file_upload_path, blank=True, null=True)
@@ -116,11 +116,8 @@ class TextFile(models.Model):
             return False
     
     def track_progress(self,increase):
-        if  increase >=100:
-            self.progress=100
-            
-        else:
-            self.progress=increase
+        
+        self.progress=str(increase)
 
         self.save()
     def process_text_file(self):
