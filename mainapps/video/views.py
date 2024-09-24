@@ -22,7 +22,7 @@ def category_view(request, category_id=None):
         # If a category is clicked, fetch the current category and its subcategories and videos
         current_category = get_object_or_404(ClipCategory, id=category_id,user=request.user)
         subcategories = current_category.subcategories.all()
-        videos = current_category.videos.all()
+        videos = current_category.video_clips.all()
     else:
         # If no category_id is provided, display the root categories (categories without a parent)
         current_category = None
