@@ -75,11 +75,13 @@ class Credit(models.Model):
     last_reset = models.DateTimeField(auto_now_add=True)
     @classmethod
     def deduct_credits(self, amount):
+        self.refresh_from_db(fields=['credits'])
+    
+        # Now operate on the actual value of `credits`
         if self.credits >= amount:
-            self.credits -= amount
+            self.credits -= amount  # This will now work correctly
             self.save()
-            return True
-        return False
+
 
     def reset_credits(self, monthly_credits):
         if (now() - self.last_reset) >= timedelta(days=30):
