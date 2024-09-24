@@ -17,6 +17,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 
 def category_view(request, category_id=None):
+    videos =[]
     if category_id:
         # If a category is clicked, fetch the current category and its subcategories and videos
         current_category = get_object_or_404(ClipCategory, id=category_id,user=request.user)
@@ -25,15 +26,15 @@ def category_view(request, category_id=None):
     else:
         # If no category_id is provided, display the root categories (categories without a parent)
         current_category = None
-        subcategories = ClipCategory.objects.filter(parent__isnull=True)
-        videos = VideoClip.objects.filter(category__isnull=True)
+        subcategories = ClipCategory.objects.filter(parent__isnull=True,user=request.user)
+        # videos = VideoClip.objects.filter(category__isnull=True,)
 
     context = {
         'current_category': current_category,
         'subcategories': subcategories,
         'videos': videos
     }
-    return render(request, 'category_view.html', context)
+    return render(request, 'vsl/asset_mgt.html', context)
 
 @login_required
 def upload_video_folder(request):

@@ -1,3 +1,19 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Background Music</title>
+    <link rel="stylesheet" href="{% static 'css/music.css' %}">
+    
+</head>
+<body class="bg" style="position: relative; overflow-x: hidden;">
+                
 <style>
 .container {
     padding: 20px;
@@ -63,6 +79,9 @@
   }
 </style>
 <!-- templates/category_view.html -->
+
+{% include 'sub_header.html' %}
+
 <div class="breadcrumb-nav">
     <ul>
         {% if current_category %}
@@ -177,3 +196,6 @@ $('.three-dots-menu').on('click', function() {
 });
 
   </script>
+
+</body>
+</html>
