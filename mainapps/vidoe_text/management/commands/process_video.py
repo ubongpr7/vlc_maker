@@ -271,7 +271,7 @@ class Command(BaseCommand):
                 video_content = output_video_file.read()
 
                 self.text_file_instance.generated_final_video.save(
-                    f"final_{text_file_instance.id}_{timestamp}.mp4",
+                    f"final_{self.text_file_instance.id}_{timestamp}.mp4",
                     ContentFile(video_content)
                     )
             self.text_file_instance.track_progress(75)
