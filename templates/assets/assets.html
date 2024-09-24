@@ -22,7 +22,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 80%;
         }
-        .folder-header {
+        /* .folder-header {
             display: flex;
             justify-content: space-between;
             padding-bottom: 10px;
@@ -32,7 +32,51 @@
         .folder-header div {
             font-weight: 600;
             font-size: 16px;
-        }
+        } */
+        .folder-header {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .folder-header div:first-child {
+        flex-grow: 1;
+        font-weight: 600;
+        font-size: 16px;
+        text-align: left;
+    }
+
+    .folder-header div:nth-child(2),
+    .folder-header div:nth-child(3) {
+        font-weight: 600;
+        font-size: 16px;
+        text-align: right;
+        margin-left: 20px; /* space between "Items" and "Modified" */
+    }
+
+    .folder-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #e0e0e0;
+        position: relative;
+    }
+
+    .folder-left {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+    }
+
+    .folder-right {
+        display: flex;
+        align-items: center;
+        position: relative;
+        justify-content: flex-end;
+    }
+
         .folder-item {
             display: flex;
             align-items: center;
@@ -126,8 +170,9 @@
                 <span class="folder-name">Folder 1</span>
             </div>
             <div class="folder-right">
-                <i class="ri-star-fill"></i>
+                <span>1</span>
                 <span class="folder-date"> Sep 23, 2024</span>
+                <i class="ri-star-fill"></i>
                 <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                 <div class="dropdown">
                     <ul>
@@ -144,8 +189,10 @@
                 <span class="folder-name">Folder 1</span>
             </div>
             <div class="folder-right">
-                <i class="ri-star-fill"></i>
+                <span>1</span>
+
                 <span class="folder-date"> Sep 23, 2024</span>
+                <i class="ri-star-fill"></i>
                 <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                 <div class="dropdown">
                     <ul>
