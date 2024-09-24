@@ -171,8 +171,11 @@ class Command(BaseCommand):
         if blank_video:
             blank_vide_clip=self.load_video_from_instance(text_file_instance,'generated_blank_video')
             logging.info('Blank Video clip loaded')
+
         else:
             logging.error('Blank video file could not be loaded')
+            self.text_file_instance.track_progress('erroee')
+
             return
         self.text_file_instance.track_progress(29)
 
