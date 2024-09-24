@@ -7,4 +7,5 @@ urlpatterns=[
     path('get_clip/<str:cat_id>/',get_clip,name='get_clip'),
     path('upload-folder/',upload_video_folder,name='upload_video_folder'),
     path('assets/<str:category_id>/',category_view,name='category_view'),
+    path('assets/', category_view, name='category_view'),
 ]
