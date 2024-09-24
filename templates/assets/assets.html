@@ -22,7 +22,17 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 80%;
         }
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
 
+        .folder-header div {
+            font-weight: 600;
+            font-size: 16px;
+        }
         .folder-item {
             display: flex;
             align-items: center;
@@ -74,16 +84,17 @@
             cursor: pointer;
         }
 
-        .dropdown {
+        .dropdown { 
             display: none;
             position: absolute;
-            right: -40px;
             top: 25px;
-            background-color: white;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.04); /* 4% transparent background */
             border: 1px solid #e0e0e0;
             border-radius: 5px;
-            max-width: 150px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            min-width: 120px;dow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .dropdown ul {
@@ -104,7 +115,11 @@
 </head>
 <body>
     <div class="folder-card">
-        
+        <div class="folder-header">
+            <div>Folder Name</div>
+            <div>Items</div>
+            <div>Modified</div>
+        </div>
         <div class="folder-item">
             <div class="folder-left">
                 <input type="checkbox">
