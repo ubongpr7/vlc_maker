@@ -324,7 +324,7 @@ class Command(BaseCommand):
             # Save the new file to Django's FileField (linked to S3 storage)
             self.text_file_instance.generated_audio.save(audio_file_name, ContentFile(audio_data))
             self.text_file_instance.track_progress(8)
-
+            time.sleep(2)
         # Return the URL to
             return self.text_file_instance.generated_audio  # This will return the URL managed by Django's FileField
         except Exception as e:
@@ -418,6 +418,7 @@ class Command(BaseCommand):
                     text_file_instance.generated_srt.save(srt_file_name, ContentFile(srt_content))
 
                     logging.info(f'SRT file saved to instance: {srt_file_name}')
+                    time.sleep(3)
                     self.text_file_instance.track_progress(24)
 
                     return text_file_instance.generated_srt
@@ -561,7 +562,7 @@ class Command(BaseCommand):
                     video_content = output_video_file.read()
 
                 text_file_instance.generated_blank_video.save(f"blank_output_{text_file_instance.id}.mp4", ContentFile(video_content))
-
+                time.sleep(2)
                 logging.info(f"Video generated successfully and saved as {text_file_instance.generated_blank_video.name}")
                 return text_file_instance.generated_blank_video
 
