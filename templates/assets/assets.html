@@ -271,10 +271,10 @@
 <body>
     {% include 'sub_header.html' %}
     <br>
-<div class="video-card-wrapper">
     <div id="confirmation-box"></div>
     <div id="add-clip-modal"></div>
     {% if not category_id %}
+    <div class="video-card-wrapper">
         <div class="folder-card">
             <div class="folder-header">
                     <div><a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-down-line"></i></a></div>
@@ -334,24 +334,28 @@
             
 
         </div>
+    </div>
 
     {%elif  category_id  and not video_id %}
+    <div class="video-card-wrapper">
+
         <div class="folder-card">
             <div class="folder-header">
                 <div>
                     <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a>
-                <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-down-line"></i></a>
+                    <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-down-line"></i></a>
 
                 </div>
+                
                 <div class="folder-right">
-                    <div> <i class="ri-star-fill"></i> Favorites</div>
-                
-                
-                <div id="add-folder"> 
-                    <i class="ri-save-2-line"></i>
-                    Create New Folder</div>
+                        <div> <i class="ri-star-fill"></i> Favorites</div>
+                    
+                    
+                    <div id="add-folder"> 
+                        <i class="ri-save-2-line"></i>
+                        Create New Folder</div>
+                    </div>
                 </div>
-        </div>
             {% if subcategories %}
             <div class="folder-header">
                     <div><input class="folder-check" type="checkbox"> Folder Name</div>
@@ -419,12 +423,14 @@
             
         </div>
         {%endif%}
+    </div>
         
 
             
             
             
         {%elif  category_id  and  video_id %}
+        
         <div class="folder-card">
             <div>
                 <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a> 
@@ -433,7 +439,7 @@
 
             </div>
             <hr>
-            <!-- <div class="video-card-wrapper"> -->
+            <div class="video-card-wrapper">
                 <div class="video-card">
                     <video id="video" width="100%" controls >
                         <source src="{{video.video_file.url}}" type="video/mp4">
@@ -442,9 +448,8 @@
                 </div>
                 
 
-            <!-- </div> -->
+            </div>
         </div>
-    </div>
     {%endif %}
 
      <script>
