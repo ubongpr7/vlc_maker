@@ -16,13 +16,21 @@
             height: 100vh;
         }
 
-        .folder-card {
+        .folder-card,.folder-card-2 {
             background-color: white;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 80%;
             height: 80%;
+        }
+        .folder-card-2{
+            height: 80%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #e0e0e0;
         }
         /* .folder-header {
             display: flex;
@@ -170,7 +178,6 @@
 /* Container for the video card */
 .video-card {
     width: 80%; /* Adjust as per your need */
-    max-width: 600px; /* To restrict excessive width on large screens */
     padding: 20px;
     border-radius: 10px;
     background-color: #f2f2f2; /* Ash color */
@@ -179,7 +186,9 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    
 }
+
 /* Placeholder for the video */
 .video-placeholder {
     width: 100%;
@@ -342,15 +351,15 @@
             
             
         {%elif  category_id  and  video_id %}
-        <div class="folder-card">
+        <div class="folder-card-2">
             <div>
                 <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a> 
                 <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-right-line"></i></a>
                 <a href="{%url 'video:category_view_video' current_category.id video.id %}">{{video.title}}<i class="ri-arrow-drop-down-line"></i></a>
 
             </div>
+            
             <div class="video-card">
-                
                 <video id="video" width="100%" controls >
                     <source src="{{video.video_file.url}}" type="video/mp4">
                     Your browser does not support the video tag.
