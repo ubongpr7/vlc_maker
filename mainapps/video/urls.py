@@ -11,6 +11,7 @@ urlpatterns=[
     path('assets/<str:category_id>/<str:video_id>/', category_view, name='category_view_video'),
     path('categories/delete/<int:category_id>/', delete_category, name='delete_category'),
     path('clips/delete/<int:clip_id>/', delete_clip, name='delete_video'),
+    path('add-video-clip/<int:category_id>/', add_video_clip, name='add_video_clip'),
 
 ]
 

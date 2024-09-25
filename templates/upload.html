@@ -1,4 +1,30 @@
+<style>
+    .card {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* margin: 0 auto; */
+    /* height: 200px; */
+    padding: 20px;
+    font-size: 14px;
 
+    box-sizing: border-box;
+}
+
+.card-header {
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+
+}
+
+.card-body {
+    font-weight: bold;
+    padding: 10px;
+}
+
+</style>
 <div class="card">
     <div class="card-header">
         <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
@@ -126,16 +152,7 @@ uploadForm.addEventListener('submit', function(event) {
         if (xhr.status === 200) {
             uploadStatus.textContent = 'Upload completed successfully!';
             // Example with relative URL
-            const targetUrl = '/video/add-scene/{{textfile_id}}';
-
-// Check if the current URL matches the target URL
-        if (window.location.pathname === targetUrl) {
-            // Refresh the page if already on the target URL
             window.location.reload();
-        } else {
-            // Navigate to the target URL if not already there
-            window.location.pathname = targetUrl;
-        }
 
             
         } else {

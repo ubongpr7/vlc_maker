@@ -267,8 +267,10 @@
     </style>
 </head>
 <body>
-    <div id="confirmation-box"></div>
+    {% include 'sub_header.html' %}
 
+    <div id="confirmation-box"></div>
+    <div id="add-clip-modal"></div>
     {% if not category_id %}
         <div class="folder-card">
             <div class="folder-header">
@@ -277,7 +279,7 @@
                         <div> <i class="ri-star-fill"></i> Favorites</div>
                     
                     
-                    <div> 
+                    <div id="add-folder"> 
                         <i class="ri-save-2-line"></i>
                         Create New Folder</div>
                     </div>
@@ -313,6 +315,13 @@
                                     Delete
                                 </a> 
                             </li>
+                            <li>
+                                <a href="" hx-get="{% url 'video:add_video_clip_modal' folder.id %}" 
+                                hx-target="#add-clip-modal" 
+                                hx-swap="innerHTML" 
+                                onclick="openModal()">Add Video</a>
+                            </li>
+
 
                         </ul>
                     </div>
@@ -366,8 +375,12 @@
                     <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                     <div class="dropdown">
                         <ul>
-                            <li>Open folder</li>
-                            <li>Add video</li>
+                            <li>
+                                <a href="" hx-get="{% url 'video:add_video_clip_modal' folder.id %}" 
+                                hx-target="#add-clip-modal" 
+                                hx-swap="innerHTML" 
+                                onclick="openModal()">Add Video</a>
+                            </li>
                             <li><a hx-get="{% url 'video:delete_category' folder.id %}"  hx-target="#confirmation-box" 
                                 hx-swap="innerHTML">Delete</a> </li>
                         </ul>
@@ -394,6 +407,7 @@
                             <ul>
                                 <li><a hx-get="{% url 'video:delete_video' video.id %}"  hx-target="#confirmation-box" 
                                     hx-swap="innerHTML">Delete</a> </li>
+
                             </ul>
                         </div>
                     </div>
@@ -427,11 +441,16 @@
 
             </div>
         </div>
-        
+        <div id="uploader">
+            {% include 'uploader.html' %}
+        </div>
 
     {%endif %}
 
      <script>
+        document.getElementById('add-folder').addEventListener('click',()=>{
+            document.getElementById('uploader').style.display='block'
+        })
         function toggleDropdown(element) {
             // Close all other dropdowns
             const dropdowns = document.querySelectorAll('.dropdown');
@@ -463,5 +482,23 @@
 
     </script>
     <script src="{% static 'htmx.js' %}"></script>
+    <script>
+        function openModal() {
+            document.getElementById("add-clip-modal").style.display = "block";
+        }
+    
+        function closeModal() {
+            document.getElementById("add-clip-modal").style.display = "none";
+        }
+    
+        // Close the modal if the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            const modal = document.getElementById("add-clip-modal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+    
 </body>
 </html>
