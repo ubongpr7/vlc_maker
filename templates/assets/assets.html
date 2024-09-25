@@ -156,54 +156,66 @@
         .dropdown ul li:hover {
             background-color: #f1f1f1;
         }
+        a {
+            text-decoration: none; 
+            color: inherit;        
+            outline: none;         
+        }
+
     </style>
 </head>
 <body>
-    <div class="folder-card">
-        <div class="folder-header">
-                <div>Asstes Library <i class="ri-arrow-drop-down-line"></i> </div>
-                <div class="folder-right">
-                    <div> <i class="ri-star-fill"></i> Favorites</div>
-                
-                
-                <div> 
-                    <i class="ri-save-2-line"></i>
-                    Create New Folder</div>
-                </div>
-        </div>
-        <div class="folder-header">
-                <div><input class="folder-check" type="checkbox"> Folder Name</div>
-                <div class="folder-right">
-
-                    <div>Items</div>
-                    <div>Modified</div>
-                    <div style="width: 145px;"></div>
-                </div>
-        </div>
-        {%for folder in main_categories %}
-        <div class="folder-item">
-            <div class="folder-left">
-                <input type="checkbox">
-                <span class="folder-name">{{folder.name}}</span>
+    {% if not category_id %}
+        <div class="folder-card">
+            <div class="folder-header">
+                    <div>Asstes Library <i class="ri-arrow-drop-down-line"></i> </div>
+                    <div class="folder-right">
+                        <div> <i class="ri-star-fill"></i> Favorites</div>
+                    
+                    
+                    <div> 
+                        <i class="ri-save-2-line"></i>
+                        Create New Folder</div>
+                    </div>
             </div>
-            <div class="folder-right">
-                <span>{{folder.get_clip_number}}</span>
-                <span class="folder-date"> {{folder.update_at}}</span>
-                <i class="ri-star-line"></i>
-                <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
-                <div class="dropdown">
-                    <ul>
-                        <li>Open folder</li>
-                        <li>Add video</li>
-                        <li>Delete</li>
-                    </ul>
+            <div class="folder-header">
+                    <div><input class="folder-check" type="checkbox"> Folder Name</div>
+                    <div class="folder-right">
+
+                        <div>Items</div>
+                        <div>Modified</div>
+                        <div style="width: 145px;"></div>
+                    </div>
+            </div>
+            {%for folder in main_categories %}
+            <div class="folder-item">
+                <a href="{%url 'video:subcategory_view' folder.id %}">
+                    <div class="folder-left">
+                        <input type="checkbox">
+                        <span class="folder-name">{{folder.name}}</span>
+                    </div>
+                </a>
+                <div class="folder-right">
+                    <span>{{folder.get_clip_number}}</span>
+                    <span class="folder-date"> {{folder.update_at}}</span>
+                    <i class="ri-star-line"></i>
+                    <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
+                    <div class="dropdown">
+                        <ul>
+                            <li>Open folder</li>
+                            <li>Add video</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
-        
+            {% endfor %}
+            
 
-    </div>
+        </div>
+    {%else %}
+
+    {%endif %}
 
      <script>
         function toggleDropdown(element) {

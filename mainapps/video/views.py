@@ -34,7 +34,8 @@ def category_view(request, category_id=None):
         'current_category': current_category,
         'main_categories': main_categories,
         'subcategories': subcategories,
-        'videos': videos
+        'videos': videos,
+        'category_id':category_id,
     }
     return render(request, 'assets/assets.html', context)
 
