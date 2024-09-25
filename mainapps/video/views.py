@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # views.py
-
+@login_required
 def add_video_clip(request, category_id):
     category = get_object_or_404(ClipCategory, id=category_id)
 
@@ -31,7 +31,7 @@ def add_video_clip(request, category_id):
     return render(request, 'partials/add_video.html', {'category': category})
 
 
-
+@login_required
 def delete_clip(request, clip_id):
     clip = get_object_or_404(VideoClip, id=clip_id)
     if request.method == 'POST':
@@ -51,7 +51,7 @@ def delete_clip(request, clip_id):
 
     return render(request,'partials/confirm_delete.html',{'item':clip})
 
-
+@login_required
 def delete_category(request, category_id):
     category = get_object_or_404(ClipCategory, id=category_id)
     if request.method == 'POST':
@@ -76,7 +76,7 @@ def delete_category(request, category_id):
     # Return a method not allowed response for non-POST requests
     return render(request,'partials/confirm_delete.html',{'item':category})
 
-
+@login_required
 def category_view(request, category_id=None,video_id=None):
     videos =[]
     subcategories=[]

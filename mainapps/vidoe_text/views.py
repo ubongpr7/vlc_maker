@@ -102,8 +102,8 @@ def serve_file(request, file_name):
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
 
-@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required  
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 def process_background_music(request, textfile_id):
     
     # Run process_video command in a new thread
@@ -206,8 +206,8 @@ def progress_page(request,al_the_way,text_file_id):
 
     return render(request,'vlc/progress.html',{"al_the_way":al_the_way,'text_file_id':text_file_id})
 
-@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 def process_textfile(request, textfile_id):
     try:
         # Fetch the TextFile instance
@@ -237,8 +237,8 @@ def process_textfile(request, textfile_id):
     return redirect(f'/text/progress_page/build/{textfile_id}')
 
 
-@check_user_credits(minimum_credits_required=1)
 @login_required
+@check_user_credits(minimum_credits_required=1)
 def add_text(request):
     if request.method == 'POST':
         voice_id = request.POST.get('voiceid')
@@ -289,8 +289,8 @@ def add_text(request):
 #     text_file_obj= get_object_or_404(TextFile,id=textfile_id)
 #     return render(request,'vlc/frontend/VLSMaker/index.html',{"textfile_id":textfile_id,})
 
-@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 @login_required
+@check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 def download_video(request,textfile_id,):
     text_file=TextFile.objects.get(id=textfile_id)
     if not text_file.processed:
