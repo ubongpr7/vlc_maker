@@ -137,7 +137,10 @@ USE_TZ = True
 
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.office365.com'  # GoDaddy uses Office 365 for email
+# EMAIL_PORT = 587  # TLS port for secure connection
+# EMAIL_USE_TLS = True  # Enable TLS
 EMAIL_PORT = 465  # SSL port
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False  # Don't use TLS since you are using SSL
