@@ -486,23 +486,6 @@
 
     </script>
     <script src="{% static 'htmx.js' %}"></script>
-    <script>
-        function openModal() {
-            document.getElementById("add-clip-modal").style.display = "block";
-        }
-    
-        function closeModal() {
-            document.getElementById("add-clip-modal").style.display = "none";
-        }
-    
-        // Close the modal if the user clicks anywhere outside of the modal
-        window.onclick = function(event) {
-            const modal = document.getElementById("add-clip-modal");
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-    </script>
     
 </body>
 </html>
