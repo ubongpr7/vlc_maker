@@ -252,7 +252,7 @@ def subscription_confirm(request):
         # Automatically l
         auth_login(request, user)
         # Success message
-        if not user_created and customer_name:
+        if not user_created :
             if not user.first_name or not user.last_name:
                 user.first_name = customer_name.split()[0] if customer_name else ""
                 user.last_name = " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else ""
