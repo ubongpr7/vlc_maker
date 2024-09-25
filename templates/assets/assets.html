@@ -338,20 +338,21 @@
             
             
         {%elif  category_id  and  video_id %}
-        <div class="video-card">
+        <div class="folder-card">
             <div>
                 <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a> 
                 <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-right-line"></i></a>
                 <a href="{%url 'video:category_view_video' current_category.id video.id %}">{{video.title}}<i class="ri-arrow-drop-down-line"></i></a>
 
             </div>
-            <div class="video-placeholder" onclick="playVideo()">
-                <i class="play-icon">▶</i>
+            <div class="video-card">
+                
+                <video id="video" width="100%" controls >
+                    <source src="{{video.video_file.url}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
-            <video id="video" width="100%" controls style="display: none;">
-                <source src="{{video.video_file.url}}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            
         </div>
         
 
