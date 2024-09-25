@@ -257,8 +257,11 @@ def subscription_confirm(request):
                 user.first_name = customer_name.split()[0] if customer_name else ""
                 user.last_name = " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else ""
                 user.save()
+            send_user_password_email(user)
+
             messages.success(request, "You've successfully signed up, and an account was created for you!")
         else:
+
             send_user_password_email(user)
             messages.success(request, "Your subscription was successfully updated!")
 
