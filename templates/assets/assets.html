@@ -92,7 +92,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 5px 0;
             border-bottom: 1px solid #e0e0e0;
         }
 
@@ -308,7 +308,7 @@
             {% endif %}
         
             {% if videos %}
-            <h5>Videos</h5>
+            <h5 style="padding: 0;">Videos</h5>
             {% for video in videos %}
                 <div class="folder-item"></div>
                     <a href="{%url 'video:category_view_video' current_category.id video.id %}">
