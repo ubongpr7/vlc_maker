@@ -200,6 +200,28 @@
     flex-direction: column;
 }
 
+.alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    margin-top: 20px;
+}
+
+.alert button {
+    margin-right: 10px;
+    padding: 8px 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.alert button:hover {
+    background-color: #c82333;
+}
     </style>
 </head>
 <body>
@@ -243,7 +265,12 @@
                     <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                     <div class="dropdown">
                         <ul>
-                            <li><a href="{% url 'video:delete_category' folder.id %}">Delete</a> </li>
+                            <li>
+                                <a hx-get="{% url 'video:delete_category' folder.id %}" hx-target="#confirmation-box" 
+                                hx-swap="innerHTML">
+                                    Delete
+                                </a> 
+                            </li>
 
                         </ul>
                     </div>
@@ -299,7 +326,8 @@
                         <ul>
                             <li>Open folder</li>
                             <li>Add video</li>
-                            <li><a href="{% url 'video:delete_category' folder.id %}">Delete</a> </li>
+                            <li><a hx-get="{% url 'video:delete_category' folder.id %}"  hx-target="#confirmation-box" 
+                                hx-swap="innerHTML">Delete</a> </li>
                         </ul>
                     </div>
                 </div>
@@ -322,8 +350,8 @@
                         <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                         <div class="dropdown">
                             <ul>
-                                <li>Play</li>
-                                <li><a href="{% url 'video:delete_video' video.id %}">Delete</a> </li>
+                                <li><a hx-get="{% url 'video:delete_video' video.id %}"  hx-target="#confirmation-box" 
+                                    hx-swap="innerHTML">Delete</a> </li>
                             </ul>
                         </div>
                     </div>
