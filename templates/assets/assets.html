@@ -262,6 +262,26 @@
             {% endfor %}
             {% endif %}
             <br>
+            {% if videos %}
+            {% for video in videos %}
+            <div class="folder-item"></div>
+                <a href="{%url 'video:subcategory_view' folder.id %}">
+                    <div class="folder-left">
+                        <i class="ri-movie-fill" style="font-weight: bold;background-color: #d9d9d9;font-size: 16px;"></i>
+                        <span class="folder-name">{{video.name}}</span>
+                    </div>
+                </a>
+                <div class="folder-right">
+                    <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
+                    <div class="dropdown">
+                        <ul>
+                            <li>Play</li>
+                            <li>Add video</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
 
             
