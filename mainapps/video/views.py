@@ -11,10 +11,57 @@ from django.core.files.storage import FileSystemStorage
 from pathlib import Path
 import json
 from django.urls import reverse
+from django.http import JsonResponse
 
 
 # views.py
-from django.shortcuts import render, get_object_or_404
+
+
+
+def delete_clip(request, clip_id):
+    clip = get_object_or_404(VideoClip, id=clip_id)
+    if request.method == 'POST':
+        # Retrieve the clip or return a 404 if not found
+
+        # Delete the video file from storage (optional)
+        if clip.video_file:
+            clip.video_file.delete(save=False)
+
+        # Delete the video clip from the database
+        clip.delete()
+
+        # Return a success response
+        return JsonResponse({'success': True})
+
+    # Return a method not allowed response for non-POST requests
+
+    return render(request,'partials/confirm_delete.html',{'item':clip})
+
+
+def delete_category(request, category_id):
+    category = get_object_or_404(ClipCategory, id=category_id)
+    if request.method == 'POST':
+
+        # Recursively delete the category, its subcategories, and all related video clips
+        def delete_category_and_subcategories(cat):
+            # Delete all video clips associated with this category
+            cat.video_clips.all().delete()
+
+            # Recursively delete subcategories
+            for subcategory in cat.subcategories.all():
+                delete_category_and_subcategories(subcategory)
+
+            # Finally, delete the category itself
+            cat.delete()
+
+        delete_category_and_subcategories(category)
+        
+        # Return a success response (JSON or redirect based on your UI)
+        return JsonResponse({'success': True})
+
+    # Return a method not allowed response for non-POST requests
+    return render(request,'partials/confirm_delete.html',{'item':category})
+
 
 def category_view(request, category_id=None,video_id=None):
     videos =[]

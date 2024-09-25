@@ -1,0 +1,39 @@
+<div class="alert">
+    <p>Are you sure you want to delete <strong>{{ item.title }}{{item.name }} and it content</strong>?</p>
+    <button 
+        hx-post="{{request.path}}" 
+        hx-target="#confirmation-box" 
+        hx-swap="outerHTML"
+    >
+        Yes
+    </button>
+    <button onclick="closeAlert()">Cancel</button>
+</div>
+
+<script>
+    function closeAlert() {
+        document.getElementById('confirmation-box').innerHTML = '';
+    }
+</script>
+.alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    margin-top: 20px;
+}
+
+.alert button {
+    margin-right: 10px;
+    padding: 8px 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.alert button:hover {
+    background-color: #c82333;
+}

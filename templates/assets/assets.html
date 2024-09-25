@@ -203,6 +203,8 @@
     </style>
 </head>
 <body>
+    <div id="confirmation-box"></div>
+
     {% if not category_id %}
         <div class="folder-card">
             <div class="folder-header">
@@ -241,9 +243,8 @@
                     <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                     <div class="dropdown">
                         <ul>
-                            <li>Open folder</li>
-                            <li>Add video</li>
-                            <li>Delete</li>
+                            <li><a href="{% url 'video:delete_category' folder.id %}">Delete</a> </li>
+
                         </ul>
                     </div>
                 </div>
@@ -298,7 +299,7 @@
                         <ul>
                             <li>Open folder</li>
                             <li>Add video</li>
-                            <li>Delete</li>
+                            <li><a href="{% url 'video:delete_category' folder.id %}">Delete</a> </li>
                         </ul>
                     </div>
                 </div>
@@ -322,7 +323,7 @@
                         <div class="dropdown">
                             <ul>
                                 <li>Play</li>
-                                <li>Delete</li>
+                                <li><a href="{% url 'video:delete_video' video.id %}">Delete</a> </li>
                             </ul>
                         </div>
                     </div>
