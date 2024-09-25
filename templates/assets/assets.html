@@ -21,7 +21,7 @@
             height: 100vh;
         } */
 
-        .folder-card,.folder-card-2 {
+        .folder-card {
             background-color: white;
             border-radius: 12px;
             padding: 20px;
@@ -271,9 +271,10 @@
 <body>
     {% include 'sub_header.html' %}
     <br>
-
     <div id="confirmation-box"></div>
     <div id="add-clip-modal"></div>
+    <div class="video-card-wrapper">
+        
     {% if not category_id %}
         <div class="folder-card">
             <div class="folder-header">
@@ -444,6 +445,8 @@
 
             </div>
         </div>
+    </div>
+
         <div id="uploader">
             {% include 'uploader.html' %}
         </div>
