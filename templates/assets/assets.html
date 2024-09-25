@@ -225,6 +225,45 @@
 .alert button:hover {
     background-color: #c82333;
 }
+/* Modal Background */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Sit on top of the page */
+    z-index: 1000; /* Ensure it appears above other elements */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px; /* Set a fixed width */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 10px 15px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background-color: #c82333;
+}
+
     </style>
 </head>
 <body>

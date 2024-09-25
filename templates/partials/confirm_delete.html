@@ -1,22 +1,64 @@
 {% load static%}
-<div class="alert">
-    <p>Are you sure you want to delete <strong>{{ item.title }}{{item.name }} and it content</strong>?</p>
-    <button 
-        hx-post="{{request.path}}" 
-        hx-target="#confirmation-box" 
-        hx-swap="outerHTML"
-    >
-        Yes
-    </button>
-    <button onclick="closeAlert()">Cancel</button>
+<!-- Container for the modal -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to delete the <strong>{{ item.title }}{{item.name}} and it content</strong>?</p>
+        <button 
+            hx-post="{{request.path}}" 
+            hx-target="#confirmation-box" 
+            hx-swap="outerHTML"
+        >
+            Yes
+        </button>
+        <button onclick="closeModal()">Cancel</button>
+    </div>
 </div>
 
 <script>
-    function closeAlert() {
-        document.getElementById('confirmation-box').innerHTML = '';
+    function closeModal() {
+        document.getElementById('confirmation-modal').style.display = 'none';
     }
 </script>
+
 <style>
+/* Modal Background */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Sit on top of the page */
+    z-index: 1000; /* Ensure it appears above other elements */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px; /* Set a fixed width */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 10px 15px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background-color: #c82333;
+}
 
 .alert {
     background-color: #f8d7da;
