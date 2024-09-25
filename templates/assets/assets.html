@@ -170,6 +170,7 @@
 /* Container for the video card */
 .video-card {
     width: 80%; /* Adjust as per your need */
+    max-width: 600px; /* To restrict excessive width on large screens */
     padding: 20px;
     border-radius: 10px;
     background-color: #f2f2f2; /* Ash color */
@@ -179,7 +180,6 @@
     align-items: center;
     flex-direction: column;
 }
-
 /* Placeholder for the video */
 .video-placeholder {
     width: 100%;
@@ -212,7 +212,7 @@
     {% if not category_id %}
         <div class="folder-card">
             <div class="folder-header">
-                    <div><a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a></div>
+                    <div><a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-down-line"></i></a></div>
                     <div class="folder-right">
                         <div> <i class="ri-star-fill"></i> Favorites</div>
                     
