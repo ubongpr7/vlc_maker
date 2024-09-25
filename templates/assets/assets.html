@@ -48,6 +48,7 @@
         text-align: left;
     }
 
+
     .folder-header div:nth-child(2),
     .folder-header div:nth-child(3) {
         /* font-weight: 600; */
@@ -163,6 +164,39 @@
             color: inherit;        
             outline: none;         
         }
+                /* Container for the video card */
+        .video-card {
+            width: 300px; /* Adjust as per your need */
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f2f2f2; /* Ash color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Placeholder for the video */
+        .video-placeholder {
+            width: 100%;
+            padding-bottom: 100%; /* To make it a square */
+            background-color: #d3d3d3; /* Slightly ash color */
+            position: relative;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Play icon */
+        .play-icon {
+            font-size: 48px;
+            color: #fff; /* White play button */
+            position: absolute;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Adds a slight shadow */
+        }
+
 
     </style>
 </head>
@@ -215,7 +249,7 @@
             
 
         </div>
-        {%else %}
+        {%elif  category_id  and not video_id %}
         <div class="folder-card">
             <div class="folder-header">
                     <div>Asstes Library<i class="ri-arrow-drop-right-line"></i>{{current_category.name }} <i class="ri-arrow-drop-down-line"></i> </div>
@@ -263,7 +297,7 @@
             </div>
             {% endfor %}
             {% endif %}
-            <br>
+        
             {% if videos %}
             {% for video in videos %}
                 <div class="folder-item"></div>
@@ -285,12 +319,20 @@
                     </div>
                 </div>
             {% endfor %}
-            {%endif%}
-
+            
+        </div>
+        {%elif  category_id  and  video_id %}
+        <div class="video-card">
+            <div class="video-placeholder">
+                <i class="play-icon">▶</i>
+            </div>
+        </div>
+        
 
             
-
-        </div>
+            
+            
+        {%endif%}
 
     {%endif %}
 
