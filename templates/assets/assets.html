@@ -265,11 +265,11 @@
                     <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-right-line"></i></a>
 
                 </div>
-                <!-- <div class="folder-right">
+                <div class="folder-right">
                     <div> <i class="ri-star-fill"></i> Favorites</div>
                 
                 
-                <div>  -->
+                <div> 
 
             {% if subcategories %}
             <div class="folder-header">
@@ -330,6 +330,12 @@
             {% endfor %}
             
         </div>
+        {%endif%}
+        
+
+            
+            
+            
         {%elif  category_id  and  video_id %}
         <div class="video-card">
             <div>
@@ -347,11 +353,6 @@
             </video>
         </div>
         
-
-            
-            
-            
-        {%endif%}
 
     {%endif %}
 
