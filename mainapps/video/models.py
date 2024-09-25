@@ -47,6 +47,7 @@ class ClipCategory(models.Model):
     name = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='categories')
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subcategories', blank=True, null=True)
+    update_at=models.DateTimeField(auto_now=True,null=True,blank=True)
     def __str__(self):
         return self.name
     class Meta:
@@ -54,6 +55,10 @@ class ClipCategory(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['name', 'user'], name='unique_category_per_user')
         ]
+    @staticmethod
+    def get_clip_number(self):
+        clips=VideoClip.objects.filter(category=self)
+        return len(clips)
 
 
 class VideoClip(models.Model):

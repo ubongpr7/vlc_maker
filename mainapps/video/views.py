@@ -18,6 +18,7 @@ from django.shortcuts import render, get_object_or_404
 
 def category_view(request, category_id=None):
     videos =[]
+    subcategories=[]
     if category_id:
         # If a category is clicked, fetch the current category and its subcategories and videos
         current_category = get_object_or_404(ClipCategory, id=category_id,user=request.user)
@@ -26,11 +27,12 @@ def category_view(request, category_id=None):
     else:
         # If no category_id is provided, display the root categories (categories without a parent)
         current_category = None
-        subcategories = ClipCategory.objects.filter(parent__isnull=True,user=request.user)
+        main_categories = ClipCategory.objects.filter(parent__isnull=True,user=request.user)
         # videos = VideoClip.objects.filter(category__isnull=True,)
 
     context = {
         'current_category': current_category,
+        'main_categories': main_categories,
         'subcategories': subcategories,
         'videos': videos
     }

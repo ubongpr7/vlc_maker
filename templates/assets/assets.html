@@ -180,14 +180,15 @@
                     <div style="width: 50px;"></div>
                 </div>
         </div>
+        {%for folder in main_categories %}
         <div class="folder-item">
             <div class="folder-left">
                 <input type="checkbox">
-                <span class="folder-name">Folder 1</span>
+                <span class="folder-name">{{folder.name}}</span>
             </div>
             <div class="folder-right">
-                <span>1</span>
-                <span class="folder-date"> Sep 23, 2024</span>
+                <span>{{folder.get_clip_number}}</span>
+                <span class="folder-date"> {{folder.update_at}}</span>
                 <i class="ri-star-line"></i>
                 <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                 <div class="dropdown">
@@ -199,27 +200,7 @@
                 </div>
             </div>
         </div>
-        <div class="folder-item">
-            <div class="folder-left">
-                <input type="checkbox">
-                <span class="folder-name">Folder 1</span>
-            </div>
-            <div class="folder-right">
-                <span>1</span>
-
-                <span class="folder-date"> Sep 23, 2024</span>
-                <i class="ri-star-line"></i>
-
-                <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
-                <div class="dropdown">
-                    <ul>
-                        <li>Open folder</li>
-                        <li>Add video</li>
-                        <li>Delete</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
         
 
     </div>
