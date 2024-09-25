@@ -55,7 +55,7 @@ class ClipCategory(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['name', 'user'], name='unique_category_per_user')
         ]
-    @staticmethod
+    @property
     def get_clip_number(self):
         clips=VideoClip.objects.filter(category=self)
         return len(clips)
