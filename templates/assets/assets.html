@@ -174,10 +174,22 @@
             outline: none; 
             display: inline;        
         }
-                /* Container for the video card */
-/* Container for the video card */
+ * Video tag, initially hidden */
+#video {
+    border-radius: 10px;
+}
+.video-card-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Centered video card */
 .video-card {
     width: 80%; /* Adjust as per your need */
+    max-width: 600px; /* To restrict excessive width on large screens */
     padding: 20px;
     border-radius: 10px;
     background-color: #f2f2f2; /* Ash color */
@@ -186,34 +198,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    
 }
-
-/* Placeholder for the video */
-.video-placeholder {
-    width: 100%;
-    padding-bottom: 100%; /* To make it a square */
-    background-color: #d3d3d3; /* Slightly ash color */
-    position: relative;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-/* Play icon */
-.play-icon {
-    font-size: 48px;
-    color: #fff; /* White play button */
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Adds a slight shadow */
-}
-
-/* Video tag, initially hidden */
-#video {
-    border-radius: 10px;
-}
-
 
     </style>
 </head>
@@ -351,21 +336,23 @@
             
             
         {%elif  category_id  and  video_id %}
-        <div class="folder-card-2">
+        <div class="folder-card">
             <div>
                 <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a> 
                 <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-right-line"></i></a>
                 <a href="{%url 'video:category_view_video' current_category.id video.id %}">{{video.title}}<i class="ri-arrow-drop-down-line"></i></a>
 
             </div>
-            
-            <div class="video-card">
-                <video id="video" width="100%" controls >
-                    <source src="{{video.video_file.url}}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <div class="video-card-wrapper">
+                <div class="video-card">
+                    <video id="video" width="100%" controls >
+                        <source src="{{video.video_file.url}}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                
+
             </div>
-            
         </div>
         
 
