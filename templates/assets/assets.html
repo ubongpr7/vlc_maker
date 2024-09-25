@@ -165,37 +165,43 @@
             outline: none;         
         }
                 /* Container for the video card */
-        .video-card {
-            width: 300px; /* Adjust as per your need */
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #f2f2f2; /* Ash color */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* Container for the video card */
+.video-card {
+    width: 300px; /* Adjust as per your need */
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f2f2f2; /* Ash color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 
-        /* Placeholder for the video */
-        .video-placeholder {
-            width: 100%;
-            padding-bottom: 100%; /* To make it a square */
-            background-color: #d3d3d3; /* Slightly ash color */
-            position: relative;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
+/* Placeholder for the video */
+.video-placeholder {
+    width: 100%;
+    padding-bottom: 100%; /* To make it a square */
+    background-color: #d3d3d3; /* Slightly ash color */
+    position: relative;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
 
-        /* Play icon */
-        .play-icon {
-            font-size: 48px;
-            color: #fff; /* White play button */
-            position: absolute;
-            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Adds a slight shadow */
-        }
+/* Play icon */
+.play-icon {
+    font-size: 48px;
+    color: #fff; /* White play button */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Adds a slight shadow */
+}
+
+/* Video tag, initially hidden */
+#video {
+    border-radius: 10px;
+}
 
 
     </style>
@@ -204,7 +210,7 @@
     {% if not category_id %}
         <div class="folder-card">
             <div class="folder-header">
-                    <div>Asstes Library <i class="ri-arrow-drop-down-line"></i> </div>
+                    <div><a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a></div>
                     <div class="folder-right">
                         <div> <i class="ri-star-fill"></i> Favorites</div>
                     
@@ -252,7 +258,19 @@
         {%elif  category_id  and not video_id %}
         <div class="folder-card">
             <div class="folder-header">
-                    <div>Asstes Library<i class="ri-arrow-drop-right-line"></i>{{current_category.name }} <i class="ri-arrow-drop-down-line"></i> </div>
+                <div>
+                    <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a> 
+                    <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-right-line"></i></a>
+
+                </div>
+                <div class="folder-right">
+                    <div> <i class="ri-star-fill"></i> Favorites</div>
+                
+                
+                <div> 
+
+            <div class="folder-header">
+                    <div><a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a>{{current_category.name }} <i class="ri-arrow-drop-down-line"></i> </div>
                     <div class="folder-right">
                         <div> <i class="ri-star-fill"></i> Favorites</div>
                     
@@ -301,7 +319,7 @@
             {% if videos %}
             {% for video in videos %}
                 <div class="folder-item"></div>
-                    <a href="{%url 'video:subcategory_view' video.id %}">
+                    <a href="{%url 'video:category_view_video' current_category.id video.id %}">
                         <div class="folder-left">
                             <i class="bi bi-play" style="font-weight: bold; padding: 5px;margin-right: 5px;background-color: #d9d9d9;font-size: 16px;"></i>
                             <span class="folder-name" style="font-size: 16px;">{{video.title}}</span>
@@ -312,7 +330,6 @@
                         <div class="dropdown">
                             <ul>
                                 <li>Play</li>
-                                <li>Add video</li>
                                 <li>Delete</li>
                             </ul>
                         </div>
@@ -323,9 +340,19 @@
         </div>
         {%elif  category_id  and  video_id %}
         <div class="video-card">
-            <div class="video-placeholder">
+            <div>
+                <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a> 
+                <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-right-line"></i></a>
+                <a href="{%url 'video:category_view_video' current_category.id video.id %}">{{video.title}}<i class="ri-arrow-drop-down-line"></i></a>
+
+            </div>
+            <div class="video-placeholder" onclick="playVideo()">
                 <i class="play-icon">▶</i>
             </div>
+            <video id="video" width="100%" controls style="display: none;">
+                <source src="{{video.video_file.url}}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
         
 
@@ -357,6 +384,15 @@
                 }
             }
         }
+    function playVideo() {
+        const video = document.getElementById('video');
+        const placeholder = document.querySelector('.video-placeholder');
+        
+        placeholder.style.display = 'none';  // Hide the placeholder
+        video.style.display = 'block';      // Show the video
+        video.play();                       // Play the video
+    }
+
     </script>
 </body>
 </html>
