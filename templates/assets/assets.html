@@ -308,6 +308,7 @@
             {% endif %}
         
             {% if videos %}
+            <h5>Videos</h5>
             {% for video in videos %}
                 <div class="folder-item"></div>
                     <a href="{%url 'video:category_view_video' current_category.id video.id %}">
