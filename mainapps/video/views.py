@@ -19,6 +19,7 @@ from django.shortcuts import render, get_object_or_404
 def category_view(request, category_id=None):
     videos =[]
     subcategories=[]
+    main_categories=[]
     if category_id:
         # If a category is clicked, fetch the current category and its subcategories and videos
         current_category = get_object_or_404(ClipCategory, id=category_id,user=request.user)
