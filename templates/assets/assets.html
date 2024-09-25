@@ -261,15 +261,7 @@
 
     {%elif  category_id  and not video_id %}
         <div class="folder-card">
-            <div class="folder-header">
-                <div>
-                    <div>
-
-                        <a href="{%url 'video:category_view' %}">Assets Library<i class="ri-arrow-drop-right-line"></i></a> 
-                        <a href="{%url 'video:subcategory_view' current_category.id %}">{{current_category.name}}<i class="ri-arrow-drop-right-line"></i></a>
-                    </div>
-
-                </div>
+            
 
             {% if subcategories %}
             <div class="folder-header">
@@ -303,9 +295,9 @@
                         </ul>
                     </div>
                 </div>
+                
+                {% endfor %}
             </div>
-
-            {% endfor %}
             {% endif %}
         
             {% if videos %}
