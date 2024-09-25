@@ -318,12 +318,12 @@
                                     Delete
                                 </a> 
                             </li>
-                            <!-- <li>
+                            <li>
                                 <a href="" hx-get="{% url 'video:add_video_clip' folder.id %}" 
                                 hx-target="#add-clip-modal" 
                                 hx-swap="innerHTML" 
-                                onclick="openModal()">Add Video</a>
-                            </li> -->
+                                >Add Video</a>
+                            </li>
 
 
                         </ul>
@@ -378,12 +378,12 @@
                     <i class="ri-more-2-fill" onclick="toggleDropdown(this)"></i>
                     <div class="dropdown">
                         <ul>
-                            <!-- <li>
-                                <a href="" hx-get="{% url 'video:add_video_clip_modal' folder.id %}" 
+                            <li>
+                                <a href="" hx-get="{% url 'video:add_video_clip' folder.id %}" 
                                 hx-target="#add-clip-modal" 
                                 hx-swap="innerHTML" 
-                                onclick="openModal()">Add Video</a>
-                            </li> -->
+                                >Add Video</a>
+                            </li>
                             <li><a hx-get="{% url 'video:delete_category' folder.id %}"  hx-target="#confirmation-box" 
                                 hx-swap="innerHTML">Delete</a> </li>
                         </ul>
