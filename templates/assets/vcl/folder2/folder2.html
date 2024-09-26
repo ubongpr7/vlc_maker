@@ -41,9 +41,8 @@
                         <div>
                         <a href="{%url 'video:category_view_video' current_category.id video.id %}">
 
-                            <img src="{% static 'resources/assets/assets2/Video placeholder.svg' %}" alt="">
-                            {{video.title}}
-                        </a>
+                            <div><a href="{%url 'video:category_view_video' current_category.id video.id %}"><img src="{% static 'resources/assets/assets2/Video placeholder.svg' %}" alt=""><a/></div>
+                            <div><a href="{%url 'video:category_view_video' current_category.id video.id %}">{{video.title}}</a></div>
                         </div>
                         <img src="{% static 'resources/assets/assets2/dots.svg ' %}" alt="">
 
