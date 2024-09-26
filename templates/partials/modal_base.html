@@ -1,19 +1,15 @@
 {% load static%}
+<!-- Container for the modal -->
+ {%block extra_css%}
 
+ {% endblock extra_css%}
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">
-        <p>Are you sure you want to delete the <strong>{{ item.title }}{{item.name}} and it content</strong>?</p>
-        <button 
-            hx-post="{{request.path}}" 
-            hx-target="#confirmation-box" 
-            hx-swap="outerHTML"
-            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-on="htmx:afterRequest: window.location.reload()"
-        >
-            Yes
-        </button>
-        <button onclick="closeModal()">Cancel</button>
+    {% block content %}    
+
+    {% endblock content %}    
     </div>
+    <button onclick="closeModal()">Cancel</button>
 </div>
 
 <script>
@@ -85,6 +81,7 @@
     background-color: #c82333;
 }
 </style>
-
+{% block extra_js%}
+{% endblock extra_js%}
 <script src="{% static 'htmx.js' %}"></script>
 

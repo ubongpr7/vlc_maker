@@ -1,36 +1,116 @@
+
+{% extends 'partials/modal_base.html' %}
+<!-- Container for the modal -->
+{% block content %}    
+
+<style>
+   .file-button {
+            background: #864af9;
+            border: none;
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 10px;
+            color: white;
+            font-size: 18px;
+            font-family: 'Arial', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation on hover */
+        }
+
+        
+
+        /* Centering the button */
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-container{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+            align-items:center;
+        }
+    
+        .card {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* margin: 0 auto; */
+    /* height: 200px; */
+    padding: 20px;
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+.card-header {
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+
+}
+
+.card-body {
+    font-weight: bold;
+    padding: 10px;
+}
+</style>
 <div class="card">
   <div class="card-header">
-      <h2>Upload Your Folder</h2>
+      <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
+          Upload Your Folder
+
+      </span>
   </div>
   <div class="card-body">
-      <form hx-post="{% url 'video:upload_video_folder' %}" 
-            hx-trigger="submit" 
-            hx-target="#uploadStatus"
-            hx-swap="outerHTML"
-            id="uploadForm" 
-            enctype="multipart/form-data">
+      <form method="POST" id="uploadForm" enctype="multipart/form-data">
           {% csrf_token %}
-          
-          <div style="display: flex; align-items: center; margin-bottom: 16px;">
-              <label for="fileInput" style="font-weight: bold; margin-right: 10px;">Upload Folder:</label>
-              <input type="file" id="fileInput" name="folder" webkitdirectory multiple hidden>
-              <button type="button" onclick="document.getElementById('fileInput').click()" style="cursor: pointer; padding: 8px 24px; background: #864AF9; color: white; border-radius: 8px;">
-                  Choose Folder
-              </button>
-              <span id="fileName2" style="margin-left: 10px; color: #00000080;">No folder chosen</span>
-          </div>
+          <div class="Script-text-file-text" style="display: flex; align-items: center; margin-bottom: 16px;">
 
+              <div style="  font-weight: bold; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                  Upload Folder:
+
+              </div>
+              <div class="vh-parent">
+                  <div class="vh-child">
+                      <span class="text3">
+                          Please Make Sure Your Folder Contains Video Files
+                      </span>
+                  </div>
+                  ?
+              </div>
+          </div>
+          </div>
+          <div class="Script-text-file-Upload" style="width: 100%; height: 50px; border: 1px solid #000000B2; box-sizing: border-box; border-radius: 8px; padding: 8px; gap: 24px; display: flex; align-items: center; margin-bottom: 24px;">
+              <div style="padding: 8px 24px; border-radius: 8px; cursor: pointer; background: #864AF9; width: fit-content; color: white; display: flex; align-items: center; gap: 10px; position: relative;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>                                
+                  <span class="text2" style="font-size: 16px; line-height: 24px; text-align: center; font-weight: 400;">Choose file</span>
+                  <input id="fileInput" type="file" name="folder" webkitdirectory multiple style="width: 100%; height: 100%; position: absolute; opacity: 0; cursor: pointer; z-index: 2; left: 0; border-radius: 8px;">
+
+              </div>
+
+              <div class="text2" id="fileName2" style="color: #00000080;">No folder chosen</div>
+          </div>
           <input type="text" id="directories" name="directories" hidden />
 
-          <button type="submit" class="btn btn-primary" id="videoUploadButton">Load Video</button>
-          
-          <!-- Progress bar -->
-          <div id="progressWrapper" style="display:none; margin-top: 24px; background-color: #f3f3f3;">
-              <div id="progressBar" style="width: 0%; height: 30px; background-color: #4CAF50; text-align: center; color: white;">0%</div>
+          <input type="text" name="purpose" hidden value='text_file'>
+          <div class="center-container" >
+              <button class="file-button" id="videoUploadButton" type="submit">Load Video</button>
           </div>
+          
+      <!-- Progress bar -->
+      <div id="progressWrapper"  style="width: 100%;display:none; margin-top: 24px;  background-color: #f3f3f3; margin-bottom: 24px;">
+          <div id="progressBar" style="width: 0%; height: 30px; background-color: #4CAF50; text-align: center; line-height: 30px; color: white;">
+              0%
+          </div>
+      </div>
 
-          <!-- Upload status -->
-          <div id="uploadStatus" style="text-align: center;"></div>
+      <!-- Display upload status -->
+      <div id="uploadStatus" style="text-align: center;"></div>
       </form>
   </div>
 </div>
@@ -38,52 +118,89 @@
 <script>
 document.querySelector("#fileInput").addEventListener("change", function() {
   let files = document.querySelector("#fileInput").files;
-  let directories = {};
+  let directories = {};  // This will store folder paths and their corresponding files
 
+  // Loop through all selected files
   for (let file of files) {
       const folderPath = file.webkitRelativePath.split('/').slice(0, -1).join('/');
       if (!directories[folderPath]) {
-          directories[folderPath] = [];
+          directories[folderPath] = [];  // Initialize array for this folder
       }
-      directories[folderPath].push(file.name);
+      directories[folderPath].push(file.name);  // Add file name to the folder
   }
 
+  // Send folder structure to backend in a hidden input field
   document.querySelector("#directories").value = JSON.stringify(directories);
-  document.getElementById("fileName2").textContent = files.length > 0 ? `${files[0].name.slice(0, 15)}...` : 'No folder chosen';
 });
+const fileName2= document.getElementById('fileName2')
 
-document.querySelector("#uploadForm").addEventListener("submit", function(event) {
+const fileUpload2 = document.getElementById('fileInput');
+  fileUpload2.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+          fileName2.textContent = `${file.name.slice(0,15)}`;
+      } else {
+          fileName2.textContent = 'No files selected';
+      }
+  });
+const uploadForm = document.getElementById('uploadForm');
+const progressBar = document.getElementById('progressBar');
+const uploadStatus = document.getElementById('uploadStatus');
+
+uploadForm.addEventListener('submit', function(event) {
   event.preventDefault();
-  const formData = new FormData(this);
+
+  const files = document.getElementById('fileInput').files;
+  if (files.length === 0) {
+      alert('Please select files to upload.');
+      return;
+  }
+
+  const formData = new FormData();
+  for (let i = 0; i < files.length; i++) {
+      formData.append('folder', files[i]);
+  }
+
+  // Add the directory structure data to the FormData object
+  formData.append('directories', document.getElementById('directories').value);
+
   const xhr = new XMLHttpRequest();
 
+  // Progress event listener
   xhr.upload.addEventListener('progress', function(e) {
       if (e.lengthComputable) {
           const percentComplete = (e.loaded / e.total) * 100;
-          document.getElementById('progressWrapper').style.display = 'block';
-          document.getElementById('videoUploadButton').disabled = true;
-          document.getElementById('videoUploadButton').textContent = 'Uploading...';
+          document.getElementById('progressWrapper').style.display='block'
+          document.getElementById('videoUploadButton').disabled=true
+          document.getElementById('videoUploadButton').textContent='Uploading Files...'
 
-          document.getElementById('progressBar').style.width = percentComplete + '%';
-          document.getElementById('progressBar').textContent = Math.round(percentComplete) + '%';
+          progressBar.style.width = percentComplete + '%';
+          progressBar.textContent = Math.round(percentComplete) + '%';
       }
   });
 
-  xhr.onload = function() {
+  // Complete event listener
+  xhr.addEventListener('load', function() {
       if (xhr.status === 200) {
-          document.getElementById('uploadStatus').innerHTML = 'Upload completed successfully!';
+          uploadStatus.textContent = 'Upload completed successfully!';
+          // Example with relative URL
+          window.location.reload();
+
+          
       } else {
-          document.getElementById('uploadStatus').innerHTML = 'Upload failed. Please try again.';
+          uploadStatus.textContent = 'Upload failed. Please try again.';
       }
-      document.getElementById('videoUploadButton').disabled = false;
-  };
+  });
 
-  xhr.onerror = function() {
-      document.getElementById('uploadStatus').innerHTML = 'An error occurred during the upload.';
-  };
+  // Error event listener
+  xhr.addEventListener('error', function() {
+      uploadStatus.textContent = 'An error occurred during the upload.';
+  });
 
+  // Send the file and directory data
   xhr.open('POST', '{% url "video:upload_video_folder" %}');
   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
   xhr.send(formData);
 });
 </script>
+{% endblock content %}    

@@ -156,7 +156,7 @@ def upload_video_folder(request):
         messages.success(request, 'Files uploaded successfully!')
         return HttpResponse('Upload successful!')
 
-    return render(request, 'upload.html')
+    return render(request, 'dir_upload.html')
 
 
 @login_required
