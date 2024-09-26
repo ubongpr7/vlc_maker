@@ -23,6 +23,7 @@
                     <img src="{% static 'resources/assets/assets1/Chevron-down.svg' %}" alt="">
                 </div>
                 <div class="newFolder">
+                    <a href=""
                     <img src="{% static 'resources/assets/assets1/create.svg' %}" alt="">
                     Create New Folder
                 </div>
@@ -50,7 +51,7 @@
                     </div>
                     <div>{{folder.get_clip_number}}</div>
                     <div>{{folder.update_at }}</div>
-                    <img src="{% static 'resources/assets/assets1/dots.svg' %}" alt="">
+                    <img src="{% static 'resources/assets/assets1/dots.svg' %}" onclick="toggleDropdown(this)" alt="">
                     <div class="actions">
                         <div>
                             <img src="{% static 'resources/assets/assets1/rename.svg' %}" alt="">
@@ -77,7 +78,8 @@
 
         </div>
     </div>
+    <script src="{% static 'htmx.js' %}"></script>
+
     
-    <script src="{% static 'resources/assets/folder.js' %}"></script>
 </body>
 </html> 

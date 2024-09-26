@@ -19,7 +19,9 @@
     align-items: center;
     flex-direction: column;
 }
-
+.action{
+    display:none
+}
 </style>
 {% if not category_id %}
 {% include 'assets/vcl/folder1/folder1.html' %}
@@ -28,3 +30,20 @@
 {% elif  category_id and video_id %}
 {% include 'assets/vcl/folder3/folder3.html' %}
 {% endif %}
+
+
+<script>
+    
+    function toggleDropdown(element) {
+
+const dropdowns = document.querySelectorAll('.action');
+dropdowns.forEach(function(dropdown) {
+    dropdown.style.display = 'none';
+});
+
+// Open the clicked dropdown
+const dropdown = element.nextElementSibling;
+dropdown.style.display = 'block';
+}
+
+</script>
