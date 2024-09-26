@@ -61,6 +61,7 @@
 document.querySelector("#fileInput").addEventListener("change", function() {
     let files = document.querySelector("#fileInput").files;
     let directories = {};  // This will store folder paths and their corresponding files
+    document.getElementById('uploadStatus').textContent =''
 
     // Loop through all selected files
     for (let file of files) {
@@ -78,9 +79,11 @@ const fileName2= document.getElementById('fileName2')
 
 const fileUpload2 = document.getElementById('fileInput');
     fileUpload2.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            fileName2.textContent = `${file.name.slice(0,15)}`;
+        const folderName = event.target.files[0].webkitRelativePath.split('/')[0];
+
+      const file = event.target.files[0]
+      if (file) {
+          fileName2.textContent =folderName.slice(0,15);
         } else {
             fileName2.textContent = 'No files selected';
         }
@@ -131,6 +134,10 @@ uploadForm.addEventListener('submit', function(event) {
             
         } else {
             uploadStatus.textContent = 'Upload failed. Please try again.';
+            document.getElementById('videoUploadButton').textContent='Upload Folder'
+            document.getElementById('videoUploadButton').disabled=false
+
+
         }
     });
 

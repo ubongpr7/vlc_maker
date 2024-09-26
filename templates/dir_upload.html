@@ -53,6 +53,7 @@
 document.querySelector("#fileInput").addEventListener("change", function() {
   let files = document.querySelector("#fileInput").files;
   let directories = {};  // This will store folder paths and their corresponding files
+  document.getElementById('uploadStatus').textContent =''
 
   // Loop through all selected files
   for (let file of files) {
@@ -125,6 +126,8 @@ uploadForm.addEventListener('submit', function(event) {
           
       } else {
           uploadStatus.textContent = 'Upload failed. Please try again.';
+          document.getElementById('videoUploadButton').textContent='Upload Folder'
+        document.getElementById('videoUploadButton').disabled=false
       }
   });
 
