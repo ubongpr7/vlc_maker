@@ -33,6 +33,7 @@
 {% elif  category_id and video_id %}
 {% include 'assets/vcl/folder3/folder3.html' %}
 {% endif %}
+<script src="{% static 'htmx.js' %}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -96,4 +97,3 @@
     });
 
 </script>
-<script src="{% static 'htmx.js' %}"></script>

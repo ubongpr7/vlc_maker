@@ -1,18 +1,89 @@
-<form method='POST' enctype="multipart/form-data">
-    <input type="file" id="file_input" name="file_field" webkitdirectory directory/>
-    <input type="text" id="directories" name="directories" hidden />
-    <input type="submit"/>
-</form>
+<div class="card">
+  <div class="card-header">
+      <h2>Upload Your Folder</h2>
+  </div>
+  <div class="card-body">
+      <form hx-post="{% url 'video:upload_video_folder' %}" 
+            hx-trigger="submit" 
+            hx-target="#uploadStatus"
+            hx-swap="outerHTML"
+            id="uploadForm" 
+            enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <div style="display: flex; align-items: center; margin-bottom: 16px;">
+              <label for="fileInput" style="font-weight: bold; margin-right: 10px;">Upload Folder:</label>
+              <input type="file" id="fileInput" name="folder" webkitdirectory multiple hidden>
+              <button type="button" onclick="document.getElementById('fileInput').click()" style="cursor: pointer; padding: 8px 24px; background: #864AF9; color: white; border-radius: 8px;">
+                  Choose Folder
+              </button>
+              <span id="fileName2" style="margin-left: 10px; color: #00000080;">No folder chosen</span>
+          </div>
+
+          <input type="text" id="directories" name="directories" hidden />
+
+          <button type="submit" class="btn btn-primary" id="videoUploadButton">Load Video</button>
+          
+          <!-- Progress bar -->
+          <div id="progressWrapper" style="display:none; margin-top: 24px; background-color: #f3f3f3;">
+              <div id="progressBar" style="width: 0%; height: 30px; background-color: #4CAF50; text-align: center; color: white;">0%</div>
+          </div>
+
+          <!-- Upload status -->
+          <div id="uploadStatus" style="text-align: center;"></div>
+      </form>
+  </div>
+</div>
+
 <script>
- files = document.querySelector("#file_input").files;
- document.querySelector("#file_input").addEventListener("change", function() {
-    files = document.querySelector("#file_input").files;
-    var directories = {}
-    for (var file of files) {
-      file.webkitRelativePath
-      directories[file.name] = file.webkitRelativePath
-    }
-    directories = JSON.stringify(directories);
-    document.querySelector("#directories").value = directories
- });
+document.querySelector("#fileInput").addEventListener("change", function() {
+  let files = document.querySelector("#fileInput").files;
+  let directories = {};
+
+  for (let file of files) {
+      const folderPath = file.webkitRelativePath.split('/').slice(0, -1).join('/');
+      if (!directories[folderPath]) {
+          directories[folderPath] = [];
+      }
+      directories[folderPath].push(file.name);
+  }
+
+  document.querySelector("#directories").value = JSON.stringify(directories);
+  document.getElementById("fileName2").textContent = files.length > 0 ? `${files[0].name.slice(0, 15)}...` : 'No folder chosen';
+});
+
+document.querySelector("#uploadForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const formData = new FormData(this);
+  const xhr = new XMLHttpRequest();
+
+  xhr.upload.addEventListener('progress', function(e) {
+      if (e.lengthComputable) {
+          const percentComplete = (e.loaded / e.total) * 100;
+          document.getElementById('progressWrapper').style.display = 'block';
+          document.getElementById('videoUploadButton').disabled = true;
+          document.getElementById('videoUploadButton').textContent = 'Uploading...';
+
+          document.getElementById('progressBar').style.width = percentComplete + '%';
+          document.getElementById('progressBar').textContent = Math.round(percentComplete) + '%';
+      }
+  });
+
+  xhr.onload = function() {
+      if (xhr.status === 200) {
+          document.getElementById('uploadStatus').innerHTML = 'Upload completed successfully!';
+      } else {
+          document.getElementById('uploadStatus').innerHTML = 'Upload failed. Please try again.';
+      }
+      document.getElementById('videoUploadButton').disabled = false;
+  };
+
+  xhr.onerror = function() {
+      document.getElementById('uploadStatus').innerHTML = 'An error occurred during the upload.';
+  };
+
+  xhr.open('POST', '{% url "video:upload_video_folder" %}');
+  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+  xhr.send(formData);
+});
 </script>

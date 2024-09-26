@@ -23,8 +23,11 @@
                     <img src="{% static 'resources/assets/assets1/Chevron-down.svg' %}" alt="">
                 </div>
                 <div class="newFolder">
-                    <img src="{% static 'resources/assets/assets1/create.svg' %}" alt="">
-                    Create New Folder
+                    <a hx-post="{% url 'video:upload_video_folder' %}"  hx-target="#confirmation-box" 
+                        hx-swap="innerHTML"> 
+                        <img src="{% static 'resources/assets/assets1/create.svg' %}" alt="">
+                        Create New Folder
+                    </a>
                 </div>
             </div>
             <div class="log">
