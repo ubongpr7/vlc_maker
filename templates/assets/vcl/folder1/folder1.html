@@ -57,8 +57,13 @@
                             Rename
                         </div>
                         <div>
+                            <a hx-get="{% url 'video:delete_category' folder.id %}"  hx-target="#confirmation-box" 
+                            hx-swap="innerHTML">
                             <img src="{% static 'resources/assets/assets1/delete.svg' %}" alt="">
                             Delete
+                        </a> 
+
+
                         </div>
                     </div>
                 </div>
