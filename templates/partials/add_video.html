@@ -2,32 +2,34 @@
 {% load static%}
 <!-- Container for the modal -->
 {% block content %}    
+<div class="card">
 
-<h2>Add Video Clip to {{ category.name }}</h2>
-<form hx-post="{{request.path}}" hx-target="#confirmation-box" hx-swap="innerHTML" enctype="multipart/form-data">
-    {% csrf_token %}
-    
-    <!-- Upload Instruction -->
-    <div style="margin-bottom: 16px;">
-        <label style="font-weight: bold;">Upload Video File:</label>
-        <span>Please select a video file to upload.</span>
-    </div>
+    <h2>Add Video Clip to {{ category.name }}</h2>
+    <form hx-post="{{request.path}}" hx-target="#confirmation-box" hx-swap="innerHTML" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Upload Instruction -->
+        <div style="margin-bottom: 16px;">
+            <label style="font-weight: bold;">Upload Video File:</label>
+            <span>Please select a video file to upload.</span>
+        </div>
 
-    <!-- Video File Upload Section -->
-    <div style="border: 1px solid #000; border-radius: 8px; padding: 8px; display: flex; align-items: center; margin-bottom: 24px;">
-        <label style="background: #864AF9; color: white; padding: 8px 24px; border-radius: 8px; cursor: pointer; position: relative;">
-            Choose video file
-            <input type="file" name="video_file" accept="video/*" required style="position: absolute; opacity: 0; cursor: pointer; left: 0;">
-        </label>
-        <!-- Display File Name -->
-        <div id="fileName" style="color: #00000080; margin-left: 10px;">No file chosen</div>
-    </div>
+        <!-- Video File Upload Section -->
+        <div style="border: 1px solid #000; border-radius: 8px; padding: 8px; display: flex; align-items: center; margin-bottom: 24px;">
+            <label style="background: #864AF9; color: white; padding: 8px 24px; border-radius: 8px; cursor: pointer; position: relative;">
+                Choose video file
+                <input type="file" name="video_file" accept="video/*" required style="position: absolute; opacity: 0; cursor: pointer; left: 0;">
+            </label>
+            <!-- Display File Name -->
+            <div id="fileName" style="color: #00000080; margin-left: 10px;">No file chosen</div>
+        </div>
 
-    <!-- Submit Button -->
-    <div style="text-align: center;">
-        <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Add Clip</button>
-    </div>
-</form>
+        <!-- Submit Button -->
+        <div style="text-align: center;">
+            <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Add Clip</button>
+        </div>
+    </form>
+</div>
 <script src="{% static 'htmx.js' %}"></script>
 
 <script>
