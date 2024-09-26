@@ -26,20 +26,20 @@
                     </a>
                     <a href="{%url 'video:subcategory_view' current_category.id %}">
                         {{current_category.name}}
+                        <img src="{% static 'resources/assets/assets2/Chevron-right.svg' %}" alt="">
+                    </a>
+                    <a href="{%url 'video:category_view_video' current_category.id video.id %}">
+                        {{video.title}}
                         <img src="{% static 'resources/assets/assets2/Chevron-down.svg' %}" alt="">
                     </a>
-                <a href="{%url 'video:category_view_video' current_category.id video.id %}">
-                    {{video.title}}<i class="ri-arrow-drop-down-line"></i>
-                    <img src="assets/Chevron-down.svg" alt="">
-                </a>
 
                 </div>
                 <div class="newFolder">
-                    <img src="assets/dots.svg" alt="">
+                    <img src="{% static 'resources/assets/assets3/dots.svg' %}" alt="">
                 </div>
             </div>
             <div class="placeholder">
-                <img src="assets/VideoPlaceholderbig.svg" alt="">
+                <img src="{% static 'resources/assets/assets3/VideoPlaceholderbig.svg' %}" alt="">
             </div>
         </div>
     </div>
