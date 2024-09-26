@@ -61,24 +61,7 @@ color: #f57f17;
                     }, 500);  // Wait for the fade-out to complete
                 }
             }, 5000);  // 5-second delay before starting the fade-out
-        });
+        })
     </script>
 {% endif %}
 
-<script>
-    // Wait until the DOM is fully loaded
-    document.addEventListener("DOMContentLoaded", function() {
-        // Select all message divs
-        const messages = document.querySelectorAll('#django-messages .message');
-
-        // Loop through each message and set a timeout to hide it
-        if (messages){
-            messages.forEach(function(message) {
-                setTimeout(function() {
-                    message.style.display = 'none';
-                }, 10000); // 10000 milliseconds = 10 seconds
-            });
-        });
-
-        }
-</script>
