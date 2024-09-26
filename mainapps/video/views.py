@@ -21,18 +21,18 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 
 def rename_video_clip(request, video_id):
+    video_clip = get_object_or_404(VideoClip, id=video_id)
     if request.method == 'POST':
         new_title = request.POST.get('newName')
-        video_clip = get_object_or_404(VideoClip, id=video_id)
         video_clip.title = new_title
         video_clip.save()
         return JsonResponse({'success': True})
     return render(request, 'rename.html', {'item': video_clip})
 
 def rename_folder(request, category_id):
+    folder = get_object_or_404(ClipCategory, id=category_id)
     if request.method == 'POST':
         new_name = request.POST.get('newName')
-        folder = get_object_or_404(ClipCategory, id=category_id)
         folder.name = new_name
         folder.save()
         return JsonResponse({'success': True})
