@@ -24,8 +24,10 @@
                         Assets Library
                     <img src="{% static 'resources/assets/assets2//chevron-right.svg' %}" alt="">
                     </a>
-                    Folder Num 1
-                    <img src="{% static 'resources/assets/assets2/Chevron-down.svg' %}" alt="">
+                    <a href="{%url 'video:subcategory_view' current_category.id %}">
+                        {{current_category.name}}
+                        <img src="{% static 'resources/assets/assets2/Chevron-down.svg' %}" alt="">
+                    </a>
                 </div>
                 <div class="newFolder">
                     <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
