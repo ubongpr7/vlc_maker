@@ -6,9 +6,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>folder</title>
-    <link rel="stylesheet" href="{% static 'resources/assets//folder1.css' %}">
 
     <link rel="stylesheet" href="{% static 'resources/assets/folder2.css' %}">
+    <style>
+        
+.log > div {
+    position: relative;
+}
+.log > div > img {
+    cursor: pointer;
+}
+
+.log > div > .actions {
+    position: absolute;
+    background: white;
+    border-radius: 0.5vw;
+    right: 0;
+    top: 2.3vw;
+    box-shadow: 0 0 0.2vw #0000004D;
+    border: solid 1px #0000004D;
+    z-index: 99;
+}
+.log > div > .actions > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    padding: 0.5vw 0.6vw;
+    cursor: pointer;
+    font-size: 0.9vw;
+}
+.log > div > .actions > div:first-child {
+    border-bottom: solid 1px #0000004D;
+    padding-right: 2vw;
+}
+    </style>
+
 </head>
 <body>
     <header>
