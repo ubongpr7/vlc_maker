@@ -6,6 +6,20 @@
             outline: none; 
             display: inline;        
         }
+        /* Centered video card */
+.video-card {
+    width: 80%; /* Adjust as per your need */
+    max-width: 600px; /* To restrict excessive width on large screens */
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f2f2f2; /* Ash color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 </style>
 {% if not category_id %}
 {% include 'assets/vcl/folder1/folder1.html' %}
