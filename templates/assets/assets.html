@@ -34,6 +34,18 @@
 {% include 'assets/vcl/folder3/folder3.html' %}
 {% endif %}
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Listen for htmx requests completion
+        htmx.on("htmx:afterOnLoad", function (event) {
+            // Check if the request was a POST request
+            if (event.detail.requestConfig.verb === "POST") {
+                // Refresh the page after POST request completes
+                window.location.reload();
+            }
+        });
+    });
+</script>
 
 <script>
     
