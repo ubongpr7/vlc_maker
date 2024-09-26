@@ -44,8 +44,22 @@
                             <div><a href="{%url 'video:category_view_video' current_category.id video.id %}"><img src="{% static 'resources/assets/assets2/Video placeholder.svg' %}" alt=""><a/></div>
                             <div><a href="{%url 'video:category_view_video' current_category.id video.id %}">{{video.title}}</a></div>
                         </div>
-                        <img src="{% static 'resources/assets/assets2/dots.svg' %}" alt="">
-
+                        <img src="{% static 'resources/assets/assets2/dots.svg' %}" class="menu" alt="">
+                        <div class="actions">
+                            <div>
+                                <img src="{% static 'resources/assets/assets1/rename.svg' %}" alt="">
+                                Rename
+                            </div>
+                            <div>
+                                <a hx-get="{% url 'video:delete_category' folder.id %}"  hx-target="#confirmation-box" 
+                                hx-swap="innerHTML">
+                                    <img src="{% static 'resources/assets/assets1/delete.svg' %}" alt="">
+                                    Delete
+                                </a> 
+    
+    
+                            </div>
+                        </div>
                     </div>
                 {%endfor %}
                 
