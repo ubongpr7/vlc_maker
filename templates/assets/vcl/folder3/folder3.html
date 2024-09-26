@@ -20,12 +20,19 @@
         <div class="box">
             <div>
                 <div class="folderpath">
-                    Asset Library
-                    <img src="assets/chevron-right.svg" alt="">
-                    Folder Num 1
-                    <img src="assets/chevron-right.svg" alt="">
-                    Clip Num 2
+                    <a href="{%url 'video:category_view' %}">
+                        Assets Library
+                    <img src="{% static 'resources/assets/assets2//chevron-right.svg' %}" alt="">
+                    </a>
+                    <a href="{%url 'video:subcategory_view' current_category.id %}">
+                        {{current_category.name}}
+                        <img src="{% static 'resources/assets/assets2/Chevron-down.svg' %}" alt="">
+                    </a>
+                <a href="{%url 'video:category_view_video' current_category.id video.id %}">
+                    {{video.title}}<i class="ri-arrow-drop-down-line"></i>
                     <img src="assets/Chevron-down.svg" alt="">
+                </a>
+
                 </div>
                 <div class="newFolder">
                     <img src="assets/dots.svg" alt="">

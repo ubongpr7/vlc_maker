@@ -9,7 +9,7 @@
 </style>
 {% if not category_id %}
 {% include 'assets/vcl/folder1/folder1.html' %}
-{% elif  category_id %}
+{% elif  category_id and video_id %}
 {% include 'assets/vcl/folder2/folder2.html' %}
 {% elif  category_id and video_id %}
 {% include 'assets/vcl/folder3/folder3.html' %}
