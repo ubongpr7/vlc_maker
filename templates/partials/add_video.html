@@ -5,7 +5,7 @@
 <div class="card">
 
     <h2>Add Video Clip to {{ category.name }}</h2>
-    <form hx-post="{{request.path}}"hx-config="{'swap':'reload'}" hx-target="#confirmation-box" hx-swap="innerHTML" enctype="multipart/form-data">
+    <form hx-post="{{request.path}}" hx-target="#confirmation-box" id="video_form" hx-swap="innerHTML" enctype="multipart/form-data">
         {% csrf_token %}
         
         <!-- Upload Instruction -->
@@ -42,5 +42,11 @@
         const fileName = input.files.length > 0 ? input.files[0].name : 'No file chosen';
         document.getElementById('fileName').textContent = fileName;
     });
+    document.getElementById('video_form').addEventListener('submit',()=>{
+        window.location.reload();
+        
+    }
+)
+
     </script>
 {% endblock content %}    
