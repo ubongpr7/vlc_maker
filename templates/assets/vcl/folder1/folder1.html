@@ -58,8 +58,11 @@
                     <img src="{% static 'resources/assets/assets1/dots.svg' %}"class="menu" alt="">
                     <div class="actions">
                         <div>
-                            <img src="{% static 'resources/assets/assets1/rename.svg' %}" alt="">
-                            Rename
+                            <a hx-get="{% url 'video:rename_folder' folder.id %}"  hx-target="#confirmation-box" 
+                            hx-swap="innerHTML">
+                                <img src="{% static 'resources/assets/assets1/rename.svg' %}" alt="">
+                                Rename
+                            </a>
                         </div>
                         <div>
                             <a hx-get="{% url 'video:delete_category' folder.id %}"  hx-target="#confirmation-box" 

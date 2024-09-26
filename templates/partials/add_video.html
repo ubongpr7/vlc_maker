@@ -5,7 +5,7 @@
 <div class="card">
 
     <h2>Add Video Clip to {{ category.name }}</h2>
-    <form hx-post="{{request.path}}" hx-on="htmx:afterRequest: window.location.reload()" hx-target="#confirmation-box" id="video_form" hx-swap="innerHTML" enctype="multipart/form-data">
+    <form hx-post="{{request.path}}" hx-on="htmx:afterRequest: window.location.reload()" id="video_form"  enctype="multipart/form-data">
         {% csrf_token %}
         
         <!-- Upload Instruction -->
@@ -31,6 +31,7 @@
         <div style="text-align: center;">
             <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Add Clip</button>
         </div>
+        
     </form>
 </div>
 <script src="{% static 'htmx.js' %}"></script>
