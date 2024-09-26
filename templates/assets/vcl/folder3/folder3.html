@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>folder</title>
-    <link rel="stylesheet" href="{% static 'resources/assets/folder2.css'%}">
+    <link rel="stylesheet" href="{% static 'resources/assets/folder3.css'%}">
 </head>
 <body>
     <header>
@@ -22,11 +22,11 @@
                 <div class="folderpath">
                     <a href="{%url 'video:category_view' %}">
                         Assets Library
-                    <img src="{% static 'resources/assets/assets2//chevron-right.svg' %}" alt="">
+                    <img src="{% static 'resources/assets/assets2/chevron-right.svg' %}" alt="">
                     </a>
                     <a href="{%url 'video:subcategory_view' current_category.id %}">
                         {{current_category.name}}
-                        <img src="{% static 'resources/assets/assets2/Chevron-right.svg' %}" alt="">
+                        <img src="{% static 'resources/assets/assets2/chevron-right.svg' %}" alt="">
                     </a>
                     <a href="{%url 'video:category_view_video' current_category.id video.id %}">
                         {{video.title}}
