@@ -70,9 +70,11 @@ const fileName2= document.getElementById('fileName2')
 
 const fileUpload2 = document.getElementById('fileInput');
   fileUpload2.addEventListener('change', (event) => {
-      const file = event.target.files[0];
+    const folderName = event.target.files[0].webkitRelativePath.split('/')[0];
+
+      const file = event.target.files[0].;
       if (file) {
-          fileName2.textContent = `${file.name.slice(0,15)}`;
+          fileName2.textContent =folderName.slice(0,15);
       } else {
           fileName2.textContent = 'No files selected';
       }
