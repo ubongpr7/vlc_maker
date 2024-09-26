@@ -88,17 +88,18 @@ def category_view(request, category_id=None,video_id=None):
         current_category = get_object_or_404(ClipCategory, id=category_id,user=request.user)
         subcategories = current_category.subcategories.all()
         videos = current_category.video_clips.all()
+
         if video_id:
             video=VideoClip.objects.get(category=current_category, id=video_id)
     else:
         # If no category_id is provided, display the root categories (categories without a parent)
-        main_categories = ClipCategory.objects.filter(parent__isnull=True,user=request.user)
+        main_categories = ClipCategory.objects.filter(user=request.user)
 
         # videos = VideoClip.objects.filter(category__isnull=True,)
 
     context = {
         'current_category': current_category,
-        'main_categories': main_categories,
+        'folders': main_categories,
         'subcategories': subcategories,
         'videos': videos,
         'category_id':category_id,

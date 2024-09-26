@@ -136,14 +136,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+# EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 # EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST = 'smtp.office365.com'  # GoDaddy uses Office 365 for email
-# EMAIL_PORT = 587  # TLS port for secure connection
-# EMAIL_USE_TLS = True  # Enable TLS
-EMAIL_PORT = 465  # SSL port
-EMAIL_USE_SSL = True
-EMAIL_USE_TLS = False  # Don't use TLS since you are using SSL
+EMAIL_PORT = 587  
+# EMAIL_PORT = 465  # SSL port
+# EMAIL_USE_SSL = True
+EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Default 'from' email address
@@ -158,7 +159,6 @@ DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"  # Get it from the section in the Stripe d
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DOMAIN_NAME = "http://153.92.208.98:8000"
-import os
 
 # Base configurations
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
