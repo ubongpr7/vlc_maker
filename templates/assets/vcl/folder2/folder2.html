@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>folder</title>
+    <title>{{current_category.name}}</title>
 
     <link rel="stylesheet" href="{% static 'resources/assets/folder2.css' %}">
     <style>
@@ -66,8 +66,11 @@
                     </a>
                 </div>
                 <div class="newFolder">
-                    <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
-                    Upload Videos
+                    <a style="align-items:center;" hx-get="{% url 'video:add_video_clip' current_category.id %}"  hx-target="#confirmation-box" 
+                                        hx-swap="innerHTML">
+                        <img  src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
+                        Upload Videos
+                    </a>
                 </div>
             </div>
             <div class="vids">
