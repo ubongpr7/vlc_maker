@@ -39,10 +39,14 @@
                     <div>
 
                         <div>
+                        <a href="{%url 'video:category_view_video' current_category.id video.id %}">
+
                             <div><img src="{% static 'resources/assets/assets2/Video placeholder.svg' %}" alt=""></div>
                             <div>{{video.title}}</div>
+                        </a>
                         </div>
                         <img src="{% static 'resources/assets/assets2/dots.svg ' %}" alt="">
+
                     </div>
                 {%endfor %}
                 <!-- <div>
