@@ -19,9 +19,9 @@
     align-items: center;
     flex-direction: column;
 }
-/* .action{
-    display:none */
-/* } */
+.action{
+    display:none
+}
 </style>
 {% if not category_id %}
 {% include 'assets/vcl/folder1/folder1.html' %}
@@ -34,16 +34,50 @@
 
 <script>
     
-    function toggleDropdown(element) {
+    document.addEventListener('DOMContentLoaded', function() {
+        const menus = document.querySelectorAll('.menu');
+        const dropdowns = document.querySelectorAll('.dropdown');
+        let activeDropdown = null;
 
-const dropdowns = document.querySelectorAll('.action');
-dropdowns.forEach(function(dropdown) {
-    dropdown.style.display = 'none';
-});
+        // Function to hide all dropdowns
+        function hideAllDropdowns() {
+            dropdowns.forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+            activeDropdown = null;
+        }
 
-// Open the clicked dropdown
-const dropdown = element.nextElementSibling;
-dropdown.style.display = 'block';
-}
+        // Event listener for each menu click
+        menus.forEach((menu, index) => {
+            menu.addEventListener('click', function(event) {
+                event.stopPropagation();  // Prevent the event from bubbling up to the document click listener
+                
+                const currentDropdown = dropdowns[index];
+
+                if (activeDropdown === currentDropdown) {
+                    // Toggle off if the same menu is clicked again
+                    currentDropdown.style.display = 'none';
+                    activeDropdown = null;
+                } else {
+                    // Hide other dropdowns and show the clicked one
+                    hideAllDropdowns();
+                    currentDropdown.style.display = 'block';
+                    activeDropdown = currentDropdown;
+                }
+            });
+        });
+
+        // Hide dropdowns if clicked outside
+        document.addEventListener('click', function() {
+            hideAllDropdowns();
+        });
+
+        // Prevent dropdown from closing if clicking inside it
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    });
 
 </script>
