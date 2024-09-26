@@ -5,7 +5,7 @@
 <div class="card">
 
     <h2>Add Video Clip to {{ category.name }}</h2>
-    <form hx-post="{{request.path}}" hx-target="#confirmation-box" id="video_form" hx-swap="innerHTML" enctype="multipart/form-data">
+    <form hx-post="{{request.path}}" hx-on="htmx:afterRequest: window.location.reload()" hx-target="#confirmation-box" id="video_form" hx-swap="innerHTML" enctype="multipart/form-data">
         {% csrf_token %}
         
         <!-- Upload Instruction -->
@@ -24,10 +24,10 @@
             <div id="fileName" style="color: #00000080; margin-left: 10px;">No file chosen</div>
         </div>
         <div class="form-group" style="margin-bottom: 24px;">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" placeholder="Title">
+            <label for="title" style="display: block; margin-bottom: 8px; font-weight: bold;">Title:</label>
+            <input type="text" id="title" name="title" placeholder="Title" 
+                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
         </div>
-        <!-- Submit Button -->
         <div style="text-align: center;">
             <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Add Clip</button>
         </div>
@@ -41,12 +41,12 @@
         const input = event.target;
         const fileName = input.files.length > 0 ? input.files[0].name : 'No file chosen';
         document.getElementById('fileName').textContent = fileName;
-    });
-    document.getElementById('video_form').addEventListener('submit',()=>{
-        window.location.reload();
+//     });
+//     document.getElementById('video_form').addEventListener('submit',()=>{
+//         window.location.reload();
         
-    }
-)
+//     }
+// )
 
     </script>
 {% endblock content %}    
