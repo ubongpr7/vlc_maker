@@ -72,7 +72,7 @@ const fileUpload2 = document.getElementById('fileInput');
   fileUpload2.addEventListener('change', (event) => {
     const folderName = event.target.files[0].webkitRelativePath.split('/')[0];
 
-      const file = event.target.files[0].;
+      const file = event.target.files[0]
       if (file) {
           fileName2.textContent =folderName.slice(0,15);
       } else {
