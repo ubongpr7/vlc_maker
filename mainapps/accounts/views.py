@@ -285,11 +285,26 @@ def subscription_confirm(request):
 
 
 
+# class CustomPasswordResetView(auth_views.PasswordResetView):
+#     template_name = 'registration/password_reset_form.html'
+#     email_template_name = 'registration/password_reset_email.html'
+#     success_url = reverse_lazy('password_reset_done')
+
+# class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+#     template_name = 'registration/password_reset_confirm.html'
+#     success_url = reverse_lazy('password_reset_complete')
+
+
+# views.py
+
 class CustomPasswordResetView(auth_views.PasswordResetView):
-    template_name = 'registration/password_reset_form.html'
-    email_template_name = 'registration/password_reset_email.html'
-    success_url = reverse_lazy('password_reset_done')
+    template_name = 'accounts/password_reset_form.html'
+
+class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'accounts/password_reset_done.html'
 
 class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    template_name = 'registration/password_reset_confirm.html'
-    success_url = reverse_lazy('password_reset_complete')
+    template_name = 'accounts/password_reset_confirm.html'
+
+class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = 'accounts/password_reset_complete.html'

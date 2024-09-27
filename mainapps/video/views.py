@@ -20,6 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 
+
 def rename_video_clip(request, video_id):
     video_clip = get_object_or_404(VideoClip, id=video_id)
     if request.method == 'POST':
