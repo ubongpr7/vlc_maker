@@ -49,10 +49,10 @@
                     </a>
                 </div>
                 <div class="newFolder">
-                    <a style="align-items:center;" hx-get="{% url 'video:add_video_clip' current_category.id %}"  hx-target="#confirmation-box" 
+                    <a style="align-items:center; padding: 2px;" hx-get="{% url 'video:add_video_clip' current_category.id %}"  hx-target="#confirmation-box" 
                                         hx-swap="innerHTML">
                         <img  src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
-                        Upload Videos
+                       <span> Upload Videos</span>
                     </a>
                 </div>
             </div>
