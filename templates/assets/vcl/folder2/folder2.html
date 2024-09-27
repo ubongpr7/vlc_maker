@@ -48,16 +48,17 @@
                         <img src="{% static 'resources/assets/assets2/Chevron-down.svg' %}" alt="">
                     </a>
                 </div>
-                <a style="align-items:center; display: inline-flex;" 
-                    hx-trigger="click"  
-                    hx-get="{% url 'video:add_video_clip' current_category.id %}"  
-                    hx-target="#confirmation-box" 
-                    hx-swap="innerHTML">
-                    <div class="newFolder" style="display: inline-flex; align-items: center;">
-                        <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
-                        <span style="padding-left: 2px;">Upload Videos</span>
-                    </div>
-                </a>
+                <div class="newFolder" style="display: inline-flex; align-items: center;">
+                    <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
+
+                    <a style="align-items:center; display: inline-flex;" 
+                        hx-trigger="click"  
+                        hx-get="{% url 'video:add_video_clip' current_category.id %}"  
+                        hx-target="#confirmation-box" 
+                        hx-swap="innerHTML">
+                            <span style="padding-left: 2px;">Upload Videos</span>
+                        </a>
+                </div>
 
             </div>
             <div class="vids">
