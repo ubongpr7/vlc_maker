@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assets Management</title>
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-
+    
     <link rel="stylesheet" href="{% static 'resources/assets//folder1.css' %}">
 </head>
 <body>
@@ -15,26 +14,6 @@
         <div class="right">
             <span>Credits Remaining: 10</span>
             <img src="{% static 'resources/assets/assets1/Profile.svg' %}" alt="">
-            <div class="not-present" id="pfpdropdown"></div>
-                <div style="border-bottom: 0.2px solid #00000080; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 18px 14px;">
-                    <span style="font-size: 24px;font-weight: 600;line-height: 30.24px;letter-spacing: -0.02em;text-align: left; color: #191919;">{{ user.first_name }} {{ user.last_name}}</span>
-                    <span style="font-size: 20px;font-weight: 400;line-height: 25.2px;letter-spacing: -0.02em;text-align: left; color: #191919B2;">{{user.email }}</span>
-                </div>
-                <div style="border-bottom: 0.2px solid #00000080; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 26px; padding: 18px 14px ;">
-                    <span class="dropdownText">View Profile</span>
-                    <div class="display: flex; box-sizing: border-box; width: 100%; flex-direction: row; ">
-                        <div class="dropdownText" style="width: 100%; display: flex; flex-direction: row; justify-content: space-between;">
-                            <span class="dropdownText" style="width: fit-content;" >Credit left</span>
-                            <span class="dropdownText" style="width: fit-content; color: #19191980;">{{user.credit.credits}}</span>
-                        </div>
-                    </div>
-                    <span class="dropdownText"><a href="/video/assets">Manage Assets Folders</a></span>
-                    <!-- <span class="dropdownText">Setting</span> -->
-                </div>
-                <div style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 36px; padding: 18px 14px ;">
-                    <span class="dropdownText"><a href="/accounts/login">Log out</a></span>
-                </div>
-            </div>
         </div>
     </header>
 {% include 'messages.html'%}
