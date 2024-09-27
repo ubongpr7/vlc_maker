@@ -64,6 +64,14 @@
                         hx-target="#confirmation-box" 
                         hx-swap="innerHTML">
 
+                        Upload 
+                        </a>
+                    <a style="align-items:center; display: inline-flex;" 
+                        hx-trigger="click"  
+                        hx-get="{% url 'video:add_video_clip' current_category.id %}"  
+                        hx-target="#confirmation-box" 
+                        hx-swap="innerHTML">
+
                         Upload Videos
                         </a>
                 </div>
