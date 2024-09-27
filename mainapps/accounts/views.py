@@ -49,7 +49,7 @@ def logout_view(request):
     logout(request)
     
     # Add a success message
-    messages.success(request, "You have been successfully logged out.")
+    messages.success(request, "You have been Successfully Logged Out.")
     
     # Redirect to the login page or homepage
     return redirect('/')  # Replace 'login' with the name of the URL to redirect to (e.g., 'home' or 'login')
@@ -105,7 +105,7 @@ def login(request):
         if user is not None:
             # If the user exists, log them in
             auth_login(request, user)  # Note: Using `auth_login` here to avoid conflict
-            messages.success(request, 'Successfully logged in!')
+            messages.success(request, 'Successfully Logged In!')
             try:
                 return redirect(request.session.get('next'))  
             except:
