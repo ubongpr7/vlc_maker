@@ -48,13 +48,16 @@
                         <img src="{% static 'resources/assets/assets2/Chevron-down.svg' %}" alt="">
                     </a>
                 </div>
-                <div style="cursor: pointer;" 
-                hx-get="{% url 'video:add_video_clip' current_category.id %}" 
-                hx-trigger="click" 
-                hx-target="#confirmation-box" 
-                hx-swap="innerHTML" class="newVideo">
-                <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
-                <span>Upload Videos</span>
+
+                <!-- <a href="#" style="font-size: larger;" hx-trigger="click" hx-get="{% url 'video:add_video_clip' current_category.id %}" hx-target="#confirmation-box" hx-swap="innerHTML"> -->
+                <div class="newVideo" hx-trigger="click" hx-get="{% url 'video:add_video_clip' current_category.id %}" hx-target="#confirmation-box" hx-swap="innerHTML" >
+                            <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
+                            Upload Video 
+
+                            
+                </div>
+                        
+                    <!-- </a> -->
             </div>
             <div class="vids">
                 {% for video in videos %}
