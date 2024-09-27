@@ -305,6 +305,7 @@ class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
 
 class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     template_name = 'accounts/password_reset_confirm.html'
+    success_url ='/accounts/reset/done'
 
 class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'accounts/password_reset_complete.html'
