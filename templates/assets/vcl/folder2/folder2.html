@@ -1,16 +1,10 @@
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{current_category.name}}</title>
-
+    
     <link rel="stylesheet" href="{% static 'resources/assets/folder2.css' %}">
     <style>
         
-.log > div {
+        .log > div {
     position: relative;
 }
 .log > div > img {
@@ -40,17 +34,6 @@
     padding-right: 2vw;
 }
     </style>
-
-</head>
-<body>
-    <header>
-        <img src="{% static 'resources/assets/assets1/logo.svg' %}" alt="">
-        <div class="right">
-            <span>Credits Remaining: 10</span>
-            <img src="{% static 'resources/assets/assets1/Profile.svg' %}" alt="">
-        </div>
-    </header>
-{% include 'messages.html'%}
 
     <div class="content">
         <div class="box">
@@ -116,6 +99,3 @@
         </div>
     </div>
     
-    <!-- <script src="script.js"></script> -->
-</body>
-</html> 

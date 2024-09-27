@@ -10,7 +10,7 @@ body {
     min-height: 100vh;
     font-size: 1.11vw;
 }
-
+/* 
 header {
     box-sizing: border-box;
     width: 100%;
@@ -39,7 +39,7 @@ header > img {
     height: 2.666vw;
 }
 
-
+ */
 
 .content {
     width: 100%;
