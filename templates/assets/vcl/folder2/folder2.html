@@ -48,7 +48,7 @@
                         <img src="{% static 'resources/assets/assets2/Chevron-down.svg' %}" alt="">
                     </a>
                 </div>
-                <a style="align-items:center; background-color: antiquewhite;" hx-trigger="click"  hx-get="{% url 'video:add_video_clip' current_category.id %}"  hx-target="#confirmation-box" 
+                <a style="align-items:center;width: fit-content;" hx-trigger="click"  hx-get="{% url 'video:add_video_clip' current_category.id %}"  hx-target="#confirmation-box" 
                 hx-swap="innerHTML">
                 <div class="newFolder">
                         <img  src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
