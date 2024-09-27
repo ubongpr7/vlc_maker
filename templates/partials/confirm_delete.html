@@ -6,7 +6,6 @@
         <button 
             hx-post="{{request.path}}" 
             hx-target="#confirmation-box" 
-            hx-swap="outerHTML"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-on="htmx:afterRequest: window.location.reload()"
         >
