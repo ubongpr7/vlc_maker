@@ -49,16 +49,13 @@
                     </a>
                 </div>
 
-                <div id="proceed" style="width: 100%; display: flex; justify-content: flex-end;"></div>
-                <a hx-trigger="click" hx-get="{% url 'video:add_video_clip' current_category.id %}" hx-target="#confirmation-box" hx-swap="innerHTML" class="button" style="text-decoration: none; ">
+                <a  hx-trigger="click" hx-get="{% url 'video:add_video_clip' current_category.id %}" hx-target="#confirmation-box" hx-swap="innerHTML">
+                <div class="newVideo" style="margin-left: auto ;">
                     Upload Video 
-                    
                     <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
-                                
-                            </a>
                         </div>
                         
-                    <!-- </a> -->
+                    </a>
             </div>
             <div class="vids">
                 {% for video in videos %}
