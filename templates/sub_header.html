@@ -66,31 +66,3 @@
         </div>
     </div>
 </header>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-    const profilePic = document.querySelector(".right img");  // Profile picture element
-    const dropdown = document.getElementById("pfpdropdown");  // Dropdown element
-
-    profilePic.addEventListener("click", function() {
-        if (dropdown.classList.contains("not-present")) {
-            dropdown.classList.remove("not-present");
-            dropdown.classList.add("present");
-            dropdown.style.transform = "scale(1)";
-        } else {
-            dropdown.classList.remove("present");
-            dropdown.classList.add("not-present");
-            dropdown.style.transform = "scale(0.7)";
-        }
-    });
-
-    // Close dropdown if clicked outside of it
-    document.addEventListener("click", function(event) {
-        if (!profilePic.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("present");
-            dropdown.classList.add("not-present");
-            dropdown.style.transform = "scale(0.7)";
-        }
-    });
-});
-
-</script>
