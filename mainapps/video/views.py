@@ -27,7 +27,7 @@ def rename_video_clip(request, video_id):
         new_title = request.POST.get('newName')
         video_clip.title = new_title
         video_clip.save()
-        return JsonResponse({'success': True})
+        return HttpResponse(status=204)  
     return render(request, 'rename.html', {'item': video_clip})
 
 def rename_folder(request, category_id):
@@ -36,7 +36,7 @@ def rename_folder(request, category_id):
         new_name = request.POST.get('newName')
         folder.name = new_name
         folder.save()
-        return JsonResponse({'success': True})
+        return HttpResponse(status=204)  
     return render(request, 'rename.html', {'item': folder})
 
 # views.py
@@ -70,7 +70,7 @@ def delete_clip(request, clip_id):
         clip.delete()
 
         # Return a success response
-        return JsonResponse({'success': True})
+        return HttpResponse(status=204)  
 
     # Return a method not allowed response for non-POST requests
 
@@ -96,7 +96,7 @@ def delete_category(request, category_id):
         delete_category_and_subcategories(category)
         
         # Return a success response (JSON or redirect based on your UI)
-        return JsonResponse({'success': True})
+        return HttpResponse(status=204)  
 
     # Return a method not allowed response for non-POST requests
     return render(request,'partials/confirm_delete.html',{'item':category})
