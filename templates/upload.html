@@ -118,7 +118,9 @@ uploadForm.addEventListener('submit', function(event) {
             document.getElementById('progressWrapper').style.display='block'
             document.getElementById('videoUploadButton').disabled=true
             document.getElementById('videoUploadButton').textContent='Uploading Files...'
-
+            if (percentComplete>0){
+                percentComplete= percentComplete-1
+            }
             progressBar.style.width = percentComplete + '%';
             progressBar.textContent = Math.round(percentComplete) + '%';
         }

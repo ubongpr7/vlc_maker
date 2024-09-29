@@ -101,19 +101,7 @@ document.querySelectorAll('.box').forEach(box => {
     });
 });
 
-const fileName = document.getElementById('fileName');
 
-const font_file = document.getElementById('font_file');
-const font_fileName = document.getElementById('font_file_name');
-
-font_file.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        font_fileName.textContent = `${file.name.slice(0,15)}`;
-    } else {
-        font_fileName.textContent = 'No file selected';
-    }
-});
 
 const slider = document.getElementById("mySlider");
 const sliderValue = document.getElementById("SliderValue");
@@ -123,6 +111,13 @@ slider.addEventListener('input', function() {
     previewText.style.fontSize = `${slider.value*0.8}px`;
     document.getElementById('font_size').value=slider.value*2
     console.log(document.getElementById('font_size').value)
+    
+});
+const font_select = document.getElementById('font_select');
+
+font_select.addEventListener('change', (event) => {
+    font= event.target.value;
+    previewText.style.fontFamily=font
     
 });
 
