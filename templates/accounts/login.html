@@ -7,7 +7,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Login</title>
+    {%include 'partials/head_c.html' %}
+
     <link rel="stylesheet" href="{% static  'css/login.css'%}">
 
 </head>
@@ -92,7 +93,7 @@
                             <img src="{% static  'assets/icons/eye-open.svg'%}" alt="eye-off" class="eye" id="eye">
                         </div>
                     </div>
-                    <a href="#" class="forgot-password" >Forgot Password?</a>
+                    <a href="/auth/password_reset" class="forgot-password" >Forgot Password?</a>
                     <button type="submit" class="button">Sign In</button>
                 </div>
             </form>
