@@ -9,7 +9,7 @@
                     <a href="{%url 'video:category_view' %}">Assets Library</a>
                     <img src="{% static 'resources/assets/assets1/Chevron-down.svg' %}" alt="">
                 </div>
-                <div class="newFolder">
+                <div class="">
                     <a hx-get="{% url 'video:upload_video_folder' %}"style="font-size: larger;"  hx-target="#confirmation-box" 
                         hx-swap="innerHTML"> 
                         <span  style="padding-left: 2px;">Create New Folder</span> 
@@ -61,16 +61,7 @@
                     </div>
                 </div>
                 {% endfor %}
-<!--                 
-                <div>
-                    <div>
-                        <input type="checkbox" name="selectall" id="">
-                        <div>Folder Num 2</div>
-                    </div>
-                    <div>1</div>
-                    <div>Sep 19, 05:58am</div>
-                    <img src="{% static 'resources/assets/assets1/dots.svg' %}" alt="">
-                </div> -->
+
             </div>
 
         </div>
