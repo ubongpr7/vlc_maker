@@ -1,7 +1,42 @@
 
 {%load static %}
 <link rel="stylesheet" href="{% static 'css/music.css' %}">
+<style>
+    a {
+        text-decoration: none; 
+        color: inherit;        
+        outline: none; 
+        display: flex;     
+        align-items:center;
+        cursor: pointer;
+    }
+    
+#pfpdropdown {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    position: absolute; 
+    border-radius: 8px; 
+    border: 1px solid #00000080; 
+    width: 330px; 
+    background: white; 
+    height: fit-content; 
+    top: 10px;
+    right: -50px;
+    z-index: 1000; 
+    transition: 0.05s ease-in;
+    transform: scale(0.7);
+    user-select: none;
+}
 
+.not-present {
+    opacity: 0;
+    transition: 0.05s ease;
+}
+
+.present {
+    opacity: 1;
+    transition: 0.05s ease;
+}
+</style>
 <header style="padding: 8px 108px; border-bottom: 1px solid rgba(0, 0, 0, 0.171);">
     <div style="display: flex; justify-content: space-between;">
         <div style="display: flex; align-items: center; cursor: pointer; position: relative;">

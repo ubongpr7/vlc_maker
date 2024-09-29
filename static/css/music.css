@@ -77,29 +77,3 @@ html, body{
     text-align: left;
 }
 
-
-#pfpdropdown {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    position: absolute; 
-    border-radius: 8px; 
-    border: 1px solid #00000080; 
-    width: 330px; 
-    background: white; 
-    height: fit-content; 
-    top: 10px;
-    right: -50px;
-    z-index: 1000; 
-    transition: 0.05s ease-in;
-    transform: scale(0.7);
-    user-select: none;
-}
-
-.not-present {
-    opacity: 0;
-    transition: 0.05s ease;
-}
-
-.present {
-    opacity: 1;
-    transition: 0.05s ease;
-}
