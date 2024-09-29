@@ -292,7 +292,7 @@ def add_text(request):
 @login_required
 @check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 def download_video(request,textfile_id,):
-    text_file=TextFile(id=textfile_id)
+    text_file=TextFile.objects.get(pk=textfile_id)
     user_credit = Credit.objects.get(user=request.user)
     if user_credit.credits > 0:
         bg_music=request.GET.get('bg_music',None)
