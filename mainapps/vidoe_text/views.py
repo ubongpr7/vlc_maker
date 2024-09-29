@@ -292,38 +292,41 @@ def add_text(request):
 @login_required
 @check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)
 def download_video(request,textfile_id,):
-    text_file=TextFile.objects.get(id=textfile_id)
-    if not text_file.processed:
+    text_file=TextFile(id=textfile_id)
+    user_credit = Credit.objects.get(user=request.user)
+    if user_credit.credits > 0:
+        bg_music=request.GET.get('bg_music',None)
+        return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music,'text_file':text_file}, )
+    else:
+        messages.info(request,'You do not have enough credit to Proceed')
+        return redirect('/accounts/pricing')
 
-        user_credit = Credit.objects.get(user=request.user)
+
+@login_required
+def download_file_from_s3(request, file_key):
+    user_credit = Credit.objects.get(user=request.user)
+    if user_credit.credits > 0:
         user_credit.credits-=1
         user_credit.save()
-    text_file.processed=True
+        # Initialize the S3 client
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        )
 
-    bg_music=request.GET.get('bg_music',None)
-    return render(request,'vlc/download.html',{'textfile_id':textfile_id,'bg_music':bg_music,'text_file':text_file}, )
+        try:
+            # Get the file from S3
+            s3_response = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_key)
 
+            # Set the appropriate headers for file download
+            response = HttpResponse(s3_response['Body'].read(), content_type=s3_response['ContentType'])
+            response['Content-Disposition'] = f'attachment; filename="{file_key.split("/")[-1]}"'
+            response['Content-Length'] = s3_response['ContentLength']
 
-
-def download_file_from_s3(request, file_key):
-    # Initialize the S3 client
-    s3 = boto3.client(
-        's3',
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-    )
-
-    try:
-        # Get the file from S3
-        s3_response = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_key)
-
-        # Set the appropriate headers for file download
-        response = HttpResponse(s3_response['Body'].read(), content_type=s3_response['ContentType'])
-        response['Content-Disposition'] = f'attachment; filename="{file_key.split("/")[-1]}"'
-        response['Content-Length'] = s3_response['ContentLength']
-
-        return response
-    except s3.exceptions.NoSuchKey:
-        return HttpResponse("File not found.", status=404)
-    except (NoCredentialsError, PartialCredentialsError):
-        return HttpResponse("Credentials not available.", status=403)
+            return response
+        except s3.exceptions.NoSuchKey:
+            return HttpResponse("File not found.", status=404)
+        except (NoCredentialsError, PartialCredentialsError):
+            return HttpResponse("Credentials not available.", status=403)
+    return HttpResponse(status=403)
