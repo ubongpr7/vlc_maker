@@ -246,7 +246,7 @@ def add_text(request):
         resolution = request.POST.get('resolution')
         font_color = request.POST.get('font_color')
         subtitle_box_color = request.POST.get('subtitle_box_color')
-        font_file = request.FILES.get('font_file')  # Assuming this is a different file field
+        font_select = request.POST.get('font_select')  # Assuming this is a different file field
         font_size = request.POST.get('font_size')
         x,y= is_api_key_valid(api_key,voice_id)
         if x and y:
@@ -258,7 +258,7 @@ def add_text(request):
                     voice_id=voice_id,
                     api_key=api_key,
                     resolution=resolution,
-                    font_file=font_file,
+                    font =font_select,
                     subtitle_box_color=subtitle_box_color,
                     font_size=font_size,
                     font_color=font_color
