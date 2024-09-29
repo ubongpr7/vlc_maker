@@ -88,12 +88,13 @@
     
 </div>
     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px; z-index: 99;">
-        {% include 'partials/back.html' %}
         <form action="{% url 'video_text:add_text'%}" method="post" enctype="multipart/form-data" class="form" style="width: 504px; height: 1800px; border: 1px solid #0000004D; border-radius: 8px; padding: 40px 24px; background: white;">
             {%csrf_token%}
 
             <div style="font-size: 24px; font-weight: 700; line-height: 29.26px; letter-spacing: -0.03em; text-align: center; margin-bottom: 72px;">
-                Create Your Perfect VSL: <br> Upload, Customize, and Convert!
+                {% include 'partials/back.html' %}
+
+               <span> Create Your Perfect VSL: <br> Upload, Customize, and Convert!</span>
             </div>
             <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; text-align: left; margin-bottom: 24px;">
                 Pick Your Dimensions
