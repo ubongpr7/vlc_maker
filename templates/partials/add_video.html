@@ -4,12 +4,12 @@
 {% block content %}    
 <div class="card">
 
-    <h2>Add Video Clip to {{ category.name }}</h2>
+    <h4>Add Video Clip to {{ category.name }}</h4>
     <form hx-post="{{request.path}}" hx-on="htmx:afterRequest: window.location.reload()" id="video_form"  enctype="multipart/form-data">
         {% csrf_token %}
         
         <!-- Upload Instruction -->
-        <div style="margin-bottom: 16px;">
+        <div style="margin-bottom: 12px;">
             <label style="font-weight: bold;">Upload Video File:</label>
             <span>Please select a video file to upload.</span>
         </div>
@@ -41,7 +41,7 @@
     document.querySelector('input[name="video_file"]').addEventListener('change', function(event) {
         const input = event.target;
         const fileName = input.files.length > 0 ? input.files[0].name : 'No file chosen';
-        document.getElementById('fileName').textContent = fileName;
+        document.getElementById('fileName').textContent = fileName.slice(0,9);
     });
 //     document.getElementById('video_form').addEventListener('submit',()=>{
 //         window.location.reload();
