@@ -10,14 +10,10 @@
                     <img src="{% static 'resources/assets/assets1/Chevron-down.svg' %}" alt="">
                 </div>
                 <div class="newFolder">
+                    
                     <a hx-get="{% url 'video:upload_video_folder' %}"  hx-target="#confirmation-box" 
                         hx-swap="innerHTML"> 
                         <img src="{% static 'resources/assets/assets1/create.svg' %}" alt="">
-                        <!-- <span  style="padding-left: 2px;">Create New Folder</span>  -->
-                    </a>
-                    <a hx-get="{% url 'video:upload_video_folder' %}"  hx-target="#confirmation-box" 
-                        hx-swap="innerHTML"> 
-                        <!-- <img src="{% static 'resources/assets/assets1/create.svg' %}" alt=""> -->
                         <span  style="padding-left: 2px;">Create New Folder</span> 
                     </a>
                 </div>
@@ -73,4 +69,4 @@
     </div>
 
     
-    <script src="{% static 'resources/assets/folder.js' %}"></script>
+    <!-- <script src="{% static 'resources/assets/folder.js' %}"></script> -->
