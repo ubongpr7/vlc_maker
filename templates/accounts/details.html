@@ -98,7 +98,7 @@
             <div class="card-body">
                 {% if subscription %}
                     <p><strong>Current Plan:</strong> {{ current_plan.nickname }}</p>
-                    <p><strong>Amount:</strong> {{ current_plan.amount / 100 }} {{ current_plan.currency }}</p>
+                    <p><strong>Amount:</strong> {{ current_plan.amount }} {{ current_plan.currency }}</p>
                     <p><strong>Status:</strong> {{ subscription.status }}</p>
                     <p><strong>Next Billing Date:</strong> {{ subscription.current_period_end }}</p>
                 {% else %}
