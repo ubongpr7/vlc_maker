@@ -13,7 +13,8 @@
     <meta name="author" content="">
     {% block more_meta_tags %}
     {% endblock %}
-    <title>{% block page_title %}{% endblock page_title %}</title>
+    {%include 'partials/head_c.html' %}
+
 <link rel="stylesheet" href="{% static  'landing/style.css'%}">
 
 
