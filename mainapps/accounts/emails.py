@@ -55,3 +55,23 @@ def send_user_password_email(user):
         html_file='accounts/password_reset.html',  # Path to your HTML email template
         context=context
     )
+from django.contrib.auth.views import PasswordResetView
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib.auth import get_user_model
+
+class CustomPasswordResetView(PasswordResetView):
+    def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name=None, use_django_email=True):
+        subject = render_to_string(subject_template_name, context)
+        subject = ''.join(subject.splitlines())  # Remove line breaks
+        html_message = render_to_string(email_template_name, context)
+        plain_message = strip_tags(html_message)
+
+        # Send the email
+        get_user_model().send_mail(
+            subject,
+            plain_message,
+            from_email,
+            [to_email],
+            html_message=html_message,
+        )
