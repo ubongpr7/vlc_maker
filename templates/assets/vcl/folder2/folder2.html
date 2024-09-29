@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{% static 'resources/assets/folder2.css' %}">
     <style>
         
-        .log > div {
+        /* .log > div {
     position: relative;
 }
 .log > div > img {
@@ -32,7 +32,7 @@
 .log > div > .actions > div:first-child {
     border-bottom: solid 1px #0000004D;
     padding-right: 2vw;
-}
+} */
     </style>
 
     <div class="content">
@@ -52,7 +52,7 @@
                 <div class="newVideo" style="margin-left: auto ;">
                     <a  hx-trigger="click" hx-get="{% url 'video:add_video_clip' current_category.id %}" hx-target="#confirmation-box" hx-swap="innerHTML">
                         <img src="{% static 'resources/assets/assets2/add.svg' %}" alt="">
-                        <span style="padding-left: 2px;"> Upload Video </span>
+                        Upload Video
                     </a>
                 </div>
                         
@@ -62,7 +62,6 @@
                     <div>
 
                         <div>
-                        <!-- <a href="{%url 'video:category_view_video' current_category.id video.id %}"> -->
 
                             <div><a href="{%url 'video:category_view_video' current_category.id video.id %}"><img src="{% static 'resources/assets/assets2/Video placeholder.svg' %}" alt=""></a></div>
                             <div><a href="{%url 'video:category_view_video' current_category.id video.id %}">{{video.title}}</a></div>
