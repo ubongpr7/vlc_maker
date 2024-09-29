@@ -116,7 +116,7 @@
                 <ul class="plan-list">
                     {% for plan in all_plans %}
                         <li>
-                            <span><strong>{{ plan.nickname }}</strong> - {{ plan.amount / 100 }} {{ plan.currency }}</span>
+                            <span><strong>{{ plan.nickname }}</strong> - {{ plan.amount }} {{ plan.currency }}</span>
                             <form action="{% url 'subscription_upgrade' plan.id %}" method="POST" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn-upgrade">Upgrade</button>
