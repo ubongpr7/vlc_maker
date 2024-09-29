@@ -1,0 +1,134 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    {%include 'partials/head_c.html' %}
+    <style>
+        .container {
+    margin: 20px;
+    padding: 20px;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.card {
+    flex: 1 1 48%; /* Two cards per row */
+    background-color: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.card-header {
+    padding: 10px;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 8px 8px 0 0;
+}
+
+.subscription-header {
+    background-color: #3498db;
+    color: white;
+}
+
+.upgrade-header {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.plan-list {
+    list-style: none;
+    padding: 0;
+}
+
+.plan-list li {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-upgrade {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-upgrade:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+    .card {
+        flex: 1 1 100%;
+    }
+}
+
+    </style>
+</head>
+<body>
+    
+
+<div class="container">
+    <div class="card-container">
+        <!-- Subscription Details Card -->
+        <div class="card">
+            <div class="card-header subscription-header">
+                <h5>Subscription Details</h5>
+            </div>
+            <div class="card-body">
+                {% if subscription %}
+                    <p><strong>Current Plan:</strong> {{ current_plan.nickname }}</p>
+                    <p><strong>Amount:</strong> {{ current_plan.amount / 100 }} {{ current_plan.currency }}</p>
+                    <p><strong>Status:</strong> {{ subscription.status }}</p>
+                    <p><strong>Next Billing Date:</strong> {{ subscription.current_period_end }}</p>
+                {% else %}
+                    <p class="text-danger">You do not have an active subscription.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Upgrade Plan Card -->
+        <div class="card">
+            <div class="card-header upgrade-header">
+                <h5>Upgrade Your Plan</h5>
+            </div>
+            <div class="card-body">
+                <ul class="plan-list">
+                    {% for plan in all_plans %}
+                        <li>
+                            <span><strong>{{ plan.nickname }}</strong> - {{ plan.amount / 100 }} {{ plan.currency }}</span>
+                            <form action="{% url 'subscription_upgrade' plan.id %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-upgrade">Upgrade</button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li>No other plans available for upgrade.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

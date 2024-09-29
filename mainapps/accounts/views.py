@@ -27,7 +27,7 @@ import stripe
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from djstripe.models import Subscription, Customer, Product,Subscription,APIKey
+from djstripe.models import Subscription, Customer, Product,Subscription,APIKey,Plan
 from django.utils.timezone import now
 
 from django.contrib.auth import views as auth_views
@@ -40,6 +40,33 @@ from django.utils.html import strip_tags
 
 
 from django.contrib.auth import logout
+
+
+
+
+
+def subscription_details(request):
+    user = request.user
+    customer = Customer.objects.filter(subscriber=user).first()
+    
+    if customer:
+        # Get the active subscription for the customer
+        subscription = Subscription.objects.filter(customer=customer, status="active").first()
+        
+        if subscription:
+            current_plan = subscription.plan
+            all_plans = Plan.objects.filter(active=True).exclude(id=current_plan.id)  # Get all other active plans
+            
+            context = {
+                'subscription': subscription,
+                'current_plan': current_plan,
+                'all_plans': all_plans
+            }
+            return render(request, 'subscription/details.html', context)
+    
+    return render(request, 'accounts/details.html')  # In case the user has no subscription
+
+
 
 def logout_view(request):
     """
