@@ -20,7 +20,7 @@
 
                 </div>
                 <div class="newFolder">
-                    <img src="{% static 'resources/assets/assets3/dots.svg' %}" alt="">
+                    <img src="{% static 'resources/assets/assets3/dots.svg' %}" class="menu" alt="">
                 </div>
                 <div class="actions">
                     <div>
@@ -34,7 +34,7 @@
                     <div>
                         <a style="align-items:center;" hx-get="{% url 'video:delete_video' video.id %}"  hx-target="#confirmation-box" 
                         hx-swap="innerHTML">
-                            <img src="{% static 'resources/assets/assets1/delete.svg' %}" alt="">
+                            <img src="{% static 'resources/assets/assets1/delete.svg' %}"  alt="">
                             Delete
                         </a> 
 
