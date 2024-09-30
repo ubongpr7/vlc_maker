@@ -77,9 +77,7 @@ uploadForm.addEventListener('submit', function(event) {
     xhr.upload.addEventListener('progress', function(e) {
         if (e.lengthComputable) {
             var  percentComplete = (e.loaded / e.total) * 100;
-            if (percentComplete === 100){
-            percentComplete -=1 
-            }
+            
             document.getElementById('videoUploadButton').disabled=true
             document.getElementById('videoUploadButton').textContent='Uploading Files...'
 
