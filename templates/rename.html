@@ -1,63 +1,27 @@
-{% extends 'partials/modal_base.html' %}
-{% load static%}
+
+{% extends 'partials/short_modal.html' %}
 <!-- Container for the modal -->
-{% block content %} 
+{%block modal_heading %}
+Add New Name:
+{%endblock modal_heading %}
+
+{%block instruction %}
+{%endblock  %}
+{% block action %}
+            
+<button class="upload-btn" id="SaveName">Save</button>
+
+{% endblock action %}
+{%block form_d %}
 
 <form hx-post="{{request.path}}" hx-on="htmx:afterRequest: window.location.reload()" id="video_form"  enctype="multipart/form-data">
-{% csrf_token %}
-    <div class="form-group" style="margin-bottom: 24px;">
-        <label for="title" style="display: block; margin-bottom: 8px; font-weight: bold;">Add New Name:</label>
-        <!-- <input type="text" id="title" name="newName" value="{{item.name}}{{item.title}}"
-               style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-                -->
-                <div class="modal-content">
-                    <div class="modal-text">
-                      <h2>Add New Name:</h2>
-                    </div>
-              
-                    <!-- Single input field -->
-                    <input
-                      type="text"
-                      id="NewName"
-                      placeholder="Add New Name"
-                      class="input-field"
-                    />
-              
-                    <!-- Action button to submit the input -->
-                    <div class="modal-buttons">
-                      <button class="upload-btn" id="SaveName">Save</button>
-                    </div>
-                  </div>
-    </div>
+{%endblock form_d %}
+{% block content %}            
+<input
+type="text"
+id="NewName"
+placeholder="Add New Name"
+class="input-field"
+/>
 
-    <div style="text-align: center;">
-        <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save</button>
-    </div>
-    
-
-</form>
-{% endblock content %} 
-
-
-
-
-<div id="successModal" class="modal2">
-    <div class="modal-content">
-      <div class="modal-text">
-        <h2>Add New Name:</h2>
-      </div>
-
-      <!-- Single input field -->
-      <input
-        type="text"
-        id="NewName"
-        placeholder="Add New Name"
-        class="input-field"
-      />
-
-      <!-- Action button to submit the input -->
-      <div class="modal-buttons">
-        <button class="upload-btn" id="SaveName">Save</button>
-      </div>
-    </div>
-  </div>
+{% endblock content %}            
