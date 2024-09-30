@@ -51,7 +51,7 @@
         background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
       }
       
-      /* .modal-content {
+      .modal-content {
         background-color: #fefefe;
         padding: 20px;
         border-radius: 10px;
@@ -61,7 +61,7 @@
         width: 400px;
         text-align: center;
       }
-       */
+      
       .modal-buttons {
         display: flex;
         justify-content: end;
@@ -200,7 +200,7 @@
  {%block extra_css%}
 
  {% endblock extra_css%}
-<div id="confirmation-modal" class="modal">
+<div id="confirmation-modal" class="modal2">
     <div class="modal-content">
         <form method="POST" id="uploadForm" enctype="multipart/form-data">
             {% csrf_token %}
