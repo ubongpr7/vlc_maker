@@ -22,6 +22,26 @@
                 <div class="newFolder">
                     <img src="{% static 'resources/assets/assets3/dots.svg' %}" alt="">
                 </div>
+                <div class="actions">
+                    <div>
+                        
+                        <a style="align-items:center;" hx-get="{% url 'video:rename_video_clip' video.id %}"  hx-target="#confirmation-box" 
+                            hx-swap="innerHTML">
+                            <img src="{% static 'resources/assets/assets1/rename.svg' %}" alt="">
+                            Rename
+                        </a>
+                    </div>
+                    <div>
+                        <a style="align-items:center;" hx-get="{% url 'video:delete_video' video.id %}"  hx-target="#confirmation-box" 
+                        hx-swap="innerHTML">
+                            <img src="{% static 'resources/assets/assets1/delete.svg' %}" alt="">
+                            Delete
+                        </a> 
+
+
+                    </div>
+                </div>
+
             </div>
             <div class="placeholder">
                 <div class="video-card">
