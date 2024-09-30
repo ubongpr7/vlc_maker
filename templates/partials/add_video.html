@@ -13,7 +13,14 @@ Please make sure your file is a  video
 <button class="upload-btn" id="videoUploadButton">Upload</button>
 
 {% endblock action %}
-
+{%block form_d %}
+        <form method="POST"  id="video_form" enctype="multipart/form-data"
+        hx-post="{{request.path}}" 
+            hx-target="#confirmation-box" 
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-on="htmx:afterRequest: window.location.reload()"
+        >
+        {%endblock form_d %}
 {% block content %}            
     <input type="file" name="video_file" id="fileInput"class="fileUpload" accept="video/*" required >
     

@@ -166,7 +166,8 @@
  {% endblock extra_css%}
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">
-        <form method="POST" id="uploadForm" enctype="multipart/form-data">
+        {%block form_d %}
+        {%endblock form_d %}
             {% csrf_token %}
 
 
