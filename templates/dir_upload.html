@@ -15,22 +15,12 @@ Please make sure your folder contains video
 {% endblock action %}
 
 {% block content %}            
-<!-- 
-    <div style="border: 1px solid #000; border-radius: 8px; padding: 8px; display: flex; align-items: center; margin-bottom: 24px;">
-        <label style="background: #864AF9; color: white; padding: 8px 24px; border-radius: 8px; cursor: pointer; position: relative;">
-            Choose folder
-        </label>
-    </div> -->
     <input id="fileInput"class="fileUpload" type="file" name="folder" webkitdirectory multiple >
-
     <input type="text" id="directories" name="directories" hidden>
     <input type="text" name="purpose" hidden value='text_file'>
-
-
-    <div id="progressWrapper" style="width: 100%; display:none; margin-top: 24px; background-color: #f3f3f3;">
+    <!-- <div id="progressWrapper" style="width: 100%; display:none; margin-top: 24px; background-color: #f3f3f3;">
         <div id="progressBar" style="width: 0%; height: 30px; background-color: #4CAF50; text-align: center; line-height: 30px; color: white;">0%</div>
-    </div>
-
+    </div> -->
     <div>
         <div class="progressPercent">
             <span id="progressPercent">0%</span>
@@ -39,8 +29,7 @@ Please make sure your folder contains video
             <div class="progress" id="progressBar"></div>
         </div>
         </div>
-
-<div id="uploadStatus" style="text-align: center; margin-top: 12px;"></div>
+        <div id="uploadStatus" style="text-align: center; margin-top: 12px;"></div>
         {% endblock content %}    
         {% block extra_js%}
         <script>
@@ -61,21 +50,24 @@ Please make sure your folder contains video
           // Send folder structure to backend in a hidden input field
           document.querySelector("#directories").value = JSON.stringify(directories);
         });
-        const fileName2= document.getElementById('fileName2')
         
-        const fileUpload2 = document.getElementById('fileInput');
-          fileUpload2.addEventListener('change', (event) => {
-            const folderName = event.target.files[0].webkitRelativePath.split('/')[0];
+        // const fileName2= document.getElementById('fileName2')
         
-              const file = event.target.files[0]
-              if (file) {
-                  fileName2.textContent =folderName.slice(0,10);
-              } else {
-                  fileName2.textContent = 'No files selected';
-              }
-          });
+        // const fileUpload2 = document.getElementById('fileInput');
+        //   fileUpload2.addEventListener('change', (event) => {
+        //     const folderName = event.target.files[0].webkitRelativePath.split('/')[0];
+        
+        //       const file = event.target.files[0]
+        //       if (file) {
+        //           fileName2.textContent =folderName.slice(0,10);
+        //       } else {
+        //           fileName2.textContent = 'No files selected';
+        //       }
+        //   });
+        
         const uploadForm = document.getElementById('uploadForm');
         const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
         const uploadStatus = document.getElementById('uploadStatus');
         
         uploadForm.addEventListener('submit', function(event) {
@@ -109,7 +101,7 @@ Please make sure your folder contains video
                   document.getElementById('videoUploadButton').textContent='Uploading Files...'
         
                   progressBar.style.width = percentComplete + '%';
-                  progressBar.textContent = Math.round(percentComplete) + '%';
+                  progressPercent.textContent = Math.round(percentComplete) + '%';
               }
           });
         
