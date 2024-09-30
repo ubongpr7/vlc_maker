@@ -5,10 +5,35 @@
  {% endblock extra_css%}
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">
-    {% block content %}    
+        <form method="POST" id="uploadForm" enctype="multipart/form-data">
 
-    {% endblock content %}    
-    <button style="color:black;" onclick="closeModal()">Close</button>
+            <div class="modal-text">
+                <h2>
+                    {%block modal_heading %}
+                    {%endblock modal_heading %}
+                </h2>
+                <p>
+                    {%block instruction %}
+                    
+                    {%endblock  %}
+                    
+                </p>
+            </div>
+        
+            {% block content %}    
+
+            {% endblock content %}    
+            <button style="color:black;" >Close</button>
+            <div class="modal-buttons">
+                <button class="cancel-btn" id="uploadCancelBtn" onclick="closeModal()">Cancel</button>
+                    {% block action %}
+                
+            <button class="upload-btn" id="uploadBtn">Upload</button>
+
+                    {% endblock action %}
+            </div>
+        </form>
+            
     </div>
 </div>
 

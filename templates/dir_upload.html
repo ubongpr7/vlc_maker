@@ -20,13 +20,17 @@
         
 
 </style>
+{%block modal_heading %}
+Upload Folder
+{%endblock modal_heading %}
+
+{%block instruction %}
+Please make sure your folder contains video
+{%endblock  %}
+
 <div class="card">
-    <form method="POST" id="uploadForm" enctype="multipart/form-data">
         {% csrf_token %}
-        <div style="margin-bottom: 16px;">
-            <label style="font-weight: bold;">Upload Folder:</label>
-            <span>Please make sure your folder contains video files.</span>
-        </div>
+        
 
         <div style="border: 1px solid #000; border-radius: 8px; padding: 8px; display: flex; align-items: center; margin-bottom: 24px;">
             <label style="background: #864AF9; color: white; padding: 8px 24px; border-radius: 8px; cursor: pointer; position: relative;">
@@ -36,7 +40,7 @@
             <div id="fileName2" style="color: #00000080; margin-left: 10px;">No folder chosen</div>
         </div>
 
-        <input type="text" id="directories" name="directories" hidden>
+        <input type="text" class="fileUpload" id="directories" name="directories" hidden>
         <input type="text" name="purpose" hidden value='text_file'>
 
         <div style="text-align: center;">
@@ -46,9 +50,14 @@
         <div id="progressWrapper" style="width: 100%; display:none; margin-top: 24px; background-color: #f3f3f3;">
             <div id="progressBar" style="width: 0%; height: 30px; background-color: #4CAF50; text-align: center; line-height: 30px; color: white;">0%</div>
         </div>
+        
 
         <div id="uploadStatus" style="text-align: center; margin-top: 12px;"></div>
-    </form>
+        {% block action %}
+            
+        <button class="upload-btn" id="uploadBtn">Upload</button>
+
+              {% endblock action %}
 <script>
 document.querySelector("#fileInput").addEventListener("change", function() {
   let files = document.querySelector("#fileInput").files;
