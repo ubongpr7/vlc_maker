@@ -15,10 +15,7 @@ Please make sure your file is a  video
 {% endblock action %}
 {%block form_d %}
         <form method="POST"  id="video_form" enctype="multipart/form-data"
-        hx-post="{{request.path}}" 
-            hx-target="#confirmation-box" 
-            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-on="htmx:afterRequest: window.location.reload()"
+   
         >
         {%endblock form_d %}
 {% block content %}            
@@ -36,3 +33,42 @@ Please make sure your file is a  video
 {% endblock content %} 
 
 
+<script>
+document.getElementById('video_form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    var form = document.getElementById('video_form');
+    var formData = new FormData(form);
+    var xhr = new XMLHttpRequest();
+
+    // Update progress bar during upload
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            var percentComplete = (e.loaded / e.total) * 100;
+            document.getElementById('progressBar').style.width = percentComplete + '%';
+            document.getElementById('progressPercent').textContent = Math.round(percentComplete) + '%';
+        }
+    });
+
+    // Set up what happens when the upload is complete
+    xhr.addEventListener('load', function() {
+        if (xhr.status === 200) {
+            // Success, reload the page
+            document.getElementById('uploadStatus').innerHTML = '<span style="color: green;">Upload successful!</span>';
+            window.location.reload();
+        } else {
+            // Error occurred
+            document.getElementById('uploadStatus').innerHTML = '<span style="color: red;">Upload failed. Please try again.</span>';
+        }
+    });
+
+    // Set up what happens if there's an error during the upload
+    xhr.addEventListener('error', function() {
+        document.getElementById('uploadStatus').innerHTML = '<span style="color: red;">Error occurred during the upload.</span>';
+    });
+
+    // Open the XHR request and send it
+    xhr.open('POST', '{{ request.path }}');
+    xhr.send(formData);
+});
+</script>

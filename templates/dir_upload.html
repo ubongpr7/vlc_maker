@@ -30,8 +30,8 @@ Please make sure your folder contains video
         </div>
     </div>
         <div id="uploadStatus" style="text-align: center; margin-top: 12px;"></div>
-        {% endblock content %}    
-        {% block extra_js%}
+{% endblock content %}    
+{% block extra_js%}
 <script>
 document.querySelector("#fileInput").addEventListener("change", function() {
     let files = document.querySelector("#fileInput").files;
