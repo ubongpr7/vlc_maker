@@ -36,31 +36,10 @@
       
       .modal-content p {
         font-size: 14px;
+        margin-bottom: 10px;
         color: #555;
       }
       
-      /* upload */
-      .modal2 {
-        display: block; /* Hidden by default */
-        position: absolute;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-      }
-      
-      .modal-content {
-        background-color: #fefefe;
-        padding: 20px;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 400px;
-        text-align: center;
-      }
       
       .modal-buttons {
         display: flex;
@@ -154,7 +133,8 @@
         border-radius: 8px;
         padding: 8px;
         font-size: 16px;
-      }
+        width:100%;
+    }
       .fileUpload::-webkit-file-upload-button {
         background: #864af9;
         color: #fff;
@@ -200,7 +180,7 @@
  {%block extra_css%}
 
  {% endblock extra_css%}
-<div id="confirmation-modal" class="modal2">
+<div id="confirmation-modal" class="modal">
     <div class="modal-content">
         <form method="POST" id="uploadForm" enctype="multipart/form-data">
             {% csrf_token %}
