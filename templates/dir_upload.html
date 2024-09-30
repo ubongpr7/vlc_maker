@@ -15,15 +15,16 @@ Please make sure your folder contains video
 {% endblock action %}
 
 {% block content %}            
-    <!-- <div style="border: 1px solid #000; border-radius: 8px; padding: 8px; display: flex; align-items: center; margin-bottom: 24px;">
+<!-- 
+    <div style="border: 1px solid #000; border-radius: 8px; padding: 8px; display: flex; align-items: center; margin-bottom: 24px;">
         <label style="background: #864AF9; color: white; padding: 8px 24px; border-radius: 8px; cursor: pointer; position: relative;">
             Choose folder
             <input id="fileInput" type="file" name="folder" webkitdirectory multiple style="position: absolute; opacity: 0; cursor: pointer; left: 0;">
         </label>
-        <div id="fileName2" style="color: #00000080; margin-left: 10px;">No folder chosen</div>
     </div> -->
+    <div id="fileName2" class="fileUpload" style="color: #00000080; margin-left: 10px;">No folder chosen</div>
 
-    <input type="text" class="fileUpload" id="directories" name="directories" >
+    <input type="text" id="directories" name="directories" hidden>
     <input type="text" name="purpose" hidden value='text_file'>
 
 
