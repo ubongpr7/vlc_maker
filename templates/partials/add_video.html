@@ -31,7 +31,7 @@ Please make sure your file is a  video
     </div>
         <div id="uploadStatus" style="text-align: center; margin-top: 12px;"></div>
 {% endblock content %} 
-
+{% block extra_js%}
 
 <script>
 document.getElementById('video_form').addEventListener('submit', function(e) {
@@ -72,3 +72,5 @@ document.getElementById('video_form').addEventListener('submit', function(e) {
     xhr.send(formData);
 });
 </script>
+
+{% endblock extra_js%}

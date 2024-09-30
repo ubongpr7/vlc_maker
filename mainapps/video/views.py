@@ -47,9 +47,8 @@ def add_video_clip(request, category_id):
     if request.method == 'POST':
         # Handle the form submission
         video_file = request.FILES.get('video_file')
-        title=request.POST.get('title')
         if video_file:
-            clip = VideoClip.objects.create(video_file=video_file, title=title,category=category)
+            clip = VideoClip.objects.create(video_file=video_file, title=video_file.filename,category=category)
             clip.save()
             return HttpResponse(status=204)  # Return no content for successful POST
         
