@@ -92,9 +92,9 @@ Please make sure your folder contains video
           // Progress event listener
           xhr.upload.addEventListener('progress', function(e) {
               if (e.lengthComputable) {
-                  const percentComplete = (e.loaded / e.total) * 100;
+                  var  percentComplete = (e.loaded / e.total) * 100;
                   if (percentComplete>0){
-                    percentComplete=percentComplete-1 
+                    percentComplete -=1 
                   }
                   document.getElementById('progressWrapper').style.display='block'
                   document.getElementById('videoUploadButton').disabled=true
