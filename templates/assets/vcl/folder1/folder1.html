@@ -9,7 +9,7 @@
                     <a href="{%url 'video:category_view' %}">Assets Library</a>
                     <img src="{% static 'resources/assets/assets1/Chevron-down.svg' %}" alt="">
                 </div>
-                <div class="newFolder" style="padding:5px" onmouseover="this.backgroundColor='#00000010;'">
+                <div class="newFolder" style="padding:5px">
                     
                     <a hx-get="{% url 'video:upload_video_folder' %}"  hx-target="#confirmation-box" 
                         hx-swap="innerHTML"> 
