@@ -9,12 +9,12 @@
                     <a href="{%url 'video:category_view' %}">Assets Library</a>
                     <img src="{% static 'resources/assets/assets1/Chevron-down.svg' %}" alt="">
                 </div>
-                <div class="newFolder" style="padding:5px">
+                <div class="newFolder" style="padding:8px">
                     
                     <a hx-get="{% url 'video:upload_video_folder' %}"  hx-target="#confirmation-box" 
                         hx-swap="innerHTML"> 
                         <img src="{% static 'resources/assets/assets1/create.svg' %}" alt="">
-                        <span  style="padding-left: 4px;">Create New Folder</span> 
+                        <span  style="padding-left: 5px;">Create New Folder</span> 
                     </a>
                 </div>
             </div>
