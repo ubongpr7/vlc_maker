@@ -1015,7 +1015,7 @@ class Command(BaseCommand):
             max_width=clip.w * .8
         )
         temp_subtitle_clip = TextClip(
-            ne_text,
+            wrapped_text,
             fontsize=adjusted_font_size,
             font=font_path_,
         )
@@ -1027,7 +1027,7 @@ class Command(BaseCommand):
             color=color,
             # stroke_color="white",
             stroke_width=0,
-            font=font_path,
+            font=font_path_,
             method='caption',
             align='center',
             size=(longest_line_width, None)  # Use the measured width for the longest line
