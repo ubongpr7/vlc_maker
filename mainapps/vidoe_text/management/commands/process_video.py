@@ -1023,7 +1023,7 @@ class Command(BaseCommand):
         longest_line_width, text_height = temp_subtitle_clip.size
         
         subtitle_clip = TextClip(
-            ne_text,
+            wrapped_text,
             fontsize=adjusted_font_size,
             color=color,
             # stroke_color="white",
