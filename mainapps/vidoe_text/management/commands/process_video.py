@@ -1006,14 +1006,14 @@ class Command(BaseCommand):
         # Create a temporary TextClip to measure the width of the longest line
 
         
-        ne_text=soft_wrap_text(
-            wrapped_text,
+        # ne_text=soft_wrap_text(
+        #     wrapped_text,
 
-            font_family=font_path,
-            fontsize=adjusted_font_size,
-            letter_spacing=12,
-            max_width=clip.w * .8
-        )
+        #     font_family=font_path,
+        #     fontsize=adjusted_font_size,
+        #     letter_spacing=12,
+        #     max_width=clip.w * .8
+        # )
         temp_subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
