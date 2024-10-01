@@ -999,21 +999,22 @@ class Command(BaseCommand):
         # Create a temporary TextClip to measure the width of the longest line
 
         font_path=fonts.get(font_path)
-        temp_subtitle_clip = TextClip(
+        
+        ne_text=soft_wrap_text(
             wrapped_text,
+
+            font_family=font_path,
+            fontsize=font_size,
+            letter_spacing=12,
+            max_width=clip.w * .8 
+        )
+        temp_subtitle_clip = TextClip(
+            ne_text,
             fontsize=adjusted_font_size,
             font=font_path
         )
         longest_line_width, text_height = temp_subtitle_clip.size
         
-        ne_text=soft_wrap_text(
-                wrapped_text,
-
-                font_family=font_path,
-                fontsize=font_size,
-                letter_spacing=12,
-                max_width=clip.w * .8 
-            )
         subtitle_clip = TextClip(
             ne_text,
             fontsize=adjusted_font_size,
