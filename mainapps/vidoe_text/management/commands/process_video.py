@@ -73,7 +73,6 @@ PEXELS_API_KEY = 'ljSCcK6YYuU0kNyMTADStB8kSOWdkzHCZnPXc26QEHhaHYqeXusdnzaA' # wr
 # Base URL for Pexels API
 BASE_URL = 'https://api.pexels.com/videos/search'
 os.environ['PYTHONIOENCODING'] = 'UTF-8'
-
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 imagemagick_path = "/usr/bin/convert" # Set the path to the ImageMagick executable
 os.environ['IMAGEMAGICK_BINARY'] = imagemagick_path
@@ -97,7 +96,7 @@ fonts={
     "Open Sans":'Open-Sans-Bold' ,
     "Helvetica": 'Helvetica-Bold',
     "Montserrat":'DejaVu-Sans-Bold',
-    "Roboto":,'Fira-Sans-Bold'
+    "Roboto":'Fira-Sans-Bold'
 }
 
 def download_from_s3(file_key, local_file_path):
