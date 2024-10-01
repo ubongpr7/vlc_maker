@@ -943,7 +943,7 @@ class Command(BaseCommand):
     def add_subtitles_to_clip(self ,clip: VideoFileClip, subtitle: pysrt.SubRipItem) -> VideoFileClip:
         logging.info(f"Adding subtitle: {subtitle.text}")
         subtitle_box_color=self.text_file_instance.subtitle_box_color
-        base_font_size=self.text_file_instance.font_size
+        base_font_size=self.text_file_instance.font_size-10
         color=self.text_file_instance.font_color
         margin=29
         font_path=self.text_file_instance.font
@@ -1006,14 +1006,6 @@ class Command(BaseCommand):
         # Create a temporary TextClip to measure the width of the longest line
 
         
-        ne_text=soft_wrap_text(
-            wrapped_text,
-
-            font_family=fonts1.get(font_path),
-            fontsize=adjusted_font_size-5,
-            letter_spacing=12,
-            max_width=clip.w * .8
-        )
         temp_subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
