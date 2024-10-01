@@ -85,10 +85,10 @@ aws_secret = settings.AWS_SECRET_ACCESS_KEY
 s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
 
 fonts={
-    "Arial": 'fonts/arial.ttf',
-    "Open Sans": 'fonts/OpenSans-Semibold.ttf',
-    "Helvetica": 'fonts/Helvetica.ttf',
-    "Montserrat" :'fonts/Montserrat.ttf',
+    "Arial": 'static/fonts/arial.ttf',
+    "Open Sans": 'static/fonts/OpenSans-Semibold.ttf',
+    "Helvetica": 'static/fonts/Helvetica.ttf',
+    "Montserrat" :'static/fonts/Montserrat.ttf',
 }
 
 
