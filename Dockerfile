@@ -47,6 +47,9 @@ COPY requirements.txt .
 RUN python3.10 -m pip install -r requirements.txt
 # Copy the rest of your application files
 COPY . /app
+RUN apt-get update && apt-get install -y \
+    libfreetype6 \
+    libfontconfig1
 
 # Set environment variable for ImageMagick
 ENV IMAGEMAGICK_BINARY=/usr/bin/convert
