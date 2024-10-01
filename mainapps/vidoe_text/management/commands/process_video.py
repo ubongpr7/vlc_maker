@@ -92,7 +92,7 @@ fonts1={
     "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
 }
 fonts={
-    "Arial": 'Nimbus-Sans-Bold',
+    "Arial": 'NimbusSans-Bold',
     "Open Sans":'Open-Sans-Bold' ,
     "Helvetica": 'Helvetica-Bold',
     "Montserrat":'DejaVu-Sans-Bold',
