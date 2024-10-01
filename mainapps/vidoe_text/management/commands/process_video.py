@@ -956,7 +956,7 @@ class Command(BaseCommand):
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = (clip.h / 1080)
         font_size = int(int(base_font_size) * scaling_factor)
-        font_path_=fonts.get(font_path)
+        font_path_=fonts1.get(font_path)
 
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
@@ -1008,7 +1008,7 @@ class Command(BaseCommand):
         
         temp_subtitle_clip = TextClip(
             wrapped_text,
-            fontsize=adjusted_font_size,
+            fontsize=font_size,
             font=font_path_,
         )
         longest_line_width, text_height = temp_subtitle_clip.size
