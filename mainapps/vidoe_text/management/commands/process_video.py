@@ -89,6 +89,7 @@ fonts={
     "Open Sans": 'static/fonts/OpenSans-Semibold.ttf',
     "Helvetica": 'static/fonts/Helvetica.ttf',
     "Montserrat" :'static/fonts/Montserrat.ttf',
+    "Roboto" :'static/fonts/Roboto-Medium.ttf',
 }
 
 
