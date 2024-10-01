@@ -85,11 +85,11 @@ aws_secret = settings.AWS_SECRET_ACCESS_KEY
 s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
 
 fonts={
-    "Arial": 'fonts/arial.ttf',
-    "Open Sans": 'fonts/OpenSans-Semibold.ttf',
-    "Helvetica": 'fonts/Helvetica.ttf',
-    "Montserrat" :'fonts/Montserrat.ttf',
-    "Roboto" :'fonts/Roboto-Medium.ttf',
+    "Arial": os.path.join(os.getcwd(),'fonts','arial.ttf',)
+    "Open Sans": os.path.join(os.getcwd(),'fonts','OpenSans-Semibold.ttf',)
+    "Helvetica": os.path.join(os.getcwd(),'fonts','Helvetica.otf',)
+    "Montserrat" :os.path.join(os.getcwd(),'fonts','Montserrat.ttf',)
+    "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf',)
 }
 
 
@@ -998,56 +998,49 @@ class Command(BaseCommand):
 
         # Create a temporary TextClip to measure the width of the longest line
 
+        font_path=fonts.get(font_path)
         temp_subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
-            font='Georgia-Bold',
+            font=font_path
         )
-        font_s3_path=fonts.get(font_path)
         longest_line_width, text_height = temp_subtitle_clip.size
-        with tempfile.NamedTemporaryFile(suffix=".ttf", delete=False) as font_temp_path:
-    
-            # Download the file from S3 to a temporary path
-            download_from_s3(font_s3_path, font_temp_path.name)
-            
-             
-            font_path_for_moviepy = font_temp_path.name
-            
-            ne_text=soft_wrap_text(
-                    wrapped_text,
+        
+        ne_text=soft_wrap_text(
+                wrapped_text,
 
-                    font_family=font_path_for_moviepy,
-                    fontsize=font_size,
-                    letter_spacing=12,
-                    max_width=clip.w * .8 
-                )
-            subtitle_clip = TextClip(
-                ne_text,
-                fontsize=adjusted_font_size,
-                color=color,
-                # stroke_color="white",
-                stroke_width=0,
-                font=font_path_for_moviepy,
-                method='caption',
-                align='center',
-                size=(longest_line_width, None)  # Use the measured width for the longest line
-            ).set_duration(clip.duration)
+                font_family=font_path,
+                fontsize=font_size,
+                letter_spacing=12,
+                max_width=clip.w * .8 
+            )
+        subtitle_clip = TextClip(
+            ne_text,
+            fontsize=adjusted_font_size,
+            color=color,
+            # stroke_color="white",
+            stroke_width=0,
+            font=font_path,
+            method='caption',
+            align='center',
+            size=(longest_line_width, None)  # Use the measured width for the longest line
+        ).set_duration(clip.duration)
 
-            text_width, text_height = subtitle_clip.size
-            small_margin = 8  # Small margin for box width
-            box_width = text_width + small_margin  # Adjust the box width to be slightly larger than the text width
-            box_height = text_height + margin
-            box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
-            print('this is the used box color:',subtitle_box_color )
-            # Adjust box position to be slightly higher in the video
-            box_position = ('center', clip.h - box_height - 2 * margin)
-            subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
+        text_width, text_height = subtitle_clip.size
+        small_margin = 8  # Small margin for box width
+        box_width = text_width + small_margin  # Adjust the box width to be slightly larger than the text width
+        box_height = text_height + margin
+        box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
+        print('this is the used box color:',subtitle_box_color )
+        # Adjust box position to be slightly higher in the video
+        box_position = ('center', clip.h - box_height - 2 * margin)
+        subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
 
-            box_clip = box_clip.set_position(box_position)
-            subtitle_clip = subtitle_clip.set_position(subtitle_position)
+        box_clip = box_clip.set_position(box_position)
+        subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
-            return CompositeVideoClip([clip, box_clip, subtitle_clip])
-            # return clip
+        return CompositeVideoClip([clip, box_clip, subtitle_clip])
+        # return clip
 
 
     def add_animated_watermark_to_instance(self, video):
