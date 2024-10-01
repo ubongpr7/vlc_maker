@@ -84,13 +84,13 @@ aws_secret = settings.AWS_SECRET_ACCESS_KEY
 s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
 
 
-# fonts={
-#     "Arial": os.path.join(os.getcwd(),'fonts','arial.ttf'),
-#     "Open Sans": os.path.join(os.getcwd(),'fonts','OpenSans-Semibold.ttf'),
-#     "Helvetica": os.path.join(os.getcwd(),'fonts','Helvetica.otf'),
-#     "Montserrat" :os.path.join(os.getcwd(),'fonts','Montserrat.ttf'),
-#     "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
-# }
+fonts1={
+    "Arial": os.path.join(os.getcwd(),'fonts','arial.ttf'),
+    "Open Sans": os.path.join(os.getcwd(),'fonts','OpenSans-Semibold.ttf'),
+    "Helvetica": os.path.join(os.getcwd(),'fonts','Helvetica.otf'),
+    "Montserrat" :os.path.join(os.getcwd(),'fonts','Montserrat.ttf'),
+    "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
+}
 fonts={
     "Arial": 'Nimbus-Sans-Bold',
     "Open Sans":'Open-Sans-Bold' ,
@@ -956,7 +956,7 @@ class Command(BaseCommand):
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = (clip.h / 1080)
         font_size = int(int(base_font_size) * scaling_factor)
-        font_path=fonts.get(font_path)
+        font_path_=fonts.get(font_path)
 
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
@@ -1006,18 +1006,18 @@ class Command(BaseCommand):
         # Create a temporary TextClip to measure the width of the longest line
 
         
-        # ne_text=soft_wrap_text(
-        #     wrapped_text,
-
-        #     font_family=font_path,
-        #     fontsize=adjusted_font_size,
-        #     letter_spacing=12,
-        #     max_width=clip.w * .8
-        # )
-        temp_subtitle_clip = TextClip(
+        ne_text=soft_wrap_text(
             wrapped_text,
+
+            font_family=fonts1.get(font_path),
             fontsize=adjusted_font_size,
-            font=font_path
+            letter_spacing=12,
+            max_width=clip.w * .8
+        )
+        temp_subtitle_clip = TextClip(
+            ne_text,
+            fontsize=adjusted_font_size,
+            font=fonts1.get(font_path),
         )
         longest_line_width, text_height = temp_subtitle_clip.size
         
