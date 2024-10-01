@@ -84,14 +84,21 @@ bucket_name = settings.AWS_STORAGE_BUCKET_NAME
 aws_secret = settings.AWS_SECRET_ACCESS_KEY
 s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
 
-fonts={
-    "Arial": os.path.join(os.getcwd(),'fonts','arial.ttf'),
-    "Open Sans": os.path.join(os.getcwd(),'fonts','OpenSans-Semibold.ttf'),
-    "Helvetica": os.path.join(os.getcwd(),'fonts','Helvetica.otf'),
-    "Montserrat" :os.path.join(os.getcwd(),'fonts','Montserrat.ttf'),
-    "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
-}
 
+# fonts={
+#     "Arial": os.path.join(os.getcwd(),'fonts','arial.ttf'),
+#     "Open Sans": os.path.join(os.getcwd(),'fonts','OpenSans-Semibold.ttf'),
+#     "Helvetica": os.path.join(os.getcwd(),'fonts','Helvetica.otf'),
+#     "Montserrat" :os.path.join(os.getcwd(),'fonts','Montserrat.ttf'),
+#     "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
+# }
+fonts={
+    "Arial": 'Nimbus-Sans-Bold',
+    "Open Sans":'Open-Sans-Bold' ,
+    "Helvetica": 'Helvetica-Bold',
+    "Montserrat":'DejaVu-Sans-Bold',
+    "Roboto":,'Fira-Sans-Bold'
+}
 
 def download_from_s3(file_key, local_file_path):
     """

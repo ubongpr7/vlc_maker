@@ -49,8 +49,9 @@ RUN python3.10 -m pip install -r requirements.txt
 COPY . /app
 RUN apt-get update && apt-get install -y \
     libfreetype6 \
-    libfontconfig1
-
+    libfontconfig1 \
+    fonts-liberation \
+    && apt-get clean
 # Set environment variable for ImageMagick
 ENV IMAGEMAGICK_BINARY=/usr/bin/convert
 RUN sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy domain="path" rights="none" pattern="@\*"-->/' /etc/ImageMagick-6/policy.xml || true \
