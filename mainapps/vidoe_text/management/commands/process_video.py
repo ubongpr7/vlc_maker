@@ -1010,14 +1010,14 @@ class Command(BaseCommand):
             wrapped_text,
 
             font_family=fonts1.get(font_path),
-            fontsize=adjusted_font_size,
+            fontsize=adjusted_font_size-5,
             letter_spacing=12,
             max_width=clip.w * .8
         )
         temp_subtitle_clip = TextClip(
             ne_text,
             fontsize=adjusted_font_size,
-            font=fonts1.get(font_path),
+            font=font_path_,
         )
         longest_line_width, text_height = temp_subtitle_clip.size
         
