@@ -1001,7 +1001,7 @@ class Command(BaseCommand):
         font_path=fonts.get(font_path)
         
         ne_text=soft_wrap_text(
-            wrapped_text,
+            subtitle.text,
 
             font_family=font_path,
             fontsize=font_size,
