@@ -250,8 +250,8 @@ class Command(BaseCommand):
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
-        subtitled_video=self.add_subtitles_from_json(final_video)
-        final_video_speeded_up_clip = self.speed_up_video_with_audio(subtitled_video, 1)
+        # subtitled_video=self.add_subtitles_from_json(final_video)
+        final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
 
         logging.info('generated_final_video successful')
         final_video=self.save_final_video(final_video_speeded_up_clip)
@@ -951,15 +951,7 @@ class Command(BaseCommand):
         scaling_factor = (clip.h / 1080)
         font_size = int(int(base_font_size) * scaling_factor)
         font_path=fonts.get(font_path)
-        
-        ne_text=soft_wrap_text(
-            subtitle.text,
 
-            font_family=font_path,
-            fontsize=font_size,
-            letter_spacing=12,
-            max_width=clip.w * .8 
-        )
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
             lines = []
@@ -1008,6 +1000,14 @@ class Command(BaseCommand):
         # Create a temporary TextClip to measure the width of the longest line
 
         
+        ne_text=soft_wrap_text(
+            wrapped_text,
+
+            font_family=font_path,
+            fontsize=adjusted_font_size,
+            letter_spacing=12,
+            max_width=clip.w * .8
+        )
         temp_subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
@@ -1016,7 +1016,7 @@ class Command(BaseCommand):
         longest_line_width, text_height = temp_subtitle_clip.size
         
         subtitle_clip = TextClip(
-            wrapped_text,
+            ne_text,
             fontsize=adjusted_font_size,
             color=color,
             # stroke_color="white",
@@ -1040,8 +1040,8 @@ class Command(BaseCommand):
         box_clip = box_clip.set_position(box_position)
         subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
-        # return CompositeVideoClip([clip, box_clip, subtitle_clip])
-        return clip
+        return CompositeVideoClip([clip, box_clip, subtitle_clip])
+        # return clip
 
 
     def add_animated_watermark_to_instance(self, video):
@@ -1198,7 +1198,7 @@ class Command(BaseCommand):
             ne_text=soft_wrap_text(
                     wrapped_text,
 
-                    font_family=fonts.get(font_path),
+                    font_family=fonts.get(font_path,'Georgia-Bold'),
                     fontsize=font_size,
                     letter_spacing=12,
                     max_width=clip.w * .8  # *0.8 for some padding
