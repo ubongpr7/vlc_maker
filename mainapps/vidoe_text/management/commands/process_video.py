@@ -68,7 +68,6 @@ RESOLUTIONS = {
 # Suppress specific Pydantic warnings
 warnings.filterwarnings("ignore", category=UserWarning, )
 
-
 openai.api_key = 'sk-proj-mo9iZjhl3DNjXlxMcx1FT3BlbkFJz5UCGoPBLnSQhh2b2stB' # write your openai api
 PEXELS_API_KEY = 'ljSCcK6YYuU0kNyMTADStB8kSOWdkzHCZnPXc26QEHhaHYqeXusdnzaA' # write your pexels
 # Base URL for Pexels API
@@ -84,6 +83,14 @@ AWS_ACCESS_KEY_ID = settings.AWS_ACCESS_KEY_ID
 bucket_name = settings.AWS_STORAGE_BUCKET_NAME
 aws_secret = settings.AWS_SECRET_ACCESS_KEY
 s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=aws_secret)
+
+fonts={
+    "Arial": os.path.join(os.getcwd(),'fonts','arial.ttf'),
+    "Open Sans": os.path.join(os.getcwd(),'fonts','OpenSans-Semibold.ttf'),
+    "Helvetica": os.path.join(os.getcwd(),'fonts','Helvetica.ttf'),
+    "Montserrat" : os.path.join(os.getcwd(),'fonts','Montserrat.ttf'),
+}
+
 
 def download_from_s3(file_key, local_file_path):
     """
@@ -255,12 +262,10 @@ class Command(BaseCommand):
     def save_final_video(self,clip):
         
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-            # generated_srt=text_file_instance.generated_srt.name
+            
             self.text_file_instance.track_progress(60)
             
             
-            # subtitled_video=self.add_subtitles_from_json(final_video_speeded_up_clip)
-            # Write the audio content to the temporary audio file
 
             clip.write_videofile(
                 temp_output_video.name,
@@ -933,7 +938,7 @@ class Command(BaseCommand):
         base_font_size=self.text_file_instance.font_size
         color=self.text_file_instance.font_color
         margin=29
-        font_path=self.text_file_instance.font_file.name
+        font_path=self.text_file_instance.font
         if margin is None:
             # Set default margin or handle the case when margin is None
             margin = 30
@@ -993,17 +998,24 @@ class Command(BaseCommand):
         temp_subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
-            font='Georgia-Bold'
+            font=fonts.get(font_path,'Georgia-Bold'),
         )
         longest_line_width, text_height = temp_subtitle_clip.size
+        ne_text=soft_wrap_text(
+                wrapped_text,
 
+                font_family=fonts.get(font_path,'Georgia-Bold'),
+                fontsize=font_size,
+                letter_spacing=12,
+                max_width=clip.w * .8  # *0.8 for some padding
+            )
         subtitle_clip = TextClip(
-            wrapped_text,
+            ne_text,
             fontsize=adjusted_font_size,
             color=color,
             # stroke_color="white",
             stroke_width=0,
-            font='Georgia-Bold',
+            font=fonts.get(font_path,'Georgia-Bold'),
             method='caption',
             align='center',
             size=(longest_line_width, None)  # Use the measured width for the longest line
@@ -1171,7 +1183,7 @@ class Command(BaseCommand):
             temp_subtitle_clip = TextClip(
                 wrapped_text,
                 fontsize=adjusted_font_size,
-                font='Georgia-Bold'  # Use the font specified in text_file_instance if available
+                font='Georgia-Bold'  
             )
             longest_line_width, text_height = temp_subtitle_clip.size
             ne_text=soft_wrap_text(
