@@ -999,7 +999,7 @@ class Command(BaseCommand):
         temp_subtitle_clip = TextClip(
             wrapped_text,
             fontsize=adjusted_font_size,
-            font=fonts.get(font_path,'Georgia-Bold'),
+            font='Georgia-Bold',
         )
         longest_line_width, text_height = temp_subtitle_clip.size
         # ne_text=soft_wrap_text(
