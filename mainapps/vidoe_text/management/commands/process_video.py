@@ -249,7 +249,8 @@ class Command(BaseCommand):
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
-        final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
+        subtitled_video=self.add_subtitles_from_json(final_video)
+        final_video_speeded_up_clip = self.speed_up_video_with_audio(subtitled_video, 1)
 
         logging.info('generated_final_video successful')
         final_video=self.save_final_video(final_video_speeded_up_clip)
@@ -1001,21 +1002,22 @@ class Command(BaseCommand):
             font=fonts.get(font_path,'Georgia-Bold'),
         )
         longest_line_width, text_height = temp_subtitle_clip.size
-        ne_text=soft_wrap_text(
-                wrapped_text,
+        # ne_text=soft_wrap_text(
+        #         wrapped_text,
 
-                font_family=fonts.get(font_path,'Georgia-Bold'),
-                fontsize=font_size,
-                letter_spacing=12,
-                max_width=clip.w * .8  # *0.8 for some padding
-            )
+        #         font_family=fonts.get(font_path,'Georgia-Bold'),
+        #         fontsize=font_size,
+        #         letter_spacing=12,
+        #         max_width=clip.w * .8  # *0.8 for some padding
+        #     )
         subtitle_clip = TextClip(
-            ne_text,
+            wrapped_text,
             fontsize=adjusted_font_size,
             color=color,
             # stroke_color="white",
             stroke_width=0,
-            font=fonts.get(font_path,'Georgia-Bold'),
+            # font=fonts.get(font_path,'Georgia-Bold'),
+            font='Georgia-Bold',
             method='caption',
             align='center',
             size=(longest_line_width, None)  # Use the measured width for the longest line
@@ -1034,7 +1036,8 @@ class Command(BaseCommand):
         box_clip = box_clip.set_position(box_position)
         subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
-        return CompositeVideoClip([clip, box_clip, subtitle_clip])
+        # return CompositeVideoClip([clip, box_clip, subtitle_clip])
+        return clip
 
 
     def add_animated_watermark_to_instance(self, video):
@@ -1112,6 +1115,8 @@ class Command(BaseCommand):
 
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
         text_file_instance=self.text_file_instance
+        font_path=self.text_file_instance.font
+
         try:
             # Read JSON content from the text_file_instance
             with text_file_instance.generated_srt.open('r') as json_file:
@@ -1183,13 +1188,13 @@ class Command(BaseCommand):
             temp_subtitle_clip = TextClip(
                 wrapped_text,
                 fontsize=adjusted_font_size,
-                font='Georgia-Bold'  
+                font=fonts.get(font_path,'Georgia-Bold')
             )
             longest_line_width, text_height = temp_subtitle_clip.size
             ne_text=soft_wrap_text(
                     wrapped_text,
 
-                    font_family=os.path.join(os.getcwd(),'fonts','31692f02-5637-4cd2-b973-99a09e542b83.ttf'),
+                    font_family=fonts.get(font_path,'Georgia-Bold'),
                     fontsize=font_size,
                     letter_spacing=12,
                     max_width=clip.w * .8  # *0.8 for some padding
