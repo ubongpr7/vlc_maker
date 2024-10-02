@@ -103,16 +103,17 @@ fonts={
     "Arial": 'Arial',
     "Open Sans":'OpenSans-Semibold' ,
     "Helvetica": 'Helvetica-2',
-    "Montserrat":'Montserrat',
+    "Montserrat":'delulu',
     "Roboto":'Roboto'
 }
 
 
-    # <type name="Arial" fullname="Arial" family="Arial" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/arial.ttf" glyphs="/usr/share/fonts/fonts/arial.ttf" version="0.1" encoding="AdobeCustom"/>
-    # <type name="OpenSans-Semibold" fullname="Open Sans Semibold" family="Open Sans" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/OpenSans-Semibold.ttf" glyphs="/usr/share/fonts/fonts/custom/OpenSans-Semibold.ttf" version="0.1" encoding="AdobeCustom"/>
-    # <type name="Helvetica-2" fullname="Helvetica Regular 2" family="Helvetica" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/Helvetica.ttf" glyphs="/usr/share/fonts/fonts/custom/Helvetica.pfb" version="0.1" encoding="AdobeCustom"/>
-    # <type name="Montserrat" fullname="Montserrat" family="Montserrat" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts//montserra.ttf" glyphs="/usr/share/fonts/fonts/montserra.ttf" version="0.1" encoding="AdobeCustom"/>
-    # <type name="Roboto" fullname="Roboto Medium" family="Roboto" foundry="URW" weight="500" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/Roboto-Medium.ttf" glyphs="/usr/share/fonts/fonts/Roboto-Medium.ttf" version="0.1" encoding="AdobeCustom"/>
+# <type name="Arial" fullname="Arial" family="Arial" format="ttf" glyphs="/usr/share/fonts/fonts/arial.ttf"/>
+# <type name="OpenSans-Semibold" fullname="Open Sans Semibold" family="Open Sans"normal" format="ttf"  glyphs="/usr/share/fonts/fonts/custom/OpenSans-Semibold.ttf"/>
+# <type name="Helvetica-2" fullname="Helvetica Regular 2" format="ttf" glyphs="/usr/share/fonts/fonts/custom/Helvetica.otf"/>
+# <type name="Montserrat" fullname="Montserrat" family="Montserrat" format="ttf"  glyphs="/usr/share/fonts/fonts/montserra.ttf"/>
+# <type name="Roboto" format="ttf" glyphs="/usr/share/fonts/fonts/Roboto-Medium.ttf"/>
+# <type name="delulu" fullname="delulu" family="delulu" format="ttf" glyphs="/usr/share/fonts/fonts/delulu.ttf" />
 
 
 # docker cp ./type-ghostscript.xml <container_name>:/etc/ImageMagick-6/type-ghostscript.xml
