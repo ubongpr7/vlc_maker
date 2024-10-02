@@ -91,6 +91,14 @@ fonts1={
     "Montserrat" :os.path.join(os.getcwd(),'fonts','montserra.ttf'),
     "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
 }
+
+fonts1={
+    "Arial": "/usr/share/fonts/custom/arial.ttf",
+    "Open Sans": "/usr/share/fonts/custom/OpenSans-Semibold.ttf",
+    "Helvetica": "/usr/share/fonts/custom/Helvetica.otf",
+    "Montserrat":"/usr/share/fonts/custom/montserra.ttf",
+    "Roboto" :"/usr/share/fonts/custom/Roboto-Medium.ttf",
+}
 fonts={
     "Arial": 'NimbusSans-Bold',
     "Open Sans":'Open-Sans-Bold' ,

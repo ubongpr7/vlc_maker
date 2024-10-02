@@ -57,7 +57,12 @@ ENV IMAGEMAGICK_BINARY=/usr/bin/convert
 RUN sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy domain="path" rights="none" pattern="@\*"-->/' /etc/ImageMagick-6/policy.xml || true \
     && sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy domain="path" rights="none" pattern="@\*"-->/' /etc/ImageMagick-7/policy.xml || true
 
-# Set the working directory
+
+COPY ./fonts /usr/share/fonts/custom
+
+# Update font cache so the system recognizes the new fonts
+RUN fc-cache -f -v
+
 WORKDIR /app
 
 # Your entrypoint or CMD here, for example:
