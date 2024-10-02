@@ -103,7 +103,7 @@ fonts={
     "Arial": 'Arial',
     "Open Sans":'OpenSans-Semibold' ,
     "Helvetica": 'Helvetica-2',
-    "Montserrat":'delulu',
+    "Montserrat":'Montserrat',
     "Roboto":'Roboto'
 }
 
@@ -963,7 +963,7 @@ class Command(BaseCommand):
     def add_subtitles_to_clip(self ,clip: VideoFileClip, subtitle: pysrt.SubRipItem) -> VideoFileClip:
         logging.info(f"Adding subtitle: {subtitle.text}")
         subtitle_box_color=self.text_file_instance.subtitle_box_color
-        base_font_size=self.text_file_instance.font_size-10
+        base_font_size=self.text_file_instance.font_size-3
         color=self.text_file_instance.font_color
         margin=29
         font_path=self.text_file_instance.font
