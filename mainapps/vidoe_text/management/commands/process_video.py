@@ -88,7 +88,7 @@ fonts1={
     "Arial": os.path.join(os.getcwd(),'fonts','arial.ttf'),
     "Open Sans": os.path.join(os.getcwd(),'fonts','OpenSans-Semibold.ttf'),
     "Helvetica": os.path.join(os.getcwd(),'fonts','Helvetica.otf'),
-    "Montserrat" :os.path.join(os.getcwd(),'fonts','Montserrat.ttf'),
+    "Montserrat" :os.path.join(os.getcwd(),'fonts','montserra.ttf'),
     "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
 }
 fonts={
