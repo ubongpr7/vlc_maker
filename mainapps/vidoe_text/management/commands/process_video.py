@@ -100,12 +100,24 @@ fonts2={
     "Roboto" :"/usr/share/fonts/custom/Roboto-Medium.ttf",
 }
 fonts={
-    "Arial": 'NimbusSans-Bold',
-    "Open Sans":'Open-Sans-Bold' ,
-    "Helvetica": 'Helvetica-Bold',
-    "Montserrat":'DejaVu-Sans-Bold',
-    "Roboto":'Fira-Sans-Bold'
+    "Arial": 'Arial',
+    "Open Sans":'OpenSans-Semibold' ,
+    "Helvetica": 'Helvetica-2',
+    "Montserrat":'Montserrat',
+    "Roboto":'Roboto'
 }
+
+
+    # <type name="Arial" fullname="Arial" family="Arial" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/arial.ttf" glyphs="/usr/share/fonts/fonts/arial.ttf" version="0.1" encoding="AdobeCustom"/>
+    # <type name="OpenSans-Semibold" fullname="Open Sans Semibold" family="Open Sans" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/OpenSans-Semibold.ttf" glyphs="/usr/share/fonts/fonts/custom/OpenSans-Semibold.ttf" version="0.1" encoding="AdobeCustom"/>
+    # <type name="Helvetica-2" fullname="Helvetica Regular 2" family="Helvetica" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/Helvetica.ttf" glyphs="/usr/share/fonts/fonts/custom/Helvetica.pfb" version="0.1" encoding="AdobeCustom"/>
+    # <type name="Montserrat" fullname="Montserrat" family="Montserrat" foundry="URW" weight="600" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts//montserra.ttf" glyphs="/usr/share/fonts/fonts/montserra.ttf" version="0.1" encoding="AdobeCustom"/>
+    # <type name="Roboto" fullname="Roboto Medium" family="Roboto" foundry="URW" weight="500" style="normal" stretch="normal" format="ttf" metrics="/usr/share/fonts/fonts/Roboto-Medium.ttf" glyphs="/usr/share/fonts/fonts/Roboto-Medium.ttf" version="0.1" encoding="AdobeCustom"/>
+
+
+# docker cp ./type-ghostscript.xml <container_name>:/etc/ImageMagick-6/type-ghostscript.xml
+
+
 
 def download_from_s3(file_key, local_file_path):
     """
@@ -964,7 +976,7 @@ class Command(BaseCommand):
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = (clip.h / 1080)
         font_size = int(int(base_font_size) * scaling_factor)
-        font_path_=fonts2.get(font_path)
+        font_path_=fonts.get(font_path)
 
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
