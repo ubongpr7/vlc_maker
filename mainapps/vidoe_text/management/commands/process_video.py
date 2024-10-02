@@ -92,7 +92,7 @@ fonts1={
     "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
 }
 
-fonts1={
+fonts2={
     "Arial": "/usr/share/fonts/custom/arial.ttf",
     "Open Sans": "/usr/share/fonts/custom/OpenSans-Semibold.ttf",
     "Helvetica": "/usr/share/fonts/custom/Helvetica.otf",
@@ -964,7 +964,7 @@ class Command(BaseCommand):
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = (clip.h / 1080)
         font_size = int(int(base_font_size) * scaling_factor)
-        font_path_=fonts1.get(font_path)
+        font_path_=fonts2.get(font_path)
 
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
