@@ -44,30 +44,6 @@ from django.contrib.auth import logout
 
 
 
-
-def subscription_details(request):
-    user = request.user
-    customer = Customer.objects.filter(subscriber=user).first()
-    
-    if customer:
-        # Get the active subscription for the customer
-        subscription = Subscription.objects.filter(customer=customer, status="active").first()
-        
-        if subscription:
-            current_plan = subscription.plan
-            all_plans = Plan.objects.filter(active=True).exclude(id=current_plan.id)  # Get all other active plans
-            
-            context = {
-                'subscription': subscription,
-                'current_plan': current_plan,
-                'all_plans': all_plans
-            }
-            return render(request, 'subscription/details.html', context)
-    
-    return render(request, 'accounts/details.html')  # In case the user has no subscription
-
-
-
 def logout_view(request):
     """
     Logs out the user and redirects to the login page or homepage.
@@ -249,6 +225,7 @@ def subscription_confirm(request):
         )
         # Sync the subscription from Stripe
         
+        
         user.save()
 
         # Automatically log the user in
@@ -275,7 +252,14 @@ def subscription_confirm(request):
 
         # Create or update the user's credits based on the product
         Credit.create_or_update_credit(user=user, product=djstripe_product, credits=credits)
-
+        # plan = Plan.objects.get(product__id=stripe_product_id)  # Replace with the actual Product ID
+    
+        # # Step 3: Create the subscription using the Plan
+        # stripe_subscription = djstripe_customer.subscribe(
+        #     items=[{
+        #         "plan": plan.id  # The plan the user is subscribing to
+        #     }]
+        # )
         # Automatically l
         auth_login(request, user)
         # Success message
@@ -336,3 +320,27 @@ class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
 class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'accounts/password_reset_complete.html'
+
+
+def subscription_details(request):
+    user = request.user
+    customer = Customer.objects.filter(subscriber=user).first()
+    
+    if customer:
+        # Get the active subscription for the customer
+        subscription = Subscription.objects.filter(customer=customer, status="active").first()
+        
+        if subscription:
+            current_plan = subscription.plan
+            all_plans = Plan.objects.filter(active=True).exclude(id=current_plan.id)  # Get all other active plans
+            
+            context = {
+                'subscription': subscription,
+                'current_plan': current_plan,
+                'all_plans': all_plans
+            }
+            return render(request, 'subscription/details.html', context)
+    
+    return render(request, 'accounts/details.html')  # In case the user has no subscription
+
+
