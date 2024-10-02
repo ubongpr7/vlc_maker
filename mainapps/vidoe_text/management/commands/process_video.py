@@ -103,7 +103,7 @@ fonts={
     "Arial": 'Arial',
     "Open Sans":'OpenSans-Semibold' ,
     "Helvetica": 'Helvetica-2',
-    "Montserrat":'delulu',
+    "Montserrat":'Montserrat',
     "Roboto":'Roboto'
 }
 
