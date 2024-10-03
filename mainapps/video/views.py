@@ -149,11 +149,12 @@ def upload_video_folder(request):
 
             # Create categories and subcategories based on folder structure
             for folder_name in folder_parts:
-                category, created = ClipCategory.objects.get_or_create(
-                    name=folder_name, parent=parent, user=request.user
-                )
-                categories_.append(category)
-                parent = category  # Make the current folder the parent for the next iteration
+                if not ClipCategory.objects.filter(name=folder_name,user=request.user):
+                    category = ClipCategory.objects.create(
+                        name=folder_name, parent=parent, user=request.user
+                    )
+                    categories_.append(category)
+                    parent = category  # Make the current folder the parent for the next iteration
 
             # Now save the files under the last category (deepest folder)
             for file_name in files:
@@ -182,7 +183,7 @@ def upload_video_folder(request):
                     continue
         for cat in categories_:
             if len(cat.video_clips.all())== 0:
-                messages.info(request, f'The Folder {cat.title} Was Deleted Since It Has No Fideo Files In It')        
+                messages.info(request, f'The Folder {cat.name} Was Deleted Since It Has No Fideo Files In It')        
                 cat.delete()
         messages.success(request, 'Files uploaded successfully!')
         return HttpResponse('Upload successful!')
