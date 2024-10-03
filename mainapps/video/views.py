@@ -155,6 +155,9 @@ def upload_video_folder(request):
                     )
                     categories_.append(category)
                     parent = category  # Make the current folder the parent for the next iteration
+                else:
+                    category=ClipCategory.objects.filter(name=folder_name,user=request.user).first()
+                    parent = category  # Make the current folder the parent for the next iteration
 
             # Now save the files under the last category (deepest folder)
             for file_name in files:
