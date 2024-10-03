@@ -101,10 +101,10 @@ fonts2={
 }
 fonts={
     "Arial": 'Arial',
-    "Open Sans":'OpenSans-Semibold' ,
-    "Helvetica": 'Helvetica-2',
+    "Open Sans Condensed":'OpenSans-Semibold' ,
+    "HelveticaforTarget-Bold": 'Helvetica-2',
     "Montserrat":'Montserrat',
-    "Roboto":'Roboto'
+    "Roboto Medium":'Roboto'
 }
 
 # <type name="Arial" format="ttf" glyphs="/usr/share/fonts/fonts/arial.ttf"/>
