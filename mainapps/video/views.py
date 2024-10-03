@@ -136,6 +136,7 @@ def category_view(request, category_id=None,video_id=None):
 @login_required
 def upload_video_folder(request):
     if request.method == 'POST':
+        categories_=[]
         if 'directories' not in request.POST:
             return render(request, 'upload.html', {'error': 'No directory data provided.'})
 
@@ -151,6 +152,7 @@ def upload_video_folder(request):
                 category, created = ClipCategory.objects.get_or_create(
                     name=folder_name, parent=parent, user=request.user
                 )
+                categories_.append(category)
                 parent = category  # Make the current folder the parent for the next iteration
 
             # Now save the files under the last category (deepest folder)
@@ -178,6 +180,10 @@ def upload_video_folder(request):
                         continue
                 else:
                     continue
+        for cat in categories_:
+            if len(cat.video_clips.all())== 0:
+                messages.info(request, f'The Folder {cat.title} Was Deleted Since It Has No Fideo Files In It')        
+                cat.delete()
         messages.success(request, 'Files uploaded successfully!')
         return HttpResponse('Upload successful!')
 

@@ -46,7 +46,7 @@ def video_clip_upload_path(instance, filename):
 class ClipCategory(models.Model):
     name = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='categories')
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subcategories', blank=True, null=True)
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='subcategories', blank=True, null=True)
     update_at=models.DateTimeField(auto_now=True,null=True,blank=True)
     def __str__(self):
         return self.name
