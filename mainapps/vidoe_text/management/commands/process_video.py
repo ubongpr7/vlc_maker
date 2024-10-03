@@ -976,7 +976,7 @@ class Command(BaseCommand):
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = (clip.h / 1080)
         font_size = int(int(base_font_size) * scaling_factor)
-        font_path_=fonts.get(font_path)
+        font_path_=fonts.get(font_path,'Montserrat')
 
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
