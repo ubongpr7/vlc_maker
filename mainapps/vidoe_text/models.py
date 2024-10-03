@@ -77,7 +77,7 @@ class TextFile(models.Model):
     api_key = models.CharField(max_length=200)
     resolution = models.CharField(max_length=50)
     font_file = models.FileField(upload_to=font_file_upload_path, blank=True, null=True)
-    bg_level = models.DecimalField(null=True,blank=True)
+    bg_level = models.DecimalField(null=True,blank=True,max_digits=7,)
     font = models.CharField(max_length=50,default='Ariel') 
     font_color = models.CharField(max_length=7)  # e.g., hex code: #ffffff
     subtitle_box_color = models.CharField(max_length=7, blank=True, null=True)
