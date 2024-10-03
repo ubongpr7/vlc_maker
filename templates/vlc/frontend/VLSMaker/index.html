@@ -12,13 +12,12 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        body {
+        /* body {
   font-family: Arial, Helvetica, 'Roboto', 'Montserrat', 'Open Sans', sans-serif;
-}
+} */
 
         .video-card {
-/* width: 80%; Adjust as per your need */
-    max-width: 504px; /* To restrict excessive width on large screens */
+    max-width: 504px;
     padding: 20px;
     border-radius: 10px;
     background-color: #f2f2f2; /* Ash color */
@@ -30,8 +29,8 @@
     margin-bottom:30px;
     }
     .card-text {
-    text-align: left; /* Align text to the left */
-    width: 100%; /* Ensure text takes full width of the card */
+    text-align: left;
+    width: 100%; 
     }
     </style>
 </head>
@@ -55,7 +54,7 @@
     {% include 'messages.html' %}
 
     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px; z-index: 99;">
-        <form action="{% url 'video_text:add_text'%}" method="post" enctype="multipart/form-data" class="form" style="width: 504px; height: 1800px; border: 1px solid #0000004D; border-radius: 8px; padding: 40px 24px; background: white;">
+        <form action="{% url 'video_text:add_text'%}" method="post" enctype="multipart/form-data" class="form" style="width: 504px; height: 2177px; border: 1px solid #0000004D; border-radius: 8px; padding: 40px 24px; background: white;">
             {%csrf_token%}
 
             <div style="font-size: 24px; font-weight: 700; line-height: 29.26px; letter-spacing: -0.03em; text-align: center; margin-bottom: 40px;">
