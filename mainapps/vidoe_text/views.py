@@ -255,7 +255,7 @@ def add_text(request):
             if  voice_id and api_key:
                 text_obj=TextFile.objects.create(
                     user=request.user,
-
+                    bg_level=0.1,
                     voice_id=voice_id,
                     api_key=api_key,
                     resolution=resolution,
