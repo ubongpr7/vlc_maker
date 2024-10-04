@@ -103,6 +103,8 @@ document.querySelectorAll('.box').forEach(box => {
 
 
 
+
+
 const slider = document.getElementById("mySlider");
 const sliderValue = document.getElementById("SliderValue");
 const previewText= document.getElementById("previewText");

@@ -15,7 +15,7 @@
 </head>
 <body class="bg" style="position: relative; overflow-x: hidden;">
     {% include 'sub_header.html' %}
-                
+                    
     <div class="progressbar" style="display: flex; justify-content: center; align-items: center; margin-top: 84px; margin-bottom: 56px;">
         <div style="width: 624px; height: 10px; background: #EEEEEE; position: relative; display: flex; align-items: center;">
             <div style="position: absolute; width: 25px; height: 25px; background: #864AF9; border-radius: 90px; left: 0%;"></div>
@@ -64,13 +64,13 @@
             <div>
                 <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
                     <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                        Font Size:
+                        Background Music Level:
                     </div>
-                    <span id="SliderValue" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">0</span>
+                    <span id="SliderValue" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">10%</span>
                 </div>
                 <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                    <input type="range" name="font_size1" min="0" max="25" value="20" class="slider" id="mySlider" style="width: 100%;">
-                    <input type="number" hidden name="font_size" value="50" class="slider" id="font_size" style="width: 100%;">
+                    <input type="range" name="font_size1" min="0" max="100" value="10" class="slider" id="mySlider" style="width: 100%;">
+                    <input type="number" hidden name="bg_level" value="0.1" class="slider" id="font_size" style="width: 100%;">
                 </div>
             </div>
             <div class="file-upload-container" id="targetDiv" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 48px; flex-direction: column;">
@@ -289,6 +289,15 @@ function checkInputs() {
             input.addEventListener('change', checkInputs);
         });
     </script>
-
+<script>
+    const slider = document.getElementById("mySlider");
+    const sliderValue = document.getElementById("SliderValue");
+    slider.addEventListener('input', function() {
+        sliderValue.textContent = `${slider.value}%`;
+        document.getElementById('bg_level').value=slider.value/100
+        console.log(document.getElementById('font_size').value)
+        
+    });
+</script>
 </body>
 </html>
