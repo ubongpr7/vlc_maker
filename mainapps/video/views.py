@@ -245,31 +245,37 @@ def add_video_clips(request, textfile_id):
             
             return redirect(f'/text/process-textfile/{textfile_id}')  # Redirect to a success page or another appropriate view
 
-        # elif request.POST.get('purpose') == 'text_file':
-        #     if request.FILES.get('text_file'):
-        #         text_file.text_file=request.FILES.get('text_file')
-        #         text_file.save()
-        #         return redirect(reverse('video:add_scenes', args=[textfile_id]))
-            
-        #     messages.error(request,'You did not upload text file')
-        #     return redirect(reverse('video:add_scenes', args=[textfile_id]))
         elif request.POST.get('purpose') == 'text_file':
             if request.FILES.get('text_file'):
-                uploaded_file = request.FILES.get('text_file')
-                
-                # Read the uploaded file
-                file_content = uploaded_file.read().decode('utf-8')  # Assuming it's a text file
-                
-                # Split the content into lines and remove empty ones
-                non_empty_lines = [line for line in file_content.splitlines() if line.strip()]
-                
-                # Join the non-empty lines back into a single string
-                cleaned_content = "\n".join(non_empty_lines)
-                
-                # Save the cleaned content to the model
-                text_file.text_file.save(f"{uploaded_file.name}_{textfile_id}", ContentFile(cleaned_content))
-                
+                if text_file.video_clips:
+
+                    for video_clip in TextLineVideoClip.objects.filter(text_file=text_file):
+                        video_clip.delete()
+                        print('Deleted a video_clip')
+
+                text_file.text_file=request.FILES.get('text_file')
+                text_file.save()
                 return redirect(reverse('video:add_scenes', args=[textfile_id]))
+            
+            messages.error(request,'You did not upload text file')
+            return redirect(reverse('video:add_scenes', args=[textfile_id]))
+        # elif request.POST.get('purpose') == 'text_file':
+        #     if request.FILES.get('text_file'):
+        #         uploaded_file = request.FILES.get('text_file')
+                
+        #         # Read the uploaded file
+        #         file_content = uploaded_file.read().decode('utf-8')  # Assuming it's a text file
+                
+        #         # Split the content into lines and remove empty ones
+        #         non_empty_lines = [line for line in file_content.splitlines() if line.strip()]
+                
+        #         # Join the non-empty lines back into a single string
+        #         cleaned_content = "\n".join(non_empty_lines)
+                
+        #         # Save the cleaned content to the model
+        #         text_file.text_file.save(f"{uploaded_file.name}_{textfile_id}", ContentFile(cleaned_content))
+                
+        #         return redirect(reverse('video:add_scenes', args=[textfile_id]))
 
 
     else:
