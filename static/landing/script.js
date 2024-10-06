@@ -34,11 +34,11 @@ function toggleMenu() {
   if (open) {
     // If menu is open, close it and change the icon back to hamburger
     topbar.style.top = "-497px"; // Move topbar offscreen
-    hamburger.src = "assets/icons/Hamburger.svg";
+    hamburger.src = "{% staitc 'assets/icons/Hamburger.svg' %}";
   } else {
     // If menu is closed, open it and change the icon to "x"
     topbar.style.top = "0"; // Slide topbar into view
-    hamburger.src = "assets/icons/x.svg";
+    hamburger.src = "{% static 'assets/icons/x.svg' %}";
   }
 }
 
