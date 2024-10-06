@@ -97,17 +97,7 @@
             </div>
         <form method="POST" action="{% url 'video_text:process_background_music' textfile_id %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <!-- <div>
-                <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
-                    <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                        Background Music Level:
-                    </div>
-                    <span id="SliderValue_main" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
-                </div>
-                <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                    <input type="range" name="bg_level" min="0" max="100" value="50" class="slider" id="mySlider_main" style="width: 100%;">
-                </div>
-            </div> -->
+            
             <div class="file-upload-container" id="targetDiv" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 48px; flex-direction: column;">
                 <div id="musicContainer" style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
 
@@ -183,7 +173,7 @@
                     <div>
                         <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
                             <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                                Music Level 1:
+                                Music Level 2:
                             </div>
                             <span id="SliderValue_2" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                         </div>
@@ -263,7 +253,7 @@
             <div>
                 <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
                     <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                        Music Level 1:
+                        Music Level ${currentNumber}:
                     </div>
                     <span id="SliderValue_${currentNumber}" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                 </div>
