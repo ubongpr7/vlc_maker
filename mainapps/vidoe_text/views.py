@@ -175,7 +175,7 @@ def process_background_music(request, textfile_id):
         file_name = f'background_music_info_{textfile_id}_.txt'
 
         textfile.bg_music_text.save(file_name, ContentFile(content))
-        textfile.bg_level=float(request.POST.get('bg_level'))/100.0
+        # textfile.bg_level=float(request.POST.get('bg_level'))/100.0
         textfile.save()
 
         try:
