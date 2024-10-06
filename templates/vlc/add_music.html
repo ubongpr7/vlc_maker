@@ -110,7 +110,7 @@
                             <svg id="svg1" class="svgIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="#191919B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <input class="fileInput" name="bg_music_1" type="file" accept="audio/*" id="fileUpload1" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
+                            <input class="fileInput" onchange="saveInput(this)" name="bg_music_1" type="file" accept="audio/*" id="fileUpload_{{textfile_id}}_1" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
                             <div class="output" id="uploadText1" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
                                 Choose File
                             </div>
@@ -121,11 +121,11 @@
                         <div style="display: flex; gap: 24px; width: 100%;">
                             <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                                 <span class="text" style="width: 100%; text-align: left;">Start:</span>
-                                <input type="text" placeholder="00:00" class="time startTime" id="from_when_1" name="from_when_1" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                                <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time startTime" id="from_when_1" name="from_when_{{textfile_id}}_1" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                             </div>
                             <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                                 <span class="text" style="width: 100%; text-align: left;">End:</span>
-                                <input type="text" placeholder="00:00" class="time endTime" name="to_when_1" id="to_when_1" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                                <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time endTime" name="to_when_1" id="to_when_{{textfile_id}}_1" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                             </div>
                         </div>
 
@@ -138,7 +138,7 @@
                                 <span id="SliderValue_1" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                             </div>
                             <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                                <input type="range" name="bg_level_1" min="0" max="100" value="50" class="slider" id="mySlider_1" style="width: 100%;">
+                                <input type="range" onchange="saveInput(this)" name="bg_level_1" min="0" max="100" value="50" class="slider" id="mySlider_{{textfile_id}}_1" style="width: 100%;">
                             </div>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
                             <svg id="svg2" class="svgIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="#191919B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <input class="fileInput" name="bg_music_2" type="file" accept="audio/*" id="fileUpload2" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
+                            <input class="fileInput" onchange="saveInput(this)" name="bg_music_2" type="file" accept="audio/*" id="fileUpload_{{textfile_id}}_2" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
                             <div class="output" id="uploadText2" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
                                 Choose File
                             </div>
@@ -162,11 +162,11 @@
                         <div style="display: flex; gap: 24px; width: 100%;">
                             <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                                 <span class="text" style="width: 100%; text-align: left;">Start:</span>
-                                <input type="text" placeholder="00:00" class="time startTime" id="from_when_2" name="from_when_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                                <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time startTime" id="from_when_{{textfile_id}}_2" name="from_when_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                             </div>
                             <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                                 <span class="text" style="width: 100%; text-align: left;">End:</span>
-                                <input type="text" placeholder="00:00" class="time endTime" name="to_when_2" id="to_when_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                                <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time endTime" name="to_when_2" id="to_when_{{textfile_id}}_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                             </div>
                         </div>
                     
@@ -178,7 +178,7 @@
                                 <span id="SliderValue_2" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                             </div>
                             <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                                <input type="range" name="bg_level_2" min="0" max="100" value="50" class="slider" id="mySlider_2" style="width: 100%;">
+                                <input type="range" onchange="saveInput(this)" name="bg_level_2" min="0" max="100" value="50" class="slider" id="mySlider_{{textfile_id}}_2" style="width: 100%;">
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@
                     
 
                         
-                <input type="hidden" id="videoInput" name="video_file" >
+                <!-- <input type="hidden" id="videoInput" name="video_file" > -->
 
                         <button type="button" id="addMusicBtn" class="button">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -220,6 +220,47 @@
         document.addEventListener('DOMContentLoaded',()=>{
             
         })
+        window.onload = function() {
+  if (sessionStorage.name && sessionStorage.password) {
+      document.getElementById("name").value = sessionStorage.name;
+      document.getElementById("password").value = sessionStorage.password;
+    }
+};
+// Store data for all inputs dynamically
+function saveInput(inputElement) {
+    if (inputElement.type === 'file') {
+        // For file inputs, save the file name
+        if (inputElement.files.length > 0) {
+            sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
+        }
+    } else {
+        // For other inputs, save the value
+        sessionStorage.setItem(inputElement.id, inputElement.value);
+    }
+}
+// Restore data when the page loads
+window.onload = function() {
+    // Get all inputs on the page
+    const inputs = document.querySelectorAll('input');
+
+    inputs.forEach(input => {
+        if (input.type === 'file') {
+            // Restore file input placeholder (file inputs can't be pre-filled for security reasons)
+            const storedFileName = sessionStorage.getItem(input.id);
+            if (storedFileName) {
+                input.setAttribute('data-file', storedFileName);
+                input.insertAdjacentHTML('afterend', `<p>Previously uploaded: ${storedFileName}</p>`);
+            }
+        } else {
+            // Restore other inputs' values
+            const storedValue = sessionStorage.getItem(input.id);
+            if (storedValue) {
+                input.value = storedValue;
+            }
+        }
+    });
+};
+
         // document.getElementById('videoInput').value = "{% static 'final/output_variation1.mp4' %}";
        let  currentNumber=2
         document.getElementById('addMusicBtn').addEventListener('click', function() {
@@ -236,7 +277,7 @@
                 <svg id="svg${currentNumber}" class="svgIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="#191919B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <input class="fileInput" name="bg_music_${currentNumber}" type="file" accept="audio/*" id="fileUpload${currentNumber}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
+                <input class="fileInput" onchange="saveInput(this)" name="bg_music_${currentNumber}" type="file" accept="audio/*" id="fileUpload_{{textfile_id}}_${currentNumber}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
                 <div class="output" id="uploadText${currentNumber}" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
                     Choose File
                 </div>
@@ -247,11 +288,11 @@
             <div style="display: flex; gap: 24px; width: 100%;">
                 <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                     <span class="text" style="width: 100%; text-align: left;">Start:</span>
-                    <input type="text" placeholder="00:00" class="time startTime" id="from_when_${currentNumber}" name="from_when_${currentNumber}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                    <input onchange="saveInput(this)" type="text" placeholder="00:00" class="time startTime" id="from_when_{{textfile_id}}_${currentNumber}" name="from_when_${currentNumber}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                 </div>
                 <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                     <span class="text" style="width: 100%; text-align: left;">End:</span>
-                    <input type="text" placeholder="00:00" class="time endTime" name="to_when_${currentNumber}" id="to_when_${currentNumber}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                    <input onchange="saveInput(this)" type="text" placeholder="00:00" class="time endTime" name="to_when_{{textfile_id}}_${currentNumber}" id="to_when_{{textfile_id}}_${currentNumber}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                 </div>
             </div>
             
@@ -263,7 +304,7 @@
                     <span id="SliderValue_${currentNumber}" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                 </div>
                 <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                    <input type="range" name="bg_level_${currentNumber}" min="0" max="100" value="50" class="slider" id="mySlider_${currentNumber}" style="width: 100%;">
+                    <input onchange="saveInput(this)" type="range" name="bg_level_${currentNumber}" min="0" max="100" value="50" class="slider" id="mySlider_{{textfile_id}}_${currentNumber}" style="width: 100%;">
                 </div>
             </div>
         </div>
@@ -275,7 +316,7 @@
     handleSlider(currentNumber)
     
     // Add file upload event listener
-    const fileInput = document.getElementById(`fileUpload${currentNumber}`);
+    const fileInput = document.getElementById(`fileUpload_{{textfile_id}}_${currentNumber}`);
     const uploadText = document.getElementById(`uploadText${currentNumber}`);
 
     fileInput.addEventListener('change', function() {
@@ -288,10 +329,10 @@
 });
 function inputHander(c_number){
     
-    const fileInput = document.getElementById(`fileUpload${c_number}`);
+    const fileInput = document.getElementById(`fileUpload_{{textfile_id}}_${c_number}`);
     const uploadText = document.getElementById(`uploadText${c_number}`);
-    const startTimeInput = document.getElementById(`from_when_${c_number}`);
-    const endTimeInput = document.getElementById(`to_when_${c_number}`);
+    const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${c_number}`);
+    const endTimeInput = document.getElementById(`to_when_{{textfile_id}}_${c_number}`);
     
     fileInput.addEventListener('change', function() {
             if (fileInput.files.length > 0) {
@@ -314,8 +355,8 @@ handleSlider(1)
 handleSlider(2)
 // handleSlider('main')
 function addInputValidation(number) {
-    const startTimeInput = document.getElementById(`from_when_${number}`);
-    const endTimeInput = document.getElementById(`to_when_${number}`);
+    const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${number}`);
+    const endTimeInput = document.getElementById(`to_when_{{textfile_id}}_${number}`);
     
     [startTimeInput, endTimeInput].forEach(input => {
         input.addEventListener('input', function() {
@@ -359,7 +400,7 @@ function checkInputs() {
 // Attach event listeners to all file inputs
 // Function to handle file upload
 function handleFileUpload(currentNumber) {
-    const fileInput = document.getElementById(`bg_music_${currentNumber}`);
+    const fileInput = document.getElementById(`bg_music_{{textfile_id}}_${currentNumber}`);
 
     // Event listener for file selection
     fileInput.addEventListener('change', function() {
@@ -400,7 +441,7 @@ document.querySelectorAll('.fileInput').forEach(input => {
     input.addEventListener('change', checkInputs);
 });
 function handleSlider(c_number){
-    const slider = document.getElementById(`mySlider_${c_number}`);
+    const slider = document.getElementById(`mySlider_{{textfile_id}}_${c_number}`);
     const sliderValue = document.getElementById(`SliderValue_${c_number}`);
     var value = slider.value;
 
