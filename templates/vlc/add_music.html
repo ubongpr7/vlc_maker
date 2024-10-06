@@ -96,9 +96,10 @@
                 
             </div>
         <form method="POST" action="{% url 'video_text:process_background_music' textfile_id %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            
             <div class="file-upload-container" id="targetDiv" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 48px; flex-direction: column;">
+                {% csrf_token %}
+                
+
                 <div id="musicContainer" style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
 
                     <div class="uploadmp3" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 24px; flex-direction: column;">
@@ -168,20 +169,21 @@
                                 <input type="text" placeholder="00:00" class="time endTime" name="to_when_2" id="to_when_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                             </div>
                         </div>
-                    </div>
                     
-                    <div>
-                        <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
-                            <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                                Music Level 2:
+                        <div>
+                            <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
+                                <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                                    Music Level 2:
+                                </div>
+                                <span id="SliderValue_2" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                             </div>
-                            <span id="SliderValue_2" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
-                        </div>
-                        <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                            <input type="range" name="bg_level_2" min="0" max="100" value="50" class="slider" id="mySlider_2" style="width: 100%;">
+                            <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
+                                <input type="range" name="bg_level_2" min="0" max="100" value="50" class="slider" id="mySlider_2" style="width: 100%;">
+                            </div>
                         </div>
                     </div>
                 </div>
+                    
 
                         
                 <input type="hidden" id="videoInput" name="video_file" >
@@ -208,9 +210,9 @@
                                 </svg>
                             </a>
                         </div>
+                        <input name="no_of_mp3" value="2" id="no_of_mp3" type="number" hidden>
             </div>
             
-            <input name="no_of_mp3" value="2" id="no_of_mp3" type="number" hidden>
         </form>
     
 
@@ -390,13 +392,6 @@ function handleFileUpload(currentNumber) {
     }
 }
 
-// Call the handleFileUpload function for each file input dynamically
-// document.addEventListener('DOMContentLoaded', function() {
-//     // Assuming you have 3 file inputs, dynamically call the function for each
-//     for (let i = 1; i <= 3; i++) {
-//         handleFileUpload(`bg_music_${i}`);
-//     }
-// });
 
 document.querySelectorAll('.fileInput').forEach(input => {
     input.addEventListener('change', checkInputs);
