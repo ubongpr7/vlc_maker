@@ -404,11 +404,13 @@ document.querySelectorAll('.fileInput').forEach(input => {
 function handleSlider(c_number){
     const slider = document.getElementById(`mySlider_${c_number}`);
     const sliderValue = document.getElementById(`SliderValue_${c_number}`);
+    var value = slider.value;
+
     sliderValue.textContent = `${value}%`;
     slider.style.background = `linear-gradient(to right, #864AF9 ${value}%, #D9D9D9 ${value}%)`; 
 
     slider.addEventListener('input', function() {
-        const value = slider.value;
+        var value = slider.value;
         sliderValue.textContent = `${slider.value}%`;
         // document.getElementById('bg_level').value=slider.value/100
         
