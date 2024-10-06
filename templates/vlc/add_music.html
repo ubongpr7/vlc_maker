@@ -210,58 +210,61 @@
                                 </svg>
                             </a>
                         </div>
-                        <input name="no_of_mp3" value="2" id="no_of_mp3_{{textfile_id}}" type="number" hidden>
+                        <input name="no_of_mp3" value="2" id="no_of_mp3" type="number" hidden>
             </div>
             
         </form>
     
 
     <script>
+        function saveInput(inputElement) {
+            if (inputElement.type === 'file') {
+                // For file inputs, save the file name
+                if (inputElement.files.length > 0) {
+                    sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
+                }
+            } else {
+                // For other inputs, save the value
+                sessionStorage.setItem(inputElement.id, inputElement.value);
+            }
+        }
+        window.onload = function() {
+            // Get all inputs on the page
+            const inputs = document.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                if (input.type === 'file') {
+                    // Restore file input placeholder (file inputs can't be pre-filled for security reasons)
+                    const storedFileName = sessionStorage.getItem(input.id);
+                    if (storedFileName) {
+
+                        input.setAttribute('data-file', storedFileName);
+                        const fileName = input.files[0].name;
+            
+                        // Extract the number from the input's id (assuming the id format is 'fileUpload_{{textfile_id}}_${currentNumber}')
+                        const idParts = input.id.split('_');
+                        const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
+
+                        // Find the corresponding output div using the extracted number
+                        const uploadTextElement = document.getElementById('uploadText' + currentNumber);
+
+                        if (uploadTextElement) {
+                            uploadTextElement.textContent = fileName.slice(0,15);
+                    }
+                } else {
+                    // Restore other inputs' values
+                    const storedValue = sessionStorage.getItem(input.id);
+                    if (storedValue) {
+                        input.value = storedValue;
+                    }
+                }
+            });
+        };
+
         document.addEventListener('DOMContentLoaded',()=>{
             
         })
-        window.onload = function() {
-  if (sessionStorage.name && sessionStorage.password) {
-      document.getElementById("name").value = sessionStorage.name;
-      document.getElementById("password").value = sessionStorage.password;
-    }
-};
-// Store data for all inputs dynamically
-function saveInput(inputElement) {
-    if (inputElement.type === 'file') {
-        // For file inputs, save the file name
-        if (inputElement.files.length > 0) {
-            sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
-        }
-    } else {
-        // For other inputs, save the value
-        sessionStorage.setItem(inputElement.id, inputElement.value);
-    }
-}
-// Restore data when the page loads
-window.onload = function() {
-    // Get all inputs on the page
-    const inputs = document.querySelectorAll('input');
 
-    inputs.forEach(input => {
-        if (input.type === 'file') {
-            // Restore file input placeholder (file inputs can't be pre-filled for security reasons)
-            const storedFileName = sessionStorage.getItem(input.id);
-            if (storedFileName) {
-                input.setAttribute('data-file', storedFileName);
-                input.insertAdjacentHTML('afterend', `<p>Previously uploaded: ${storedFileName}</p>`);
-            }
-        } else {
-            // Restore other inputs' values
-            const storedValue = sessionStorage.getItem(input.id);
-            if (storedValue) {
-                input.value = storedValue;
-            }
-        }
-    });
-};
-
-        // document.getElementById('videoInput').value = "{% static 'final/output_variation1.mp4' %}";
        let  currentNumber=2
         document.getElementById('addMusicBtn').addEventListener('click', function() {
     // Increment the number
