@@ -102,10 +102,10 @@
                     <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
                         Background Music Level:
                     </div>
-                    <span id="SliderValue" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
+                    <span id="SliderValue_main" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                 </div>
                 <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                    <input type="range" name="bg_level" min="0" max="100" value="50" class="slider" id="mySlider" style="width: 100%;">
+                    <input type="range" name="bg_level" min="0" max="100" value="50" class="slider" id="mySlider_main" style="width: 100%;">
                 </div>
             </div>
             <div class="file-upload-container" id="targetDiv" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 48px; flex-direction: column;">
@@ -317,6 +317,7 @@ inputHander(1)
 inputHander(2)
 handleSlider(1)
 handleSlider(2)
+handleSlider('main')
 function addInputValidation(number) {
     const startTimeInput = document.getElementById(`from_when_${number}`);
     const endTimeInput = document.getElementById(`to_when_${number}`);
