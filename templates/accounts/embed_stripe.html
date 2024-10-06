@@ -1,26 +1,25 @@
-{% extends 'wrapper/base.html' %}
+{% load static %}
 
-
-{% block content %}
-  <div class="container" style="height: 50px;">
-
-  </div>
-{% endblock content %}
-{% block extra_script %}
-<!-- production -->
-<!-- <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-<stripe-pricing-table pricing-table-id="prctbl_1PzmCnEt5xiNvM25Ro8qIuJs"
-publishable-key="pk_test_51PxpLrEt5xiNvM25Rj6vQQT4bi20QmR1iTsJIg5nE4xfAPnn2JhGOc849P28jHOxSRmw6JQ5eZE9t02vFd6fJGVL00ToXu5U6h">
-</stripe-pricing-table> -->
-
-
-<!-- test -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    {%include 'partials/head_c.html' %}
+    
+    <link rel="stylesheet" href="{% static 'landing/style.css' %}">
+</head>
+<body>
 
 <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
 <stripe-pricing-table pricing-table-id="prctbl_1Q0lcJEt5xiNvM25yJF1xnS2"
 publishable-key="pk_test_51PxpLrEt5xiNvM25Rj6vQQT4bi20QmR1iTsJIg5nE4xfAPnn2JhGOc849P28jHOxSRmw6JQ5eZE9t02vFd6fJGVL00ToXu5U6h">
 </stripe-pricing-table>
+</body>
+</html>
 
-{% endblock extra_script %}
 
 
