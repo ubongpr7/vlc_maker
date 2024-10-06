@@ -153,7 +153,7 @@ def process_background_music(request, textfile_id):
                         music=music_file,
                         start_time=start_times[i-1],
                         end_time=end_times[i-1],
-                        bg_level=bg_levels[i-1]
+                        bg_level=bg_levels[i]
 
                     )
                 
