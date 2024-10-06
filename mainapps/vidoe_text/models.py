@@ -78,7 +78,7 @@ class TextFile(models.Model):
     resolution = models.CharField(max_length=50)
     font_file = models.FileField(upload_to=font_file_upload_path, blank=True, null=True)
     bg_level = models.DecimalField(null=True,blank=True,max_digits=12,decimal_places=9,default=0.1)
-    font = models.CharField(max_length=50,default='Ariel') 
+    font = models.CharField(max_length=50,default='Arial') 
     font_color = models.CharField(max_length=7)  # e.g., hex code: #ffffff
     subtitle_box_color = models.CharField(max_length=7, blank=True, null=True)
     font_size = models.IntegerField()
@@ -145,6 +145,7 @@ class TextLineVideoClip(models.Model):
     line_number = models.IntegerField()  # Corresponds to the line number in the text file
     timestamp_start = models.FloatField(null=True, blank=True)  # Start time for where this clip begins in the final video
     timestamp_end = models.FloatField(null=True, blank=True)  # End time for where this clip ends in the final video
+
     def to_dict(self):
         if self.video_file:
             video_path = self.video_file.video_file # Use .url to get the S3 or local URL

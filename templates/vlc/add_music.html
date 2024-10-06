@@ -106,7 +106,6 @@
                 </div>
                 <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
                     <input type="range" name="bg_level" min="0" max="100" value="50" class="slider" id="mySlider" style="width: 100%;">
-                    <!-- <input type="number" hidden name="bg_level"  value="0.5"  id="bg_level" > -->
                 </div>
             </div>
             <div class="file-upload-container" id="targetDiv" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 48px; flex-direction: column;">
@@ -138,6 +137,19 @@
                                 <input type="text" placeholder="00:00" class="time endTime" name="to_when_1" id="to_when_1" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                             </div>
                         </div>
+
+
+                        <div>
+                            <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
+                                <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                                    Music Level 1:
+                                </div>
+                                <span id="SliderValue_1" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
+                            </div>
+                            <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
+                                <input type="range" name="bg_level_1" min="0" max="100" value="50" class="slider" id="mySlider_1" style="width: 100%;">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="uploadmp3" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 24px; flex-direction: column;">
@@ -165,6 +177,18 @@
                                 <span class="text" style="width: 100%; text-align: left;">End:</span>
                                 <input type="text" placeholder="00:00" class="time endTime" name="to_when_2" id="to_when_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                             </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
+                            <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                                Music Level 1:
+                            </div>
+                            <span id="SliderValue_2" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
+                        </div>
+                        <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
+                            <input type="range" name="bg_level_2" min="0" max="100" value="50" class="slider" id="mySlider_2" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -235,12 +259,26 @@
                     <input type="text" placeholder="00:00" class="time endTime" name="to_when_${currentNumber}" id="to_when_${currentNumber}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                 </div>
             </div>
+            
+            <div>
+                <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
+                    <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                        Music Level 1:
+                    </div>
+                    <span id="SliderValue_${currentNumber}" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
+                </div>
+                <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
+                    <input type="range" name="bg_level_${currentNumber}" min="0" max="100" value="50" class="slider" id="mySlider_${currentNumber}" style="width: 100%;">
+                </div>
+            </div>
         </div>
     `;
     
     document.getElementById('musicContainer').insertAdjacentHTML('beforeend', htmlCode);
     addInputValidation(currentNumber);
-        
+    inputHander(currentNumber)
+    handleSlider(currentNumber)
+    
     // Add file upload event listener
     const fileInput = document.getElementById(`fileUpload${currentNumber}`);
     const uploadText = document.getElementById(`uploadText${currentNumber}`);
@@ -277,6 +315,8 @@ addInputValidation(1)
 addInputValidation(2)
 inputHander(1)
 inputHander(2)
+handleSlider(1)
+handleSlider(2)
 function addInputValidation(number) {
     const startTimeInput = document.getElementById(`from_when_${number}`);
     const endTimeInput = document.getElementById(`to_when_${number}`);
@@ -304,30 +344,29 @@ function addInputValidation(number) {
     });
 }
 function checkInputs() {
-            const inputs = document.querySelectorAll('.fileInput');
-            const submitForm = document.getElementById('submit_form');
-            const proceed = document.getElementById('proceed');
+        const inputs = document.querySelectorAll('.fileInput');
+        const submitForm = document.getElementById('submit_form');
+        const proceed = document.getElementById('proceed');
 
-            // Check if any file input is not empty
-            let anyFilled = Array.from(inputs).some(input => input.files.length > 0);
+        // Check if any file input is not empty
+        let anyFilled = Array.from(inputs).some(input => input.files.length > 0);
 
-            if (anyFilled) {
-                submitForm.style.display = 'flex';
-                proceed.style.display = 'none';
-            } else {
-                submitForm.style.display = 'none';
-                proceed.style.display = 'flex';
-            }
+        if (anyFilled) {
+            submitForm.style.display = 'flex';
+            proceed.style.display = 'none';
+        } else {
+            submitForm.style.display = 'none';
+            proceed.style.display = 'flex';
         }
+    }
 
-        // Attach event listeners to all file inputs
-        document.querySelectorAll('.fileInput').forEach(input => {
-            input.addEventListener('change', checkInputs);
-        });
-    </script>
-<script>
-    const slider = document.getElementById("mySlider");
-    const sliderValue = document.getElementById("SliderValue");
+// Attach event listeners to all file inputs
+document.querySelectorAll('.fileInput').forEach(input => {
+    input.addEventListener('change', checkInputs);
+});
+function handleSlider(c_number){
+    const slider = document.getElementById(`mySlider_${c_number}`);
+    const sliderValue = document.getElementById(`SliderValue_${c_number}`);
 
     slider.addEventListener('input', function() {
         const value = slider.value;
@@ -338,6 +377,9 @@ function checkInputs() {
         // console.log(document.getElementById('bg_level').value)
         
     });
-</script>
+
+}
+    </script>
+
 </body>
 </html>

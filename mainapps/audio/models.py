@@ -18,6 +18,8 @@ class BackgroundMusic(models.Model):
     music=models.FileField(null=True, blank=True, upload_to='bg_misics')
     start_time = models.FloatField(help_text="Start time in seconds")
     end_time = models.FloatField(help_text="End time in seconds")
+    bg_level = models.DecimalField(null=True,blank=True,max_digits=12,decimal_places=9,default=0.1)
+    
     # video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='background_music')
 
     def __str__(self):

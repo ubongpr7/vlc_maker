@@ -93,7 +93,7 @@ class Command(BaseCommand):
         self.text_file_instance.track_progress(8)
         for line in music_info:
         
-            music_path, start_time, end_time = line.strip().split(' ')
+            music_path, start_time, end_time, bg_level = line.strip().split(' ')
             start_time_seconds = float(start_time)
             end_time_seconds = float(end_time)
             duration = end_time_seconds - start_time_seconds
@@ -107,6 +107,7 @@ class Command(BaseCommand):
     
             background_clip = self.load_audio_from_file_field(music_path).subclip(0, duration)
             background_clip = background_clip.set_start(start_time_seconds)
+            background_clip=background_clip.volumex(float(bg_level))
 
             # Append the processed background clip to the list
             background_clips.append(background_clip)

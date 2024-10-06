@@ -138,7 +138,8 @@ def process_background_music(request, textfile_id):
             return JsonResponse({"error": "Text file is missing."}, status=400)
         music_files = [request.FILES.get(f'bg_music_{i}') for i in range(1, no_of_mp3 +1)]  # Adjust based on your inputs
         start_times_str = {f'bg_music_{i}': request.POST.get(f'from_when_{i}') for i in range(1, no_of_mp3 +1)}
-        end_times_str = {f'bg_music_{i}': request.POST.get(f'to_when_{i}') for i in range(1, no_of_mp3+1)}
+        bg_levels = {f'bg_music_{i}': request.POST.get(f'bg_level_{i}') for i in range(1, no_of_mp3 +1)}
+        end_times_str = {f'bg_music_{i}': float(request.POST.get(f'to_when_{i}')) for i in range(1, no_of_mp3+1)}
         start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
 
@@ -152,6 +153,8 @@ def process_background_music(request, textfile_id):
                         music=music_file,
                         start_time=start_times[i-1],
                         end_time=end_times[i-1],
+                        bg_level=bg_levels[i-1]
+
                     )
                 
                 bg_musics.append(bg_music)
@@ -163,7 +166,8 @@ def process_background_music(request, textfile_id):
         for bg_music in bg_musics:
             start_time_str = bg_music.start_time
             end_time_str = bg_music.end_time
-            lines.append(f"{bg_music.music.name} {start_time_str} {end_time_str}")
+            bg_level=str(float(bg_music.bg_level))
+            lines.append(f"{bg_music.music.name} {start_time_str} {end_time_str} {bg_level}")
 
         content = "\n".join(lines)
         
