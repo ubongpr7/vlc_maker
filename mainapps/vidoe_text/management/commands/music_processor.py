@@ -119,7 +119,7 @@ class Command(BaseCommand):
 
         if original_audio is not None:
             
-            final_audio = CompositeAudioClip([original_audio.volumex(1.0), background_audio.volumex(float(self.text_file_instance.bg_level))])
+            # final_audio = CompositeAudioClip([original_audio.volumex(1.0), background_audio.volumex(float(self.text_file_instance.bg_level))])
             final_audio = CompositeAudioClip([original_audio.volumex(1.0), background_audio])
         else:
             final_audio = background_audio
