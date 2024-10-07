@@ -217,17 +217,7 @@
     
 
     <script>
-        function saveInput(inputElement) {
-            if (inputElement.type === 'file') {
-                // For file inputs, save the file name
-                if (inputElement.files.length > 0) {
-                    sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
-                }
-            } else {
-                // For other inputs, save the value
-                sessionStorage.setItem(inputElement.id, inputElement.value);
-            }
-        }
+        
         window.onload = function() {
             // Get all inputs on the page
             const inputs = document.querySelectorAll('input');
@@ -354,6 +344,17 @@ function inputHander(c_number){
             }
         });
 };
+function saveInput(inputElement) {
+            if (inputElement.type === 'file') {
+                // For file inputs, save the file name
+                if (inputElement.files.length > 0) {
+                    sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
+                }
+            } else {
+                // For other inputs, save the value
+                sessionStorage.setItem(inputElement.id, inputElement.value);
+            }
+        }
 addInputValidation(1)
 addInputValidation(2)
 inputHander(1)
