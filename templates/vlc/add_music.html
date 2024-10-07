@@ -218,46 +218,82 @@
 
     <script>
         
+        // window.onload = function() {
+        //     // Get all inputs on the page
+        //     const inputs = document.querySelectorAll('input');
+
+        //     inputs.forEach(input => {
+        //         if (input.type === 'file') {
+        //             // Restore file input placeholder (file inputs can't be pre-filled for security reasons)
+        //             const storedFileName = sessionStorage.getItem(input.id);
+        //             if (storedFileName) {
+
+        //                 input.setAttribute('data-file', storedFileName);
+        //                 const fileName = input.files[0].name;
+            
+        //                 // Extract the number from the input's id (assuming the id format is 'fileUpload_{{textfile_id}}_${currentNumber}')
+        //                 const idParts = input.id.split('_');
+        //                 const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
+
+        //                 // Find the corresponding output div using the extracted number
+        //                 const uploadTextElement = document.getElementById('uploadText' + currentNumber);
+
+        //                 if (uploadTextElement) {
+        //                     uploadTextElement.textContent = fileName.slice(0,15);
+        //             }
+        //         }else {
+        //             // Restore other inputs' values
+        //             const storedValue = sessionStorage.getItem(input.id);
+        //             if (storedValue) {
+        //                 input.value = storedValue;
+        //                 if(input.id.startWith('mySlider')){
+        //                     document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
+
+        //                 }
+        //             }
+        //         }
+        //     });
+        // };
         window.onload = function() {
-            // Get all inputs on the page
-            const inputs = document.querySelectorAll('input');
+    // Get all inputs on the page
+    const inputs = document.querySelectorAll('input');
 
-            inputs.forEach(input => {
-                if (input.type === 'file') {
-                    // Restore file input placeholder (file inputs can't be pre-filled for security reasons)
-                    const storedFileName = sessionStorage.getItem(input.id);
-                    if (storedFileName) {
+    inputs.forEach(input => {
+        if (input.type === 'file') {
+            // Restore file input placeholder (file inputs can't be pre-filled for security reasons)
+            const storedFileName = sessionStorage.getItem(input.id);
+            if (storedFileName) {
+                input.setAttribute('data-file', storedFileName);
 
-                        input.setAttribute('data-file', storedFileName);
-                        const fileName = input.files[0].name;
-            
-                        // Extract the number from the input's id (assuming the id format is 'fileUpload_{{textfile_id}}_${currentNumber}')
-                        const idParts = input.id.split('_');
-                        const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
+                // Extract the number from the input's id (assuming the id format is 'fileUpload_{{textfile_id}}_${currentNumber}')
+                const idParts = input.id.split('_');
+                const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
 
-                        // Find the corresponding output div using the extracted number
-                        const uploadTextElement = document.getElementById('uploadText' + currentNumber);
+                // Find the corresponding output div using the extracted number
+                const uploadTextElement = document.getElementById('uploadText' + currentNumber);
 
-                        if (uploadTextElement) {
-                            uploadTextElement.textContent = fileName.slice(0,15);
-                    }
-                } else {
-                    // Restore other inputs' values
-                    const storedValue = sessionStorage.getItem(input.id);
-                    if (storedValue) {
-                        input.value = storedValue;
-                        if(input.id.startWith('mySlider')){
-                            document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
-
-                        }
-                    }
+                if (uploadTextElement) {
+                    // Since input.files might be empty, we use the stored file name from sessionStorage
+                    uploadTextElement.textContent = storedFileName.slice(0, 15);  // Trim file name
                 }
-            });
-        };
+            }
+        } else {
+            // Restore other inputs' values
+            const storedValue = sessionStorage.getItem(input.id);
+            if (storedValue) {
+                input.value = storedValue;
 
-        document.addEventListener('DOMContentLoaded',()=>{
-            
-        })
+                // Check if the input is a slider (assuming the input.id starts with 'mySlider')
+                if (input.id.startsWith('mySlider')) {
+                    document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
+                }
+            }
+        }
+    });
+};
+
+
+        
 
        let  currentNumber=2
         document.getElementById('addMusicBtn').addEventListener('click', function() {
