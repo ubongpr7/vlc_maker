@@ -3,7 +3,7 @@ import os
 import uuid
 from django.db import models
 from mainapps.accounts.models import User
-
+from .validators import  validate_video_file
 class Video(models.Model):
     title = models.CharField(max_length=255)
     video_file = models.FileField(upload_to='videos/')
@@ -39,7 +39,7 @@ def video_clip_upload_path(instance, filename):
     """Generate a unique file path for each uploaded text file."""
     ext = filename.split('.')[-1]
     filename = f'{uuid.uuid4()}.{ext}'  # Use UUID to ensure unique file names
-    if instance.id:
+    if not instance.id:
         return os.path.join('text_files', 'new', filename)
     return os.path.join('video_clip', str(instance.id), filename)
 
@@ -65,7 +65,7 @@ class VideoClip(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.SET_NULL,null=True,blank=True,editable=False, related_name='user_clips')
 
     title = models.CharField(max_length=255, null=True, blank=True)
-    video_file = models.FileField(upload_to=video_clip_upload_path)
+    video_file = models.FileField(upload_to=video_clip_upload_path,validators=[validate_video_file])
     duration = models.FloatField(null=True, blank=True)  # You can extract this with MoviePy when uploading the clip
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(ClipCategory,null=True,on_delete=models.SET_NULL, related_name='video_clips', blank=True)
