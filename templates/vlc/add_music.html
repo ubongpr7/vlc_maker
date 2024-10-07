@@ -256,6 +256,10 @@
                     const storedValue = sessionStorage.getItem(input.id);
                     if (storedValue) {
                         input.value = storedValue;
+                        if(input.id.startWith('mySlider')){
+                            document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
+
+                        }
                     }
                 }
             });
