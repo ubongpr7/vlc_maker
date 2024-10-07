@@ -114,6 +114,7 @@ class Command(BaseCommand):
         self.text_file_instance.track_progress(40)
         
         background_audio = CompositeAudioClip(background_clips)
+        self.text_file_instance.track_progress(45)
 
         logging.info('Done loading music')
 

@@ -223,27 +223,7 @@
 
         inputs.forEach(input => {
             if (input.type === 'file') {
-                // Restore file input placeholder (file inputs can't be pre-filled for security reasons)
-                const storedFileName = sessionStorage.getItem(input.id);
-                if (storedFileName) {
-                    input.setAttribute('data-file', storedFileName);
-
-                    // Extract the number from the input's id (assuming the id format is 'fileUpload_{{textfile_id}}_${currentNumber}')
-                    const idParts = input.id.split('_');
-                    const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
-
-                    // Find the corresponding output div using the extracted number
-                    const uploadTextElement = document.getElementById('uploadText' + currentNumber);
-                    // checkInputs()
-                    const submitForm = document.getElementById('submit_form');
-                    const proceed = document.getElementById('proceed');
-                    submitForm.style.display = 'flex';
-                    proceed.style.display = 'none';
-                    if (uploadTextElement) {
-                        // Since input.files might be empty, we use the stored file name from sessionStorage
-                        uploadTextElement.textContent = storedFileName.slice(0, 30);  // Trim file name
-                    }
-                }
+                
             } else {
                 // Restore other inputs' values
                 const storedValue = sessionStorage.getItem(input.id);
@@ -355,7 +335,7 @@ function saveInput(inputElement) {
             if (inputElement.type === 'file') {
                 // For file inputs, save the file name
                 if (inputElement.files.length > 0) {
-                    sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
+                    // sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
                 }
             } else {
                 // For other inputs, save the value
