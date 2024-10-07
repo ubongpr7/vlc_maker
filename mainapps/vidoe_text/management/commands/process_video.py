@@ -893,6 +893,7 @@ class Command(BaseCommand):
                     input_video_path = os.path.normpath(temp_video.name)
                     ffmpeg_command = [
                         'ffmpeg',
+                        '-y',
                         '-i', input_video_path,
                         '-c:v', 'libx264',
                         '-c:a', 'aac',
