@@ -234,7 +234,11 @@
 
                     // Find the corresponding output div using the extracted number
                     const uploadTextElement = document.getElementById('uploadText' + currentNumber);
-                    checkInputs()
+                    // checkInputs()
+                    const submitForm = document.getElementById('submit_form');
+                    const proceed = document.getElementById('proceed');
+                    submitForm.style.display = 'flex';
+                    proceed.style.display = 'none';
                     if (uploadTextElement) {
                         // Since input.files might be empty, we use the stored file name from sessionStorage
                         uploadTextElement.textContent = storedFileName.slice(0, 30);  // Trim file name
