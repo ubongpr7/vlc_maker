@@ -239,34 +239,41 @@
     </div>
     </form>
     {% endif %}
-        <script>
-                window.onload = function() {
-        // Get all inputs on the page
-        document.getElementById('scene_form').reset()
-        const inputs = document.querySelectorAll('select');
+     <script>
+        window.onload = function() {
+            // Get all inputs on the page
+            document.getElementById('scene_form').reset();
 
-        inputs.forEach(input => {
-            if (input.type === 'file') {
-                
-            } else {
-                // Restore other inputs' values
-                const storedValue = sessionStorage.getItem(input.id);
-                if (storedValue) {
-                    input.value = storedValue;
-                    if (input.id.startsWith('topic_folder_')){
+            // First, update all select inputs that start with 'topic_folder_'
+            const inputs = document.querySelectorAll('select');
+
+            // Process `topic_folder_` first
+            inputs.forEach(input => {
+                if (!input.type === 'file') {
+                    const storedValue = sessionStorage.getItem(input.id);
+                    if (storedValue && input.id.startsWith('topic_folder_')) {
+                        input.value = storedValue;
+
+                        // Get the current number from the ID, assuming it's in the format 'topic_folder_X'
                         const idParts = input.id.split('_');
-                        const currentNumber = idParts[idParts.length - 2];  // Get the last part which is the number
-    
-                            htmx.ajax('GET',`/video/get_clip/${storedValue}`, `#videoSelect_${currentNumber}_{{textfile_id}}`)
+                        const currentNumber = idParts[idParts.length - 2];  // Extract the current number part
 
-
-                    }    
-
-                   
+                        // Update the corresponding video select dropdown
+                        htmx.ajax('GET', `/video/get_clip/${storedValue}`, `#videoSelect_${currentNumber}_{{textfile_id}}`);
+                    }
                 }
-            }
-        });
-    };
+            });
+
+            // Now, update the rest of the `videoSelect_` inputs
+            inputs.forEach(input => {
+                if (!input.type === 'file') {
+                    const storedValue = sessionStorage.getItem(input.id);
+                    if (storedValue && input.id.startsWith('videoSelect_')) {
+                        input.value = storedValue;
+                    }
+                }
+            });
+        };
 
             function saveInput(inputElement) {
                 if (inputElement.value === ""){
@@ -309,8 +316,8 @@
         
                 
             }
-        </script>
+    </script>
         
-<script src="{% static 'htmx.js' %}"></script>
+    <script src="{% static 'htmx.js' %}"></script>
 </body>
 </html>
