@@ -35,17 +35,40 @@ from django.conf import settings
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 
-def check_credits(api_key):  
-    url = "https://api.elevenlabs.io/credits"  # Adjust with the correct endpoint  
-    headers = {  
+
+
+
+
+
+import requests
+
+def check_credits(api_key):
+    # Define the endpoint for fetching user information
+    url = "https://api.elevenlabs.io/v1/user"
+    
+    # Set the headers with the API key for authentication
+    headers = {
       "xi-api-key": api_key,
 
-    }  
-    response = requests.get(url, headers=headers)  
-    if response.status_code == 200:  
-        return response.json()  # Assuming the response is in JSON format  
-    else:  
-        return f"Error: {response.status_code}, {response.text}"  
+    }
+    
+    # Make the request to the ElevenLabs API
+    response = requests.get(url, headers=headers)
+    
+    # Check if the request was successful
+    if response.status_code == 200:
+        user_data = response.json()
+        
+        # Extract the subscription information
+        subscription = user_data.get("subscription", {})
+        remaining_credits = subscription.get("character_limit", 0)
+        
+        print(f"Remaining Credits: {remaining_credits}")
+        return f"Remaining Credits: {remaining_credits}"
+    else:
+        print(f"Failed to fetch user info. Status Code: {response.status_code}")
+        print(f"Response: {response.text}")
+        return None
 
 def is_api_key_valid(api_key,voice_id):
     """
