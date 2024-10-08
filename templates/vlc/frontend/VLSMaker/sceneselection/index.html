@@ -253,7 +253,7 @@
                 const storedValue = sessionStorage.getItem(input.id);
                 if (storedValue) {
                     input.value = storedValue;
-                    if (input.id.startWith('topic_folder_'))
+                    if (input.id.startsWith('topic_folder_'))
                     var idParts = input.id.split('_');
                     var currentNumber = idParts[idParts.length - 2];  // Get the last part which is the number
 
