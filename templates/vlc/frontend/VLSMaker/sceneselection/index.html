@@ -244,30 +244,49 @@
             // Get all inputs on the page
             document.getElementById('scene_form').reset();
 
-            // First, update all select inputs that start with 'topic_folder_'
             const inputs = document.querySelectorAll('select');
+            
+            // Helper function to return a promise for each htmx request
+            const fetchClip = (url, targetId) => {
+                return new Promise((resolve, reject) => {
+                    htmx.ajax('GET', url, targetId)
+                        .then(() => resolve())
+                        .catch(() => reject());
+                });
+            };
 
-            // Process `topic_folder_` first
+            // First, update all select inputs that start with 'topic_folder_'
+            const topicFolderPromises = [];
+
             inputs.forEach(input => {
-                    const storedValue = sessionStorage.getItem(input.id);
-                    if (storedValue && input.id.startsWith('topic_folder_')) {
-                        input.value = storedValue;
+                const storedValue = sessionStorage.getItem(input.id);
+                if (storedValue && input.id.startsWith('topic_folder_')) {
+                    input.value = storedValue;
 
-                        // Get the current number from the ID, assuming it's in the format 'topic_folder_X'
-                        const idParts = input.id.split('_');
-                        const currentNumber = idParts[idParts.length - 2];  // Extract the current number part
+                    // Get the current number from the ID, assuming it's in the format 'topic_folder_X'
+                    const idParts = input.id.split('_');
+                    const currentNumber = idParts[idParts.length - 2];  // Extract the current number part
 
-                        // Update the corresponding video select dropdown
-                        htmx.ajax('GET', `/video/get_clip/${storedValue}`, `#videoSelect_${currentNumber}_{{textfile_id}}`);
-                    }
+                    // Build the URL and target ID
+                    const url = `/video/get_clip/${storedValue}`;
+                    const targetId = `#videoSelect_${currentNumber}_{{textfile_id}}`;
+
+                    // Store the promise to execute htmx.ajax for this input
+                    topicFolderPromises.push(fetchClip(url, targetId));
+                }
             });
 
-            // Now, update the rest of the `videoSelect_` inputs
-            inputs.forEach(input => {
+            // Run all htmx requests for `topic_folder_` sequentially
+            Promise.all(topicFolderPromises).then(() => {
+                // Once all topic_folder_ updates are done, proceed with videoSelect_ updates
+                inputs.forEach(input => {
                     const storedValue = sessionStorage.getItem(input.id);
                     if (storedValue && input.id.startsWith('videoSelect_')) {
                         input.value = storedValue;
                     }
+                });
+            }).catch(err => {
+                console.error('An error occurred while updating topic_folder_:', err);
             });
         };
 
