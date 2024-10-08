@@ -35,6 +35,17 @@ from django.conf import settings
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 
+def check_credits(api_key):  
+    url = "https://api.elevenlabs.io/credits"  # Adjust with the correct endpoint  
+    headers = {  
+        "Authorization": f"Bearer {api_key}"  
+    }  
+    response = requests.get(url, headers=headers)  
+    if response.status_code == 200:  
+        return response.json()  # Assuming the response is in JSON format  
+    else:  
+        return f"Error: {response.status_code}, {response.text}"  
+
 def is_api_key_valid(api_key,voice_id):
     """
     Checks if the given ElevenLabs API key is valid.
@@ -255,6 +266,8 @@ def add_text(request):
         font_select = request.POST.get('font_select')  # Assuming this is a different file field
         font_size = request.POST.get('font_size')
         x,y= is_api_key_valid(api_key,voice_id)
+        api_credits=check_credits(api_key)
+        print("Credit info: "+api_credits)
         if x and y:
                 
             if  voice_id and api_key:
