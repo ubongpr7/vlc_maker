@@ -253,5 +253,27 @@
 
     </div>
     <script src="{% static 'js/script.js'%}"></script>
+    <!-- <script>
+        window.onload = function() {
+    // Get all inputs on the page
+        const inputs = document.querySelectorAll('input');
+
+        inputs.forEach(input => {
+            if (input.type === 'file') {
+                
+            } else {
+
+                    if (input.id.startsWith('mySlider')) {
+                        const idParts = input.id.split('_');
+                    const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
+
+                        document.getElementById('SliderValue_'+currentNumber).textContent=storedValue+'%'
+                        document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
+                    }
+                }
+            }
+        });
+    };
+    </script> -->
 </body>
 </html>
