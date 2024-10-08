@@ -316,7 +316,6 @@
                 }
             }
 
-            // Once all `topic_folder_` updates are done, proceed with `videoSelect_` updates
             inputs.forEach(input => {
                 const storedValue = sessionStorage.getItem(input.id);
                 if (storedValue && input.id.startsWith('videoSelect_')) {
@@ -327,14 +326,9 @@
 
 
         function saveInput(inputElement) {
-            if (inputElement.value === ""){
-
-            }else{
+            
                 sessionStorage.setItem(inputElement.id, inputElement.value);
                 console.log(inputElement.value)
-
-            }
-        
         }
         const fileName= document.getElementById('fileName')
         const fileUpload = document.getElementById('fileUpload');
