@@ -262,15 +262,8 @@
     };
 
             function saveInput(inputElement) {
-            if (inputElement.type === 'file') {
-                // For file inputs, save the file name
-                if (inputElement.files.length > 0) {
-                    // sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
-                }
-            } else {
-                // For other inputs, save the value
                 sessionStorage.setItem(inputElement.id, inputElement.value);
-            }
+            
         }
             const fileName= document.getElementById('fileName')
             const fileUpload = document.getElementById('fileUpload');
@@ -288,7 +281,6 @@
                 if (categoryId === ""){
                     select2.value=""
                     select2.innerHTML = "";
-                    saveInput(item)
 
                     const defaultOption = document.createElement('option');
                     defaultOption.value = "";
@@ -297,6 +289,7 @@
 
                 }
                 else{
+                    saveInput(item)
 
                     htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}_{{textfile_id}}`)
                 }
