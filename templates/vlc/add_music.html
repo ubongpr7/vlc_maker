@@ -224,7 +224,6 @@
 
         inputs.forEach(input => {
             if (input.type === 'file') {
-                input.value = ''; 
                 
             } else {
                 // Restore other inputs' values
@@ -248,12 +247,12 @@
 
         
 
-       let  currentNumber=2
-        document.getElementById('addMusicBtn').addEventListener('click', function() {
+    let  currentNumber=2
+    document.getElementById('addMusicBtn').addEventListener('click', function() {
     // Increment the number
     currentNumber++;
-            document.getElementById('no_of_mp3').value=currentNumber
-            console.log(document.getElementById('no_of_mp3').value)
+    document.getElementById('no_of_mp3').value=currentNumber
+    console.log(document.getElementById('no_of_mp3').value)
     const htmlCode = `
         <div class="uploadmp3" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 24px; flex-direction: column;">
             <div class="text">

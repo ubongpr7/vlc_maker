@@ -149,7 +149,7 @@
         
     </div>    
     {% if text_file.text_file %}
-    <form method="POST" action="." enctype="multipart/form-data">
+    <form method="POST" action="." id="scene_form" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="text", hidden name="purpose" value='process'>
     <div class="scene-container" style="display: flex;padding:30px 30px;  justify-content: center; align-items: center;">
@@ -191,8 +191,8 @@
                         <div style="display: flex; width: 100%; height: fit-content; gap: 10px; align-items: center; flex-direction: column;">
                         <!-- Topic Folder Selection -->
                         <div style="width: 100%; position: relative;">
-                            <select name="topic_folder_{{ forloop.counter0 }}"
-                                onchange="fetchVideoClips(this.value, '{{ forloop.counter0 }}')"
+                            <select id="topic_folder_{{ forloop.counter0 }}" name="topic_folder_{{ forloop.counter0 }}"
+                                onchange="fetchVideoClips(this.value, '{{ forloop.counter0 }}',this)"
                                     style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
                             <option value="">Select Topic</option>
                             {% for video_category in video_categories %}
@@ -206,8 +206,8 @@
                     
                         <!-- Video Selection -->
                         <div style="width: 100%; position: relative;">
-                            <select class="selected_clip" name="selected_video_{{ forloop.counter0 }}" 
-                                    id="videoSelect_{{ forloop.counter0 }}" 
+                            <select class="selected_clip"onchange="saveInput(this)" name="selected_video_{{ forloop.counter0 }}" id="selected_video_{{ forloop.counter0 }}" 
+                                    id="videoSelect_{{ forloop.counter0 }}_{{textfile_id}}" 
                                     style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
                             <option value="">Select a video</option>
                             </select>
@@ -217,7 +217,7 @@
                         </div>
                     
                         <!-- Hidden Input -->
-                        <input type="hidden" name="topic_folder_selected_{{ forloop.counter0 }}" id="topicFolder_{{ forloop.counter0 }}">
+                        <input type="hidden" name="topic_folder_selected_{{ forloop.counter0 }}" id="topicFolder_{{ forloop.counter0 }}_{{textfile_id}}">
                         </div>
                     </div>
                     {% endfor %}
@@ -240,6 +240,44 @@
     </form>
     {% endif %}
         <script>
+                window.onload = function() {
+        // Get all inputs on the page
+        document.getElementById('scene_form').reset()
+        const inputs = document.querySelectorAll('input');
+
+        inputs.forEach(input => {
+            if (input.type === 'file') {
+                
+            } else {
+                // Restore other inputs' values
+                const storedValue = sessionStorage.getItem(input.id);
+                if (storedValue) {
+                    input.value = storedValue;
+
+                    // Check if the input is a slider (assuming the input.id starts with 'mySlider')
+                    if (input.id.startsWith('mySlider')) {
+                        const idParts = input.id.split('_');
+                    const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
+
+                        document.getElementById('SliderValue_'+currentNumber).textContent=storedValue+'%'
+                        document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
+                    }
+                }
+            }
+        });
+    };
+
+            function saveInput(inputElement) {
+            if (inputElement.type === 'file') {
+                // For file inputs, save the file name
+                if (inputElement.files.length > 0) {
+                    // sessionStorage.setItem(inputElement.id, inputElement.files[0].name);
+                }
+            } else {
+                // For other inputs, save the value
+                sessionStorage.setItem(inputElement.id, inputElement.value);
+            }
+        }
             const fileName= document.getElementById('fileName')
             const fileUpload = document.getElementById('fileUpload');
             fileUpload.addEventListener('change', (event) => {
@@ -251,11 +289,12 @@
                 }
             });
 
-            function fetchVideoClips(categoryId, counter) {
+            function fetchVideoClips(categoryId, counter,item) {
                 select2=document.getElementById(`videoSelect_${counter}`)
                 if (categoryId === ""){
                     select2.value=""
                     select2.innerHTML = "";
+                    saveInput(item)
 
                     const defaultOption = document.createElement('option');
                     defaultOption.value = "";
