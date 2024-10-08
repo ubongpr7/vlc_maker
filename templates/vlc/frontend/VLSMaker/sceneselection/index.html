@@ -292,7 +292,6 @@
             // First, update all select inputs that start with 'topic_folder_'
             for (const input of inputs) {
                 const storedValue = sessionStorage.getItem(input.id);
-                input.disabled=true
                 if (storedValue && input.id.startsWith('topic_folder_')) {
                     input.value = storedValue;
 
@@ -323,12 +322,7 @@
                     input.value = storedValue;
                 }
             });
-
         });
-        inputs.forEach(input => {
-            input.disabled=false
-        })
-
 
 
         function saveInput(inputElement) {
