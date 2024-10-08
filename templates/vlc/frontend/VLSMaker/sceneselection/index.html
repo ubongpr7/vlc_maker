@@ -243,7 +243,7 @@
                 window.onload = function() {
         // Get all inputs on the page
         document.getElementById('scene_form').reset()
-        const inputs = document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('select');
 
         inputs.forEach(input => {
             if (input.type === 'file') {
@@ -255,13 +255,7 @@
                     input.value = storedValue;
 
                     // Check if the input is a slider (assuming the input.id starts with 'mySlider')
-                    if (input.id.startsWith('mySlider')) {
-                        const idParts = input.id.split('_');
-                    const currentNumber = idParts[idParts.length - 1];  // Get the last part which is the number
-
-                        document.getElementById('SliderValue_'+currentNumber).textContent=storedValue+'%'
-                        document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
-                    }
+                   
                 }
             }
         });

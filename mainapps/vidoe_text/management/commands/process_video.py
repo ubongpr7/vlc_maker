@@ -854,67 +854,67 @@ class Command(BaseCommand):
 
 
 
-    def load_video_from_file_field(self, file_field) -> VideoFileClip:
-        """
-        Load a video from a file field, downloading it from S3,
-        convert it using ffmpeg if necessary, and return it as a MoviePy VideoFileClip.
+    # def load_video_from_file_field(self, file_field) -> VideoFileClip:
+    #     """
+    #     Load a video from a file field, downloading it from S3,
+    #     convert it using ffmpeg if necessary, and return it as a MoviePy VideoFileClip.
 
-        Args:
-            file_field: The FileField containing the S3 path for the video file.
+    #     Args:
+    #         file_field: The FileField containing the S3 path for the video file.
 
-        Returns:
-            VideoFileClip: The loaded video clip.
+    #     Returns:
+    #         VideoFileClip: The loaded video clip.
 
-        Raises:
-            ValueError: If the file field is empty or not a valid video file.
-        """
-        try:
-            # Ensure that the file field is valid
-            if not file_field or not file_field.name:
-                raise ValueError("File field is empty or invalid.")
+    #     Raises:
+    #         ValueError: If the file field is empty or not a valid video file.
+    #     """
+    #     try:
+    #         # Ensure that the file field is valid
+    #         if not file_field or not file_field.name:
+    #             raise ValueError("File field is empty or invalid.")
 
-            # Create a temporary file to store the downloaded video
-            with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_video:
-                # Download the video file from S3 and save it to the temporary file
-                video_content = download_from_s3(file_field.name, temp_video.name)
+    #         # Create a temporary file to store the downloaded video
+    #         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_video:
+    #             # Download the video file from S3 and save it to the temporary file
+    #             video_content = download_from_s3(file_field.name, temp_video.name)
 
-                if not video_content:
-                    raise ValueError("Failed to download the video from S3.")
+    #             if not video_content:
+    #                 raise ValueError("Failed to download the video from S3.")
 
-                # Write the video content to the temp file
-                with open(temp_video.name, 'wb') as video_file:
-                    video_file.write(video_content)
+    #             # Write the video content to the temp file
+    #             with open(temp_video.name, 'wb') as video_file:
+    #                 video_file.write(video_content)
 
-                # Create another temporary file for the converted video
-                with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as converted_video:
-                    converted_video_path = os.path.normpath(converted_video.name)
+    #             # Create another temporary file for the converted video
+    #             with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as converted_video:
+    #                 converted_video_path = os.path.normpath(converted_video.name)
 
-                    # Use ffmpeg to convert the video
-                    input_video_path = os.path.normpath(temp_video.name)
-                    ffmpeg_command = [
-                        'ffmpeg',
-                        '-y',
-                        '-i', input_video_path,
-                        '-c:v', 'libx264',
-                        '-c:a', 'aac',
-                        converted_video_path
-                    ]
+    #                 # Use ffmpeg to convert the video
+    #                 input_video_path = os.path.normpath(temp_video.name)
+    #                 ffmpeg_command = [
+    #                     'ffmpeg',
+    #                     '-y',
+    #                     '-i', input_video_path,
+    #                     '-c:v', 'libx264',
+    #                     '-c:a', 'aac',
+    #                     converted_video_path
+    #                 ]
 
-                    # Run the ffmpeg command
-                    subprocess.run(ffmpeg_command, check=True)
+    #                 # Run the ffmpeg command
+    #                 subprocess.run(ffmpeg_command, check=True)
 
-                    # Load the converted video using MoviePy
-                    video_clip = VideoFileClip(converted_video_path)
+    #                 # Load the converted video using MoviePy
+    #                 video_clip = VideoFileClip(converted_video_path)
 
-                    # Return the video clip
-                    logging.info('Clip loaded!')
-                    return video_clip
+    #                 # Return the video clip
+    #                 logging.info('Clip loaded!')
+    #                 return video_clip
 
-        except subprocess.CalledProcessError as ffmpeg_error:
-            logging.error(f"FFmpeg error: {ffmpeg_error}")
-            raise ValueError("Video conversion failed using FFmpeg.")
-        except Exception as e:
-            logging.error(f"Error loading video from file field: {e}")
+    #     except subprocess.CalledProcessError as ffmpeg_error:
+    #         logging.error(f"FFmpeg error: {ffmpeg_error}")
+    #         raise ValueError("Video conversion failed using FFmpeg.")
+    #     except Exception as e:
+    #         logging.error(f"Error loading video from file field: {e}")
 
 
     def crop_to_aspect_ratio_(self,clip, desired_aspect_ratio):
