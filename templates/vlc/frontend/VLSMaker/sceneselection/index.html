@@ -254,8 +254,8 @@
                 if (storedValue) {
                     input.value = storedValue;
                     if (input.id.startsWith('topic_folder_'))
-                    var idParts = input.id.split('_');
-                    var currentNumber = idParts[idParts.length - 2];  // Get the last part which is the number
+                    const idParts = input.id.split('_');
+                    const currentNumber = idParts[idParts.length - 2];  // Get the last part which is the number
 
                         htmx.ajax('GET',`/video/get_clip/${storedValue}`, `#videoSelect_${currentNumber}_{{textfile_id}}`)
 
