@@ -38,7 +38,8 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 def check_credits(api_key):  
     url = "https://api.elevenlabs.io/credits"  # Adjust with the correct endpoint  
     headers = {  
-        "Authorization": f"Bearer {api_key}"  
+      "xi-api-key": api_key,
+
     }  
     response = requests.get(url, headers=headers)  
     if response.status_code == 200:  
