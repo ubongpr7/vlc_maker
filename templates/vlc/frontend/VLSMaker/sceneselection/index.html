@@ -251,6 +251,7 @@
             inputs.forEach(input => {
                     const storedValue = sessionStorage.getItem(input.id);
                     if (storedValue && input.id.startsWith('topic_folder_')) {
+                        console.log(input.id)
                         input.value = storedValue;
 
                         // Get the current number from the ID, assuming it's in the format 'topic_folder_X'
@@ -258,8 +259,9 @@
                         var currentNumber = idParts[idParts.length - 2];  // Extract the current number part
 
                         // Update the corresponding video select dropdown
-                        fetchVideoClips(storedValue,currentNumber,input)
-                        // htmx.ajax('GET', `/video/get_clip/${storedValue}`, `#videoSelect_${currentNumber}_{{textfile_id}}`);
+                        // fetchVideoClips(storedValue,currentNumber,input)
+                        console.log(storedValue + ' for category')
+                        htmx.ajax('GET', `/video/get_clip/${storedValue}`, `#videoSelect_${currentNumber}_{{textfile_id}}`);
                     }
             });
 
@@ -277,6 +279,7 @@
 
             }else{
                 sessionStorage.setItem(inputElement.id, inputElement.value);
+                console.log(inputElement.value)
 
             }
         
