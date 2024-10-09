@@ -308,7 +308,7 @@ def validate_api_key(api_key, voice_id):
             else:
                 return {'valid': False, 'error': "Invalid API key"}
         else:
-            return {'valid': False, 'error': f"API request failed with status code {response.status_code}"}
+            return {'valid': False, 'error': f"Invalid Voice ID"}
     except requests.exceptions.RequestException as e:
         return {'valid': False, 'error': 'Error connecting to Eleven Labs API'}
 
