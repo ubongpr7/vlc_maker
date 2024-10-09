@@ -276,9 +276,44 @@ def process_textfile(request, textfile_id):
     # Redirect to another page while the process runs in the background
     return redirect(f'/text/progress_page/build/{textfile_id}')
 
+import requests
+from django.http import JsonResponse
+
+def validate_api_key(api_key, voice_id):
+    # Try making a request to Eleven Labs API to validate the key
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    headers = {"xi-api-key": api_key}
+    data = {
+        "text": "Test voice synthesis",  # Small test text to avoid large requests
+        "model_id": "eleven_monolingual_v1",
+        "voice_settings": {
+            "stability": 0.5,
+            "similarity_boost": 0.75
+        }
+    }
+
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        
+        if response.status_code == 200:
+            return {'valid': True}
+        elif response.status_code == 401:
+            error_detail = response.json().get('detail', {})
+            if 'status' in error_detail and error_detail['status'] == 'quota_exceeded':
+                return {
+                    'valid': False, 
+                    'error': f"Quota exceeded: {error_detail.get('message', 'Insufficient credits')}"
+                }
+            else:
+                return {'valid': False, 'error': "Invalid API key"}
+        else:
+            return {'valid': False, 'error': f"API request failed with status code {response.status_code}"}
+    except requests.exceptions.RequestException as e:
+        return {'valid': False, 'error': 'Error connecting to Eleven Labs API'}
 
 
-def validate_api_key(request):
+
+def validate_api_keyv(request):
     if request.method == 'POST':
         api_key = request.POST.get('eleven_labs_api_key', '')
         voice_id = request.POST.get('voice_id') # Replace with a valid default voice ID to test the API key
@@ -326,39 +361,44 @@ def add_text(request):
         font_select = request.POST.get('font_select')  # Assuming this is a different file field
         font_size = request.POST.get('font_size')
         x,y= is_api_key_valid(api_key,voice_id)
-        api_credits=check_credits(api_key)
-        print(f"Credit info: {api_credits}")
-        if x and y:
-                
-            if  voice_id and api_key:
-                text_obj=TextFile.objects.create(
-                    user=request.user,
-                    bg_level=0.06,
-                    voice_id=voice_id,
-                    api_key=api_key,
-                    resolution=resolution,
-                    font =font_select,
-                    subtitle_box_color=subtitle_box_color,
-                    font_size=font_size,
-                    font_color=font_color
-                )
-                return redirect(reverse('video:add_scenes', args=[text_obj.id]))
+        api_vaidation= validate_api_key(api_key,voice_id)
+        if api_vaidation.get('valid'):
 
-            else:
-                messages.error(request,'Please provide all required fields.')
+            if x and y:
+                    
+                if  voice_id and api_key:
+                    text_obj=TextFile.objects.create(
+                        user=request.user,
+                        bg_level=0.06,
+                        voice_id=voice_id,
+                        api_key=api_key,
+                        resolution=resolution,
+                        font =font_select,
+                        subtitle_box_color=subtitle_box_color,
+                        font_size=font_size,
+                        font_color=font_color
+                    )
+                    return redirect(reverse('video:add_scenes', args=[text_obj.id]))
+
+                else:
+                    messages.error(request,'Please provide all required fields.')
+                    return render(request, 'vlc/frontend/VLSMaker/index.html', {
+                        'error': 'Please provide all required fields.'
+                    })
+            elif x and not y:
+                messages.error(request,'The voice ID you provided is invalid, please provide a valid one')
                 return render(request, 'vlc/frontend/VLSMaker/index.html', {
-                    'error': 'Please provide all required fields.'
+                    'error': 'Please provide valid API key'
                 })
-        elif x and not y:
-            messages.error(request,'The voice ID you provided is invalid, please provide a valid one')
-            return render(request, 'vlc/frontend/VLSMaker/index.html', {
-                'error': 'Please provide valid API key'
-            })
-        elif not x:
-            messages.error(request,'The API key you provided is invalid, please provide a valid one!')
-            return render(request, 'vlc/frontend/VLSMaker/index.html', {
-                'error': 'Please provide valid API key'
-            })
+            elif not x:
+                messages.error(request,'The API key you provided is invalid, please provide a valid one!')
+                return render(request, 'vlc/frontend/VLSMaker/index.html', {
+                    'error': 'Please provide valid API key'
+                })
+        else:
+            messages.error(request, f'{api_vaidation.get('error')}')
+            return render(request, 'vlc/frontend/VLSMaker/index.html',)
+            
         
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
