@@ -290,7 +290,7 @@ def add_text(request):
         font_size = request.POST.get('font_size')
         x,y= is_api_key_valid(api_key,voice_id)
         api_credits=check_credits(api_key)
-        print("Credit info: "+api_credits)
+        print(f"Credit info: {api_credits}")
         if x and y:
                 
             if  voice_id and api_key:
