@@ -58,11 +58,9 @@ def check_credits(api_key):
     
     # Check if the request was successful
     if response.status_code == 200:
-        user_data = response.json()
+        remaining_credits = response.json()
         
         # Extract the subscription information
-        subscription = user_data.get("subscription", {})
-        remaining_credits = subscription.get("character_limit", 0)
         
         print(f"Remaining Credits: {remaining_credits}")
         return f"Remaining Credits: {remaining_credits}"
