@@ -396,7 +396,7 @@ def add_text(request):
                     'error': 'Please provide valid API key'
                 })
         else:
-            messages.error(request, f'{api_vaidation.get('error')}')
+            messages.error(request, f"{api_vaidation.get('error')}")
             return render(request, 'vlc/frontend/VLSMaker/index.html',)
             
         
