@@ -186,6 +186,10 @@ class Command(BaseCommand):
         output_audio_file = os.path.join(base_path,'audio',f'{timestamp}_{text_file_id}_audio.mp3')
 
         audio_file = self.convert_text_to_speech(text_file, voice_id, api_key,output_audio_file) #this is a file path
+        if not audio_file:
+            self.text_file_instance.track_progress('The Credit On Your ElevenLabs API Key Is Not Enough To Process The Text File')
+            return 
+
         self.text_file_instance.track_progress(10)
         
         logging.info('done with audio file ')
@@ -326,6 +330,7 @@ class Command(BaseCommand):
         return sped_up_video
 
     def convert_text_to_speech(self, text_file_path, voice_id, api_key, output_audio_file):
+
         """
         Converts a text file to speech using ElevenLabs and saves the audio in the specified output directory.
         

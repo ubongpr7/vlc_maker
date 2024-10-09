@@ -71,20 +71,26 @@
             fetch('/text/progress/{{text_file_id}}')
                 .then(response => response.json())
                 .then(data => {
-                    let progress = data.progress;
-                    const percent =document.getElementById('percent');
-                    percent.innerText= progress +'%'
-                    if (progress < 100) {
-                        setTimeout(fetchProgress, 1000); // Poll every second
-                    } 
-                    else {
-                        if ("{{al_the_way }}" =='bg_music'){
+                    if (data.error){
+                        window.location.href = '/text';  
 
-                            window.location.href = '/text/download_video/{{text_file_id}}';  // Redirect to view video page
-                        }
+                    }else {
+
+                        let progress = data.progress;
+                        const percent =document.getElementById('percent');
+                        percent.innerText= progress +'%'
+                        if (progress < 100) {
+                            setTimeout(fetchProgress, 1000); // Poll every second
+                        } 
                         else {
-
-                            window.location.href = '/text/process-background-music/{{text_file_id}}';  // Redirect to view video page
+                            if ("{{al_the_way }}" =='bg_music'){
+    
+                                window.location.href = '/text/download_video/{{text_file_id}}';  // Redirect to view video page
+                            }
+                            else {
+    
+                                window.location.href = '/text/process-background-music/{{text_file_id}}';  // Redirect to view video page
+                            }
                         }
                     }
                 });

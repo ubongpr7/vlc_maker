@@ -239,7 +239,8 @@ def progress(request,text_file_id):
     
             return JsonResponse({'progress': int(text_file.progress)})
         except:
-            return JsonResponse({'progress': text_file.progress})
+            messages.error(request,f"{text_file.progress}")
+            return JsonResponse({'error': text_file.progress})
 
 @login_required
 def progress_page(request,al_the_way,text_file_id):
