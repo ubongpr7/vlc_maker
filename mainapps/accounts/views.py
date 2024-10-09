@@ -96,6 +96,8 @@ class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
 # Create your views here.
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('/text')
     
     if request.method == 'POST':
         # Get username and password from the form
