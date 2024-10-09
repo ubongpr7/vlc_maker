@@ -44,7 +44,8 @@ import requests
 
 def check_credits(api_key):
     # Define the endpoint for fetching user information
-    url = "https://api.elevenlabs.io/v1/user"
+    url = "https://api.elevenlabs.io/v1/usage/character-stats"
+    
     
     # Set the headers with the API key for authentication
     headers = {
