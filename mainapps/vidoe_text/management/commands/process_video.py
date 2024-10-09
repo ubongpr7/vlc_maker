@@ -92,13 +92,6 @@ fonts1={
     "Roboto" :os.path.join(os.getcwd(),'fonts','Roboto-Medium.ttf'),
 }
 
-fonts2={
-    "Arial": "/usr/share/fonts/custom/arial.ttf",
-    "Open Sans": "/usr/share/fonts/custom/OpenSans-Semibold.ttf",
-    "Helvetica": "/usr/share/fonts/custom/Helvetica.otf",
-    "Montserrat":"/usr/share/fonts/custom/montserra.ttf",
-    "Roboto" :"/usr/share/fonts/custom/Roboto-Medium.ttf",
-}
 fonts={
     "Arial": 'Arial',
     "Open Sans Condensed":'OpenSans-Semibold' ,
@@ -106,16 +99,6 @@ fonts={
     "Montserrat":'Montserrat',
     "Roboto Medium":'Roboto'
 }
-
-# <type name="Arial" format="ttf" glyphs="/usr/share/fonts/fonts/arial.ttf"/>
-# <type name="OpenSans-Semibold" format="ttf"  glyphs="/usr/share/fonts/fonts/OpenSans-Semibold.ttf"/>
-# <type name="Helvetica-2" format="otf" glyphs="/usr/share/fonts/fonts/Helvetica.otf"/>
-# <type name="Montserrat" format="otf"  glyphs="/usr/share/fonts/fonts/Montserrat.otf"/>
-# <type name="Roboto" format="ttf" glyphs="/usr/share/fonts/fonts/Roboto-Medium.ttf"/>
-# <type name="delulu" format="ttf" glyphs="/usr/share/fonts/fonts/delulu.ttf" />
-
-
-# docker cp ./type-ghostscript.xml <container_name>:/etc/ImageMagick-6/type-ghostscript.xml
 
 
 
