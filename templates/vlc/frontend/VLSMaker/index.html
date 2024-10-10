@@ -286,7 +286,7 @@
         data.append('eleven_labs_api_key', apiKey);
         data.append('voice_id', voiceId);
 
-        fetch('/validate-api-keyv/', {  // Adjust the URL based on your routing
+        fetch('/text/validate_api_key/', {  // Adjust the URL based on your routing
             method: 'POST',
             body: data,
             headers: {
