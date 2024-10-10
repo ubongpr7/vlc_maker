@@ -14,7 +14,7 @@ urlpatterns = [
     path('text/', include('mainapps.vidoe_text.urls',namespace='video_text')),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     path("auth/", include("django.contrib.auth.urls")),  # new
-    path('auth/password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    # path('auth/password_reset/', CustomPasswordResetV ;liew.as_view(), name='password_reset'),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

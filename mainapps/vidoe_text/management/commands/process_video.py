@@ -268,7 +268,7 @@ class Command(BaseCommand):
 
         logging.info('generated_final_video successful')
         final_video=self.save_final_video(final_video_speeded_up_clip)
-        watermarked= self.add_animated_watermark_to_instance(final_video_speeded_up_clip)
+        watermarked= self.add_static_watermark_to_instance(final_video_speeded_up_clip)
         self.text_file_instance.track_progress(100)
             
 
@@ -1187,6 +1187,112 @@ class Command(BaseCommand):
             except Exception as e:
                 logging.error(f"Error generating watermarked video: {e}")
                 return False
+
+
+
+
+
+    def add_static_watermark_to_instance(self, video):
+        """
+        Add static 'SAMPLE' text along three diagonals across the video and save the result.
+        """
+        text_file_instance = self.text_file_instance
+
+        try:
+            # Function to calculate positions for 'SAMPLE' text on different diagonals
+            def calculate_positions(video, diagonal_type):
+                positions = []
+                if diagonal_type == "main":
+                    # Main diagonal with 3 instances
+                    for i in range(1, 4):
+                        pos_x = (video.w // 4) * i
+                        pos_y = (video.h // 4) * i
+                        positions.append((pos_x, pos_y))
+                elif diagonal_type == "secondary":
+                    # Secondary diagonal with 2 instances (starting from the middle of video)
+                    for i in range(1, 3):
+                        pos_x = (video.w // 4) * i
+                        pos_y = (video.h // 2) + (video.h // 6) * i  # Offset from the middle
+                        positions.append((pos_x, pos_y))
+                elif diagonal_type == "tertiary":
+                    # Third diagonal with 1 instance
+                    pos_x = video.w // 2
+                    pos_y = video.h // 4
+                    positions.append((pos_x, pos_y))
+                return positions
+
+            # Function to create "SAMPLE" TextClip
+            def create_sample_textclip(video, position):
+                return TextClip(
+                    "SAMPLE",
+                    fontsize=int(video.h * 0.2),  # Adjust font size based on video height
+                    color='white',
+                    font="Arial-Bold",
+                    stroke_color='black',
+                    stroke_width=2
+                ).set_opacity(0.5).set_position(position).set_duration(video.duration)
+
+            # Collecting the positions for each diagonal
+            main_positions = calculate_positions(video, "main")
+            secondary_positions = calculate_positions(video, "secondary")
+            tertiary_positions = calculate_positions(video, "tertiary")
+
+            # Create text watermarks for each position
+            text_watermarks = []
+            for position in main_positions:
+                text_watermarks.append(create_sample_textclip(video, position))
+            
+            for position in secondary_positions:
+                text_watermarks.append(create_sample_textclip(video, position))
+            
+            for position in tertiary_positions:
+                text_watermarks.append(create_sample_textclip(video, position))
+
+            self.text_file_instance.track_progress(82)
+
+            # Overlay the static text watermarks on the video
+            watermarked = CompositeVideoClip([video] + text_watermarks, size=video.size)
+            watermarked.set_duration(video.duration)
+            self.text_file_instance.track_progress(83)
+
+            # Save the output to a temporary file
+            try:
+                with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
+                    watermarked.write_videofile(
+                        temp_output_video.name,
+                        codec='libx264',
+                        preset="ultrafast",
+                        audio_codec="aac",
+                        ffmpeg_params=["-movflags", "+faststart"]
+                    )
+                    self.text_file_instance.track_progress(94)
+
+                    # Save the watermarked video to the model field
+                    if text_file_instance.generated_watermarked_video:
+                        text_file_instance.generated_watermarked_video.delete(save=False)
+                        self.text_file_instance.track_progress(97)
+
+                    with open(temp_output_video.name, 'rb') as temp_file:
+                        text_file_instance.generated_watermarked_video.save(
+                            f"watermarked_output_{text_file_instance.id}.mp4",
+                            ContentFile(temp_file.read())
+                        )
+                        self.text_file_instance.track_progress(99)
+
+                logging.info("Watermarked video generated successfully.")
+                return True
+
+            except Exception as e:
+                logging.error(f"Error generating watermarked video: {e}")
+                return False
+
+        except Exception as e:
+            logging.error(f"Error in adding watermark to video: {e}")
+            return False
+
+
+
+
 
     def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
         text_file_instance=self.text_file_instance
