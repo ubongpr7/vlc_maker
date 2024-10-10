@@ -454,22 +454,41 @@ def download_video(request,textfile_id,):
 
 
 @login_required
-def download_file_from_s3(request, file_key,textfile_id):
-    user_credit = Credit.objects.get(user=request.user)
-    text_file=TextFile.objects.get(id=textfile_id)
+def download_file_from_s3(request, file_key,textfile_id-None):
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+    )
 
-    if user_credit.credits > 0:
-        if not text_file.processed:
-            user_credit.credits-=1
-            user_credit.save()
-            text_file.processed=True
-            text_file.save()
-        s3 = boto3.client(
-            's3',
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-        )
+    if textfile_id:
+        user_credit = Credit.objects.get(user=request.user)
+        text_file=TextFile.objects.get(id=textfile_id)
 
+        if user_credit.credits > 0:
+            if not text_file.processed:
+                user_credit.credits-=1
+                user_credit.save()
+                text_file.processed=True
+                text_file.save()
+        
+            try:
+                # Get the file from S3
+                s3_response = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_key)
+
+                # Set the appropriate headers for file download
+                response = HttpResponse(s3_response['Body'].read(), content_type=s3_response['ContentType'])
+                response['Content-Disposition'] = f'attachment; filename="{file_key.split("/")[-1]}"'
+                response['Content-Length'] = s3_response['ContentLength']
+
+                return response
+            except s3.exceptions.NoSuchKey:
+                return HttpResponse("File not found.", status=404)
+            except (NoCredentialsError, PartialCredentialsError):
+                return HttpResponse("Credentials not available.", status=403)
+        return HttpResponse(status=403)
+        
+    else:
         try:
             # Get the file from S3
             s3_response = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_key)
@@ -484,4 +503,5 @@ def download_file_from_s3(request, file_key,textfile_id):
             return HttpResponse("File not found.", status=404)
         except (NoCredentialsError, PartialCredentialsError):
             return HttpResponse("Credentials not available.", status=403)
+        
     return HttpResponse(status=403)
