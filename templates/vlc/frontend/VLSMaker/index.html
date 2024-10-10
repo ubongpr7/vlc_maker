@@ -285,6 +285,7 @@
                         'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include CSRF token for security
                     },
                     success: function(response) {
+                        console.log(response);  // Log the entire response to the console
                         if (response.valid) {
                             submitButton.prop('disabled', false);  // Enable submit button if valid
                         } else {
@@ -293,13 +294,19 @@
                                 apiKeyError.text(response.error);  // Show API key error
                             } else if (response.error.includes('voice')) {
                                 voiceIdError.text(response.error);  // Show Voice ID error
+                            } else {
+                                apiKeyError.text('An unknown error occurred');  // Fallback for unknown errors
                             }
                         }
                     },
-                    error: function() {
+
+                    error: function(xhr, status, error) {
+                        console.log("Error Status: ", status);  // Log error status
+                        console.log("Error: ", error);          // Log error message
                         submitButton.prop('disabled', true);
                         apiKeyError.text('Error validating the API key.');
                     }
+
                 });
             } else {
                 submitButton.prop('disabled', true);
