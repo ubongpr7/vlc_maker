@@ -251,89 +251,66 @@
 
     </div>
     <script src="{% static 'js/script.js'%}"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-    const apiKeyInput = document.querySelector('#api_key');
-    const voiceIdInput = document.querySelector('#voice_id');
-    const submitButton = document.querySelector('#submit_form');
-    const apiKeyError = document.createElement('p');
-    const voiceIdError = document.createElement('p');
+    
 
-    // Disable submit button initially
-    submitButton.disabled = true;
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const submitButton = $('#submit_form');
+        const apiKeyInput = $('#api_key');
+        const voiceIdInput = $('#voice_id');
+        const apiKeyError = $('#api_key_error');
+        const voiceIdError = $('#voice_id_error');
 
-    // Listen for changes in both inputs
-    apiKeyInput.addEventListener('input', validateFields);
-    voiceIdInput.addEventListener('input', validateFields);
+        // Initially disable the submit button
+        submitButton.prop('disabled', true);
 
-    function validateFields() {
-        const apiKey = apiKeyInput.value.trim();
-        const voiceId = voiceIdInput.value.trim();
+        // Function to validate the API key and Voice ID
+        function validateAPIKey() {
+            const apiKey = apiKeyInput.val().trim();
+            const voiceId = voiceIdInput.val().trim();
 
-        // Remove existing error messages
-        apiKeyError.textContent = '';
-        voiceIdError.textContent = '';
+            // Remove any previous error messages
+            apiKeyError.text('');
+            voiceIdError.text('');
 
-        // Ensure both fields are not empty before making the request
-        if (apiKey && voiceId) {
-            validateAPIKey(apiKey, voiceId);
-        }
-    }
-
-    function validateAPIKey(apiKey, voiceId) {
-        // Create the request payload
-        const data = new FormData();
-        data.append('eleven_labs_api_key', apiKey);
-        data.append('voice_id', voiceId);
-
-        fetch('/text/validate_api_key', {  // Adjust the URL based on your routing
-            method: 'POST',
-            body: data,
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),  // If you're using Django, ensure the CSRF token is included
-            }
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.valid) {
-                submitButton.disabled = false;  // Enable submit button if validation is successful
+            if (apiKey && voiceId) {
+                // Send AJAX request to validate the API key and voice ID
+                $.ajax({
+                    url: '/text/validate_api_key/',  // URL for the Django view
+                    type: 'POST',
+                    data: {
+                        'eleven_labs_api_key': apiKey,
+                        'voice_id': voiceId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include CSRF token for security
+                    },
+                    success: function(response) {
+                        if (response.valid) {
+                            submitButton.prop('disabled', false);  // Enable submit button if valid
+                        } else {
+                            submitButton.prop('disabled', true);  // Disable submit button if not valid
+                            if (response.error.includes('API key')) {
+                                apiKeyError.text(response.error);  // Show API key error
+                            } else if (response.error.includes('voice')) {
+                                voiceIdError.text(response.error);  // Show Voice ID error
+                            }
+                        }
+                    },
+                    error: function() {
+                        submitButton.prop('disabled', true);
+                        apiKeyError.text('Error validating the API key.');
+                    }
+                });
             } else {
-                submitButton.disabled = true;  // Disable submit button if validation fails
-                if (result.error.includes('API key')) {
-                    showError(apiKeyInput, apiKeyError, result.error);  // Display API key error
-                } else if (result.error.includes('voice')) {
-                    showError(voiceIdInput, voiceIdError, result.error);  // Display Voice ID error
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-    function showError(inputField, errorElement, message) {
-        errorElement.textContent = message;
-        errorElement.style.color = 'red';  // Optional: Add styling for the error message
-        inputField.parentNode.insertBefore(errorElement, inputField.nextSibling);
-    }
-
-    // Function to get the CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+                submitButton.prop('disabled', true);
             }
         }
-        return cookieValue;
-    }
-});
 
-    </script>
+        // Listen for changes in the API key or Voice ID inputs
+        apiKeyInput.on('input', validateAPIKey);
+        voiceIdInput.on('input', validateAPIKey);
+    });
+</script>
+
 </body>
 </html>
