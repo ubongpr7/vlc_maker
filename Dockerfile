@@ -58,6 +58,19 @@ RUN sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy doma
     && sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy domain="path" rights="none" pattern="@\*"-->/' /etc/ImageMagick-7/policy.xml || true
 
 
+
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG DB_PASSWORD
+ARG EMAIL_HOST_PASSWORD
+ARG EMAIL_HOST_USER
+
+ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+ENV EMAIL_HOST_USER=${EMAIL_HOST_USER}
+EXPOSE 8000
 COPY ./fonts /usr/share/fonts/custom
 
 # Update font cache so the system recognizes the new fonts
@@ -67,7 +80,7 @@ WORKDIR /app
 
 # Your entrypoint or CMD here, for example:
 # ENTRYPOINT ["entrypoint.sh"]
-EXPOSE 8000
+
 # CMD ["python3.10", "manage.py", "runserver", "0.0.0.0:8000"]
 CMD [ "python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:8000"]
 
