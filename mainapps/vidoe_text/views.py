@@ -459,12 +459,16 @@ def download_video(request,textfile_id,):
 
 
 @login_required
-def download_file_from_s3(request, file_key):
+def download_file_from_s3(request, file_key,textfile_id):
     user_credit = Credit.objects.get(user=request.user)
+    text_file=TextFile.objects.get(id=textfile_id)
+
     if user_credit.credits > 0:
-        user_credit.credits-=1
-        user_credit.save()
-        # Initialize the S3 client
+        if not text_file.processed:
+            user_credit.credits-=1
+            user_credit.save()
+            text_file.processed=True
+            text_file.save()
         s3 = boto3.client(
             's3',
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,

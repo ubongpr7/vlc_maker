@@ -59,7 +59,7 @@
                 </div>
             </div>
                     {% if bg_music == 'false' %}
-                    <a href="{% url 'video_text:download_file' file_key=text_file.generated_final_video.name %}"download style="display: flex; box-sizing: border-box; align-items: center; justify-content: center; text-decoration: none; background: #864AF9; border-radius: 8px; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 21.94px; text-align: left; color: white; padding: 12px 24px; width: 100%; gap: 10px;">
+                    <a id="downloadButton" href="{% url 'video_text:download_file' file_key=text_file.generated_final_video.name textfile_id=text_file.id %}"download style="display: flex; box-sizing: border-box; align-items: center; justify-content: center; text-decoration: none; background: #864AF9; border-radius: 8px; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 21.94px; text-align: left; color: white; padding: 12px 24px; width: 100%; gap: 10px;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             
                             <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M7 10L12 15M12 15L17 10M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -95,6 +95,22 @@
 //             dropdown.classList.add('not-present');
 //         }
 //     });
+
+    document.getElementById('downloadButton').addEventListener('click', function(event) {
+        // Start the download
+        const href = event.currentTarget.getAttribute('href');
+
+        // Create a temporary link and simulate a click
+        const tempLink = document.createElement('a');
+        tempLink.href = href;
+        tempLink.setAttribute('download', '');
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+
+        // Redirect the user to '/text' after starting the download
+        window.location.href = '/text';
+    });
 </script>
 </body>
 </html>
