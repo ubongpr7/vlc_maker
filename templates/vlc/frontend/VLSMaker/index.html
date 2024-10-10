@@ -295,7 +295,7 @@
                             } else if (response.error.includes('voice')) {
                                 voiceIdError.text(response.error);  // Show Voice ID error
                             } else {
-                                apiKeyError.text('An unknown error occurred');  // Fallback for unknown errors
+                                apiKeyError.text(response.error);  // Fallback for unknown errors
                             }
                         }
                     },

@@ -343,7 +343,7 @@ def validate_api_keyv(request):
                 else:
                     return JsonResponse({'valid': False, 'error': "Invalid API key"})
             else:
-                return JsonResponse({'valid': False, 'error': f"API request failed with status code {response.status_code}"})
+                return JsonResponse({'valid': False, 'error':"Invalid Voice ID"})
         except requests.exceptions.RequestException:
             return JsonResponse({'valid': False, 'error': 'Error connecting to Eleven Labs API'})
 
