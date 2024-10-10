@@ -78,25 +78,47 @@
                 <p style="margin-top:-40px;font-size:12px;">*Please Note That  When You Click Download, Watermark Will Be Removed</p>
             
         </div>
+
     </div>
+
+    <a id="downloadButton" href="{% url 'video_text:download_file' file_key=text_file.generated_final_video.name textfile_id=text_file.id %}" download style="...">
+        Download Video
+    </a>
+    
+    <script>
+        document.getElementById('downloadButton').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent the default anchor behavior
+    
+            // Fetch the URL to start the download
+            const href = event.currentTarget.getAttribute('href');
+    
+            fetch(href)
+            .then(response => {
+                if (response.ok) {
+                    // Create a temporary link to trigger the download
+                    const tempLink = document.createElement('a');
+                    tempLink.href = href;
+                    tempLink.setAttribute('download', '');
+                    document.body.appendChild(tempLink);
+                    tempLink.click();
+                    document.body.removeChild(tempLink);
+    
+                    // After the download starts, redirect to /text
+                    window.location.href = '/text';
+                } else {
+                    console.error('Download failed or could not start.');
+                }
+            })
+            .catch(error => {
+                console.error('Error initiating the download:', error);
+            });
+        });
+    </script>
+    
 <script>
-//     const pfp = document.getElementById('pfp');
-// const dropdown = document.getElementById('pfpdropdown');
-
-//     pfp.addEventListener('click', function() {
-//         dropdown.classList.toggle('not-present');
-//         dropdown.classList.toggle('present');
-//     });
 
 
-//     document.addEventListener('click', function(event) {
-//         if (!dropdown.contains(event.target) && !pfp.contains(event.target)) {
-//             dropdown.classList.remove('present');
-//             dropdown.classList.add('not-present');
-//         }
-//     });
-
-    document.getElementById('downloadButton').addEventListener('click', function(event) {
+    <!-- document.getElementById('downloadButton').addEventListener('click', function(event) {
         // Start the download
         const href = event.currentTarget.getAttribute('href');
 
@@ -110,7 +132,7 @@
 
         // Redirect the user to '/text' after starting the download
         window.location.href = '/text';
-    });
+    }); -->
 </script>
 </body>
 </html>
