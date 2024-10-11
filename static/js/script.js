@@ -97,9 +97,37 @@ function selectOption(resolution) {
 document.querySelectorAll('.box').forEach(box => {
     box.addEventListener('click', function() {
         const resolution = this.getAttribute('data-resolution');
-        selectOption(resolution);
+        adjustPreviewBox(resolution);  // Function to adjust preview box size based on resolution
     });
 });
+
+function adjustPreviewBox(resolution) {
+    const previewBox = document.querySelector('.preview-box');
+    
+    let width = 100;  // Set base width to 100% or adjust as needed
+    let height;
+
+    // Adjust height based on resolution ratio
+    switch (resolution) {
+        case '1:1':
+            height = width;  // Equal width and height for 1:1 ratio
+            break;
+        case '16:9':
+            height = (width / 16) * 9;  // Height calculated for 16:9 ratio
+            break;
+        case '4:5':
+            height = (width / 4) * 5;  // Height calculated for 4:5 ratio
+            break;
+        default:
+            console.error('Unknown resolution:', resolution);
+            return;
+    }
+
+    // Apply width and height to the preview box element
+    previewBox.style.width = `${width}%`;
+    previewBox.style.height = `${height}vw`;  // Set height based on viewport width
+}
+
 
 
 

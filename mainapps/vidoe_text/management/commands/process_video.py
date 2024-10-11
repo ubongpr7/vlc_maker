@@ -1189,8 +1189,6 @@ class Command(BaseCommand):
                 return False
 
 
-
-
     def add_static_watermark_to_instance(self, video):
         """
         Add static 'SAMPLE' text along three diagonals across the video and save the result.
@@ -1220,32 +1218,32 @@ class Command(BaseCommand):
                     positions.append((pos_x, pos_y))
                 return positions
 
-            # Function to create "SAMPLE" TextClip with rotation for diagonal alignment
-            def create_sample_textclip(video, position, rotation_angle):
+            # Function to create "SAMPLE" TextClip with a fixed rotation of 45 degrees for all watermarks
+            def create_sample_textclip(video, position):
                 return TextClip(
-                    "Sample",
-                    fontsize=int(video.h * 0.1),  # Adjusted font size (smaller)
+                    "SAMPLE",
+                    fontsize=int(video.h * 0.1),  # Adjust font size as needed
                     color='white',
                     font="Montserrat",
                     stroke_color='black',
                     stroke_width=2
-                ).set_opacity(0.5).set_position(position).set_duration(video.duration).rotate(rotation_angle)
+                ).set_opacity(0.5).set_position(position).set_duration(video.duration).rotate(45)  # Fixed rotation of 45 degrees
 
             # Collecting the positions for each diagonal
             main_positions = calculate_positions(video, "main")
             secondary_positions = calculate_positions(video, "secondary")
             tertiary_positions = calculate_positions(video, "tertiary")
 
-            # Create text watermarks for each position with rotation
+            # Create text watermarks for each position with a fixed 45-degree rotation
             text_watermarks = []
             for position in main_positions:
-                text_watermarks.append(create_sample_textclip(video, position, rotation_angle=45))  # Main diagonal 45 degrees
+                text_watermarks.append(create_sample_textclip(video, position))
 
             for position in secondary_positions:
-                text_watermarks.append(create_sample_textclip(video, position, rotation_angle=-45))  # Secondary diagonal -45 degrees
+                text_watermarks.append(create_sample_textclip(video, position))
 
             for position in tertiary_positions:
-                text_watermarks.append(create_sample_textclip(video, position, rotation_angle=30))  # Tertiary diagonal at 30 degrees
+                text_watermarks.append(create_sample_textclip(video, position))
 
             self.text_file_instance.track_progress(82)
 
@@ -1288,6 +1286,105 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error in adding watermark to video: {e}")
             return False
+
+
+    # def add_static_watermark_to_instance(self, video):
+    #     """
+    #     Add static 'SAMPLE' text along three diagonals across the video and save the result.
+    #     """
+    #     text_file_instance = self.text_file_instance
+
+    #     try:
+    #         # Function to calculate positions for 'SAMPLE' text on different diagonals
+    #         def calculate_positions(video, diagonal_type):
+    #             positions = []
+    #             if diagonal_type == "main":
+    #                 # Main diagonal with 3 instances, spread evenly
+    #                 for i in range(1, 4):
+    #                     pos_x = (video.w // 4) * i
+    #                     pos_y = (video.h // 4) * i
+    #                     positions.append((pos_x, pos_y))
+    #             elif diagonal_type == "secondary":
+    #                 # Secondary diagonal with 2 instances, spread with more spacing
+    #                 for i in range(1, 3):
+    #                     pos_x = (video.w // 4) * i
+    #                     pos_y = (video.h // 2) + (video.h // 4) * i  # More spacing from the middle
+    #                     positions.append((pos_x, pos_y))
+    #             elif diagonal_type == "tertiary":
+    #                 # Tertiary diagonal with 1 instance
+    #                 pos_x = video.w // 2
+    #                 pos_y = video.h // 4
+    #                 positions.append((pos_x, pos_y))
+    #             return positions
+
+    #         # Function to create "SAMPLE" TextClip with rotation for diagonal alignment
+    #         def create_sample_textclip(video, position, rotation_angle):
+    #             return TextClip(
+    #                 "Sample",
+    #                 fontsize=int(video.h * 0.1),  # Adjusted font size (smaller)
+    #                 color='white',
+    #                 font="Montserrat",
+    #                 stroke_color='black',
+    #                 stroke_width=2
+    #             ).set_opacity(0.5).set_position(position).set_duration(video.duration).rotate(rotation_angle)
+
+    #         # Collecting the positions for each diagonal
+    #         main_positions = calculate_positions(video, "main")
+    #         secondary_positions = calculate_positions(video, "secondary")
+    #         tertiary_positions = calculate_positions(video, "tertiary")
+
+    #         # Create text watermarks for each position with rotation
+    #         text_watermarks = []
+    #         for position in main_positions:
+    #             text_watermarks.append(create_sample_textclip(video, position, rotation_angle=45))  # Main diagonal 45 degrees
+
+    #         for position in secondary_positions:
+    #             text_watermarks.append(create_sample_textclip(video, position, rotation_angle=-45))  # Secondary diagonal -45 degrees
+
+    #         for position in tertiary_positions:
+    #             text_watermarks.append(create_sample_textclip(video, position, rotation_angle=30))  # Tertiary diagonal at 30 degrees
+
+    #         self.text_file_instance.track_progress(82)
+
+    #         # Overlay the static text watermarks on the video
+    #         watermarked = CompositeVideoClip([video] + text_watermarks, size=video.size)
+    #         watermarked.set_duration(video.duration)
+    #         self.text_file_instance.track_progress(83)
+
+    #         # Save the output to a temporary file
+    #         try:
+    #             with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
+    #                 watermarked.write_videofile(
+    #                     temp_output_video.name,
+    #                     codec='libx264',
+    #                     preset="ultrafast",
+    #                     audio_codec="aac",
+    #                     ffmpeg_params=["-movflags", "+faststart"]
+    #                 )
+    #                 self.text_file_instance.track_progress(94)
+
+    #                 # Save the watermarked video to the model field
+    #                 if text_file_instance.generated_watermarked_video:
+    #                     text_file_instance.generated_watermarked_video.delete(save=False)
+    #                     self.text_file_instance.track_progress(97)
+
+    #                 with open(temp_output_video.name, 'rb') as temp_file:
+    #                     text_file_instance.generated_watermarked_video.save(
+    #                         f"watermarked_output_{text_file_instance.id}.mp4",
+    #                         ContentFile(temp_file.read())
+    #                     )
+    #                     self.text_file_instance.track_progress(99)
+
+    #             logging.info("Watermarked video generated successfully.")
+    #             return True
+
+    #         except Exception as e:
+    #             logging.error(f"Error generating watermarked video: {e}")
+    #             return False
+
+    #     except Exception as e:
+    #         logging.error(f"Error in adding watermark to video: {e}")
+    #         return False
 
 
 
