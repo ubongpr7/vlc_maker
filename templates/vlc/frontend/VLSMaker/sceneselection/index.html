@@ -209,16 +209,19 @@
                     
                         <!-- Video Selection -->
                         <div style="width: 100%; position: relative;">
-                            <select class="selected_clip"onchange="saveInput(this)" name="selected_video_{{ forloop.counter0 }}" id="videoSelect_{{ forloop.counter0 }}_{{textfile_id}}" 
-                                    
-                                    style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333;">
-                            <option value="">Select a video</option>
+                            <select class="selected_clip"
+                                    onchange="saveInput(this)"
+                                    name="selected_video_{{ forloop.counter0 }}"
+                                    id="videoSelect_{{ forloop.counter0 }}_{{textfile_id}}" 
+                                    style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333; padding-right: 40px;"> <!-- Add padding-right to ensure space for the arrow -->
+                                <option value="">Select a video</option>
                             </select>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
-                            <path d="M6 9L12 15L18 9" stroke="#050315" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg> 
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" 
+                                 style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                                <path d="M6 9L12 15L18 9" stroke="#050315" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </div>
-                    
+                        
                         <!-- Hidden Input -->
                         <input type="hidden" name="topic_folder_selected_{{ forloop.counter0 }}" id="topicFolder_{{ forloop.counter0 }}_{{textfile_id}}">
                         </div>
