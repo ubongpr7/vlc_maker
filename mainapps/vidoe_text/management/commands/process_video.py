@@ -1189,38 +1189,35 @@ class Command(BaseCommand):
                 return False
     def add_static_watermark_to_instance(self, video):
         """
-        Add static 'SAMPLE' text along three distinct diagonals across the video and save the result.
+        Add a single 'SAMPLE' text across the main diagonal of the video and save the result.
         """
         text_file_instance = self.text_file_instance
 
         try:
-            # Function to create "SAMPLE" TextClip with a fixed rotation of 45 degrees for all watermarks
-            def create_sample_textclip(video, position):
+            # Function to create "SAMPLE" TextClip for the diagonal, adjusted to the video diagonal size
+            def create_sample_textclip(video):
+                # Calculate diagonal length of the video using Pythagoras theorem
+                diagonal_length = int((video.w ** 2 + video.h ** 2) ** 0.5)
+                
+                # Set the font size to cover a significant portion of the diagonal
+                font_size = int(diagonal_length * 0.1)  # Adjust this ratio to control the size
+                
                 return TextClip(
                     "Sample",
-                    fontsize=int(video.h * 0.2),  # Adjust font size as needed
+                    fontsize=font_size,  # Font size based on diagonal length
                     color='white',
                     font="Montserrat",
                     stroke_color='black',
                     stroke_width=2
-                ).set_opacity(0.5).set_position(position).set_duration(video.duration).rotate(45)  # Fixed rotation of 45 degrees
+                ).set_opacity(0.5).set_position("center").set_duration(video.duration).rotate(45)  # Positioned at the center, rotated diagonally
 
-            # Positions for three distinct diagonals
-            central_diagonal_position = (video.w // 2, video.h // 2)  # Center of the video
-            top_diagonal_position = (video.w // 4, video.h // 4)  # Top diagonal position
-            bottom_diagonal_position = (video.w * 3 // 4, video.h * 3 // 4)  # Bottom diagonal position
-
-            # Create text watermarks for each position
-            text_watermarks = [
-                create_sample_textclip(video, central_diagonal_position),
-                create_sample_textclip(video, top_diagonal_position),
-                create_sample_textclip(video, bottom_diagonal_position),
-            ]
+            # Create the watermark text for the diagonal
+            text_watermark = create_sample_textclip(video)
 
             self.text_file_instance.track_progress(82)
 
-            # Overlay the static text watermarks on the video
-            watermarked = CompositeVideoClip([video] + text_watermarks, size=video.size)
+            # Overlay the static text watermark on the video
+            watermarked = CompositeVideoClip([video, text_watermark], size=video.size)
             watermarked.set_duration(video.duration)
             self.text_file_instance.track_progress(83)
 
@@ -1258,7 +1255,6 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error in adding watermark to video: {e}")
             return False
-
 
     # def add_static_watermark_to_instance(self, video):
     #     """
