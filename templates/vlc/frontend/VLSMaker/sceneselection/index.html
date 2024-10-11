@@ -329,7 +329,9 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
             // Event listener for the first select field
             topicFolderSelect.addEventListener("change", function() {
                 if (this.value !== "") {
-                    this.style.border = "";  // Remove red border if a value is selected
+                    this.style.border = "";
+                    svgItemElement.style.top='50%'
+                    
                     const errorElement = document.getElementById(errorElementId);
                     if (errorElement) {
                         errorElement.remove();  // Remove error message if it exists
