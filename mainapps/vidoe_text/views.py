@@ -171,10 +171,38 @@ def process_background_music(request, textfile_id):
         # Check if the necessary fields are present in TextFile
         if not textfile.text_file:
             return JsonResponse({"error": "Text file is missing."}, status=400)
-        music_files = [request.FILES.get(f'bg_music_{i}') for i in range(1, no_of_mp3 +1)]  # Adjust based on your inputs
-        start_times_str = {f'bg_music_{i}': request.POST.get(f'from_when_{i}') for i in range(1, no_of_mp3 +1)}
-        bg_levels = {f'bg_music_{i}': float(request.POST.get(f'bg_level_{i}'))/1000.0 for i in range(1, no_of_mp3 +1)}
-        end_times_str = {f'bg_music_{i}': request.POST.get(f'to_when_{i}') for i in range(1, no_of_mp3+1)}
+        # Check for text file and return error if missing
+        music_files = []
+        start_times_str = {}
+        bg_levels = {}
+        end_times_str = {}
+
+        # Loop through each item based on the number of MP3s
+        for i in range(1, no_of_mp3 + 1):
+            # Get the music file and check if it's not None before adding to the list
+            music_file = request.FILES.get(f'bg_music_{i}')
+            if music_file is not None:
+                music_files.append(music_file)
+
+            # Get start time and check if it's not None before adding to the dictionary
+            start_time = request.POST.get(f'from_when_{i}')
+            if start_time is not None:
+                start_times_str[f'bg_music_{i}'] = start_time
+
+            # Get background level and check if it's not None before adding to the dictionary
+            bg_level = request.POST.get(f'bg_level_{i}')
+            if bg_level is not None:
+                bg_levels[f'bg_music_{i}'] = float(bg_level) / 1000.0
+
+            # Get end time and check if it's not None before adding to the dictionary
+            end_time = request.POST.get(f'to_when_{i}')
+            if end_time is not None:
+                end_times_str[f'bg_music_{i}'] = end_time
+
+        # music_files = [request.FILES.get(f'bg_music_{i}') for i in range(1, no_of_mp3 +1)]  # Adjust based on your inputs
+        # start_times_str = {f'bg_music_{i}': request.POST.get(f'from_when_{i}') for i in range(1, no_of_mp3 +1)}
+        # bg_levels = {f'bg_music_{i}': float(request.POST.get(f'bg_level_{i}'))/1000.0 for i in range(1, no_of_mp3 +1)}
+        # end_times_str = {f'bg_music_{i}': request.POST.get(f'to_when_{i}') for i in range(1, no_of_mp3+1)}
         start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
 
