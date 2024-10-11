@@ -291,11 +291,16 @@
                         } else {
                             submitButton.prop('disabled', true);  // Disable submit button if not valid
                             if (response.error.includes('API key')) {
+
                                 apiKeyError.text(response.error);  // Show API key error
+                                apiKeyInput.focus()
                             } else if (response.error.includes('Voice')) {
                                 voiceIdError.text(response.error);  // Show Voice ID error
+                                voiceIdInput.focus()
                             } else {
                                 apiKeyError.text(response.error);  // Fallback for unknown errors
+                                apiKeyInput.focus()
+
                             }
                         }
                     },
