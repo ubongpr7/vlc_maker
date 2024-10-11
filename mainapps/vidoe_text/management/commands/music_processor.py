@@ -306,7 +306,7 @@ class Command(BaseCommand):
                             f"watermarked_output_{text_file_instance.id}.mp4",
                             ContentFile(temp_file.read())
                         )
-                        self.text_file_instance.track_progress(99)
+                        self.text_file_instance.track_progress(100)
 
                 logging.info("Watermarked video generated successfully.")
                 return True
