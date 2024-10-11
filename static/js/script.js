@@ -105,33 +105,36 @@ document.querySelectorAll('.box').forEach(box => {
 function adjustPreviewBox(resolution) {
     const previewBox = document.getElementById('preview-box');
     
-    // Set a base size in px (originally 382px)
-    const baseSize = 382;  
-    let width, height;
+    // Set the width to 100% of the parent container
+    previewBox.style.width = '100%';
 
-    // Adjust dimensions based on resolution ratio
+    // Set a base height in px (originally 382px)
+    const originalHeight = 382;  
+    let height;
+
+    // Adjust height based on resolution ratio
     switch (resolution) {
         case '1:1':
-            width = baseSize;  // Equal width and height for 1:1 ratio
-            height = baseSize;
+            height = originalHeight;  // Equal height for 1:1 ratio
             break;
         case '16:9':
-            width = baseSize;  // Keep the width constant for 16:9 ratio
-            height = (baseSize * 9) / 16;  // Calculate height for 16:9 ratio
+            height = (originalHeight / 1) * (9 / 16);  // Height calculated for 16:9 ratio
             break;
         case '4:5':
-            width = baseSize;  // Keep the width constant for 4:5 ratio
-            height = (baseSize * 5) / 4;  // Calculate height for 4:5 ratio
+            height = (originalHeight / 1) * (5 / 4);  // Height calculated for 4:5 ratio
             break;
         default:
             console.error('Unknown resolution:', resolution);
             return;
     }
 
-    // Apply calculated dimensions to the preview box
-    previewBox.style.width = `${width}px`;   // Set width in px
-    previewBox.style.height = `${height}px`;  // Set height in px
+    // Apply calculated height to the preview box
+    console.log(height)
+    previewBox.style.height = `${height}px`;  // Set height in px based on the calculation
 }
+
+
+
 
 
 const slider = document.getElementById("mySlider");
