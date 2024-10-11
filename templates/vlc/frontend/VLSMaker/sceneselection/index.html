@@ -249,8 +249,8 @@
             let allValid = true;
 
             // Loop through each loop index
-            const loopLength = "{{ n_lines }}"; // Replace with your loop length variable
-            const textfileId = "{{ textfile_id }}"; // Replace with textfile_id
+            const loopLength = "{{ n_lines }}"; 
+            const textfileId = "{{ textfile_id }}"; 
 
             for (let i = 0; i < loopLength; i++) {
                 const fileInput = document.getElementById(`video_${i}`);
@@ -289,7 +289,27 @@
             }
         });
 
+        const loopLength = "{{ n_lines }}"; 
+        const textfileId = "{{ textfile_id }}"; 
 
+        for (let i = 0; i < loopLength; i++) {
+            const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
+            const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
+
+            // Event listener for first select field
+            topicFolderSelect.addEventListener("change", function() {
+                if (this.value !== "") {
+                    this.style.border = "";  // Remove red border if a value is selected
+                }
+            });
+
+            // Event listener for second dependent select field
+            videoSelect.addEventListener("change", function() {
+                if (this.value !== "") {
+                    this.style.border = "";  // Remove red border if a value is selected
+                }
+            });
+        }
         window.addEventListener('load', async function() {
             // Ensure all elements are loaded
             document.getElementById('scene_form').reset();
