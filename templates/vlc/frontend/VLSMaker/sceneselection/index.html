@@ -208,7 +208,7 @@
                         </div>
                     
                         <!-- Video Selection -->
-                        <div style="width: 100%; position: relative;">
+                        <div id="div_{{ forloop.counter0 }}" style="width: 100%; position: relative;">
                             <select class="selected_clip"
                                     onchange="saveInput(this)"
                                     name="selected_video_{{ forloop.counter0 }}"
@@ -216,7 +216,7 @@
                                     style="appearance: none; background: #EEEEEE; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; border: none; color: #333; padding-right: 40px;"> <!-- Add padding-right to ensure space for the arrow -->
                                 <option value="">Select a video</option>
                             </select>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" 
+                            <svg id="svg_{{ forloop.counter0 }}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" 
                                  style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;">
                                 <path d="M6 9L12 15L18 9" stroke="#050315" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -257,6 +257,8 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
         const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
         const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
         const errorElementId = `select_video_${i}_error`;
+        const svgItemid=`svg_${i}`
+        let svgItemElement= document.getElementById(svgItemid)
         let errorElement = document.getElementById(errorElementId);
 
         // Check if file input has value or both selects have values
@@ -265,12 +267,13 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
 
         if (!isFileProvided && !isSelectProvided) {
             // Highlight unselected inputs
-            fileInput.style.border = "2px solid red";
-            topicFolderSelect.style.border = "2px solid red";
-            videoSelect.style.border = "2px solid red";
+            fileInput.style.border = "0.5px solid red";
+            topicFolderSelect.style.border = "0.5px solid red";
+            videoSelect.style.border = "0.5px solid red";
+            svgItemElement.style.top='40%'
 
             // Increase padding for the second select (videoSelect)
-            videoSelect.style.paddingRight = "25px"; // Increase padding slightly to align the arrow properly
+            // videoSelect.style.paddingRight = "25px"; // Increase padding slightly to align the arrow properly
 
             // Focus on the first invalid field
             topicFolderSelect.focus();
@@ -295,6 +298,7 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
             fileInput.style.border = "";
             topicFolderSelect.style.border = "";
             videoSelect.style.border = "";
+            svgItemElement.style.top='50%'
 
             // Remove any existing error message if present
             if (errorElement) {
