@@ -67,6 +67,31 @@
     font-weight: bold;
     padding: 10px;
 }
+/* General styling to ensure select elements are vertically aligned */
+select {
+    -webkit-appearance: none;  /* Remove default arrow in some browsers */
+    -moz-appearance: none;     /* Remove default arrow in Firefox */
+    appearance: none;
+    padding-right: 20px;       /* Add space for the custom arrow */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="black" d="M2 0L0 2h4z"/></svg>') no-repeat right center;
+    background-position: right 10px center; /* Ensure arrow is centered vertically */
+}
+
+/* Specific styling for selects inside the form */
+#scene_form select {
+    width: 100%;
+    height: 35px; /* Set a fixed height to ensure the arrow is centered vertically */
+    box-sizing: border-box;
+    padding: 0 10px; /* Padding for proper text and arrow positioning */
+    font-size: 14px; /* Adjust font size to match the design */
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Default border style */
+}
+
+/* Ensure that error select elements are still centered */
+#scene_form select[style*="2px solid red"] {
+    border-color: red;
+}
 
     </style>
 </head>
