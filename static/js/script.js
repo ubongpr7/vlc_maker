@@ -101,33 +101,37 @@ document.querySelectorAll('.box').forEach(box => {
     });
 });
 
+
 function adjustPreviewBox(resolution) {
-    const previewBox = document.querySelector('#preview-box');
+    const previewBox = document.querySelector('.preview-box');
     
-    let width = 100;  // Set base width to 100% or adjust as needed
+    // Set the width to 100% of the parent container
+    previewBox.style.width = '100%';
+
+    // Set a base height in px (originally 382px)
+    const originalHeight = 382;  
     let height;
 
     // Adjust height based on resolution ratio
     switch (resolution) {
         case '1:1':
-            height = width;  // Equal width and height for 1:1 ratio
+            height = originalHeight;  // Equal height for 1:1 ratio
             break;
         case '16:9':
-            height = (width / 16) * 9;  // Height calculated for 16:9 ratio
+            height = (originalHeight / 1) * (9 / 16);  // Height calculated for 16:9 ratio
             break;
         case '4:5':
-            height = (width / 4) * 5;  // Height calculated for 4:5 ratio
+            height = (originalHeight / 1) * (5 / 4);  // Height calculated for 4:5 ratio
             break;
         default:
             console.error('Unknown resolution:', resolution);
             return;
     }
 
-    // Apply width and height to the preview box element
-    previewBox.style.width = `${width}%`;
-    previewBox.style.height = `${height}vw`;  // Set height based on viewport width
+    // Apply calculated height to the preview box
+    console.log(height)
+    previewBox.style.height = `${height}px`;  // Set height in px based on the calculation
 }
-
 
 
 
