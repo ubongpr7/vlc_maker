@@ -81,10 +81,6 @@
 
     </div>
 
-    <a id="downloadButton" href="{% url 'video_text:download_file' file_key=text_file.generated_final_video.name textfile_id=text_file.id %}" download style="...">
-        Download Video
-    </a>
-    
     <script>
         document.getElementById('downloadButton').addEventListener('click', function(event) {
             event.preventDefault();  // Prevent the default anchor behavior
@@ -115,24 +111,6 @@
         });
     </script>
     
-<script>
-
-
-    <!-- document.getElementById('downloadButton').addEventListener('click', function(event) {
-        // Start the download
-        const href = event.currentTarget.getAttribute('href');
-
-        // Create a temporary link and simulate a click
-        const tempLink = document.createElement('a');
-        tempLink.href = href;
-        tempLink.setAttribute('download', '');
-        document.body.appendChild(tempLink);
-        tempLink.click();
-        document.body.removeChild(tempLink);
-
-        // Redirect the user to '/text' after starting the download
-        window.location.href = '/text';
-    }); -->
-</script>
+    
 </body>
 </html>
