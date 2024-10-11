@@ -97,41 +97,41 @@ function selectOption(resolution) {
 document.querySelectorAll('.box').forEach(box => {
     box.addEventListener('click', function() {
         const resolution = this.getAttribute('data-resolution');
-        adjustPreviewBox(resolution);  // Function to adjust preview box size based on resolution
+        // adjustPreviewBox(resolution);  // Function to adjust preview box size based on resolution
     });
 });
 
 
-function adjustPreviewBox(resolution) {
-    const previewBox = document.getElementById('preview-box');
+// function adjustPreviewBox(resolution) {
+//     const previewBox = document.getElementById('preview-box');
     
-    // Set the width to 100% of the parent container
-    previewBox.style.width = '100%';
+//     // Set the width to 100% of the parent container
+//     previewBox.style.width = '100%';
 
-    // Set a base height in px (originally 382px)
-    const originalHeight = 382;  
-    let height;
+//     // Set a base height in px (originally 382px)
+//     const originalHeight = 382;  
+//     let height;
 
-    // Adjust height based on resolution ratio
-    switch (resolution) {
-        case '1:1':
-            height = originalHeight;  // Equal height for 1:1 ratio
-            break;
-        case '16:9':
-            height = (originalHeight / 1) * (9 / 16);  // Height calculated for 16:9 ratio
-            break;
-        case '4:5':
-            height = (originalHeight / 1) * (5 / 4);  // Height calculated for 4:5 ratio
-            break;
-        default:
-            console.error('Unknown resolution:', resolution);
-            return;
-    }
+//     // Adjust height based on resolution ratio
+//     switch (resolution) {
+//         case '1:1':
+//             height = originalHeight;  // Equal height for 1:1 ratio
+//             break;
+//         case '16:9':
+//             height = (originalHeight / 1) * (9 / 16);  // Height calculated for 16:9 ratio
+//             break;
+//         case '4:5':
+//             height = (originalHeight / 1) * (5 / 4);  // Height calculated for 4:5 ratio
+//             break;
+//         default:
+//             console.error('Unknown resolution:', resolution);
+//             return;
+//     }
 
-    // Apply calculated height to the preview box
-    console.log(height)
-    previewBox.style.height = `${height}px`;  // Set height in px based on the calculation
-}
+//     // Apply calculated height to the preview box
+//     console.log(height)
+//     previewBox.style.height = `${height}px`;  // Set height in px based on the calculation
+// }
 
 
 
