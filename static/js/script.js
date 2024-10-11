@@ -97,6 +97,7 @@ function selectOption(resolution) {
 document.querySelectorAll('.box').forEach(box => {
     box.addEventListener('click', function() {
         const resolution = this.getAttribute('data-resolution');
+        selectOption(resolution)
         // adjustPreviewBox(resolution);  // Function to adjust preview box size based on resolution
     });
 });
