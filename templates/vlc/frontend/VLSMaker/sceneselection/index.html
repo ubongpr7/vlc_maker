@@ -67,31 +67,6 @@
     font-weight: bold;
     padding: 10px;
 }
-/* General styling to ensure select elements are vertically aligned */
-select {
-    -webkit-appearance: none;  /* Remove default arrow in some browsers */
-    -moz-appearance: none;     /* Remove default arrow in Firefox */
-    appearance: none;
-    padding-right: 20px;       /* Add space for the custom arrow */
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="black" d="M2 0L0 2h4z"/></svg>') no-repeat right center;
-    background-position: right 10px center; /* Ensure arrow is centered vertically */
-}
-
-/* Specific styling for selects inside the form */
-#scene_form select {
-    width: 100%;
-    height: 35px; /* Set a fixed height to ensure the arrow is centered vertically */
-    box-sizing: border-box;
-    padding: 0 10px; /* Padding for proper text and arrow positioning */
-    font-size: 14px; /* Adjust font size to match the design */
-    border-radius: 5px;
-    border: 1px solid #ccc; /* Default border style */
-}
-
-/* Ensure that error select elements are still centered */
-#scene_form select[style*="2px solid red"] {
-    border-color: red;
-}
 
     </style>
 </head>
@@ -267,70 +242,72 @@ select {
     </div>
     </form>
      <script>
-        document.getElementById("scene_form").addEventListener("submit", function(event) {
-            // Get all looped elements
-            let allValid = true;
+document.getElementById("scene_form").addEventListener("submit", function(event) {
+    let allValid = true;
 
-            // Loop through each loop index
-            const loopLength = "{{ n_lines }}"; 
-            const textfileId = "{{ textfile_id }}"; 
+    // Loop through each loop index
+    const loopLength = "{{ n_lines }}"; 
+    const textfileId = "{{ textfile_id }}"; 
 
-            for (let i = 0; i < loopLength; i++) {
-                const fileInput = document.getElementById(`video_${i}`);
-                const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
-                const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
-                const errorElementId = `select_video_${i}_error`;
-                let errorElement = document.getElementById(errorElementId);
+    for (let i = 0; i < loopLength; i++) {
+        const fileInput = document.getElementById(`video_${i}`);
+        const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
+        const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
+        const errorElementId = `select_video_${i}_error`;
+        let errorElement = document.getElementById(errorElementId);
 
-                // Check if file input has value or both selects have values
-                const isFileProvided = fileInput && fileInput.files.length > 0;
-                const isSelectProvided = topicFolderSelect && topicFolderSelect.value && videoSelect && videoSelect.value;
+        // Check if file input has value or both selects have values
+        const isFileProvided = fileInput && fileInput.files.length > 0;
+        const isSelectProvided = topicFolderSelect && topicFolderSelect.value && videoSelect && videoSelect.value;
 
-                if (!isFileProvided && !isSelectProvided) {
-                    // Highlight unselected inputs
-                    fileInput.style.border = "2px solid red";
-                    topicFolderSelect.style.border = "2px solid red";
-                    videoSelect.style.border = "2px solid red";
+        if (!isFileProvided && !isSelectProvided) {
+            // Highlight unselected inputs
+            fileInput.style.border = "2px solid red";
+            topicFolderSelect.style.border = "2px solid red";
+            videoSelect.style.border = "2px solid red";
 
-                    // Focus on the first invalid field
-                    topicFolderSelect.focus();
+            // Increase padding for the second select (videoSelect)
+            videoSelect.style.paddingRight = "25px"; // Increase padding slightly to align the arrow properly
 
-                    // Mark as invalid
-                    allValid = false;
+            // Focus on the first invalid field
+            topicFolderSelect.focus();
 
-                    // Add error message just below the video select element if it doesn't exist
-                    if (!errorElement) {
-                        errorElement = document.createElement('div');
-                        errorElement.id = errorElementId;
+            // Mark as invalid
+            allValid = false;
 
-                        // Styling the error message
-                        errorElement.style.color = 'red';
-                        errorElement.style.fontSize = '0.8rem';  // Very small font
-                        errorElement.style.textAlign = 'center'; // Center the text
-                        errorElement.style.marginTop = '5px';    // Add some space between select and the error message
-
-                        errorElement.innerText = "Please Select A Scene";
-                        videoSelect.parentNode.insertBefore(errorElement, videoSelect.nextSibling);
-                    }
-
-                } else {
-                    // Remove red border if inputs are valid
-                    fileInput.style.border = "";
-                    topicFolderSelect.style.border = "";
-                    videoSelect.style.border = "";
-
-                    // Remove any existing error message if present
-                    if (errorElement) {
-                        errorElement.remove();
-                    }
-                }
+            // Add error message just below the video select element if it doesn't exist
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.id = errorElementId;
+                errorElement.style.color = 'red';
+                errorElement.style.fontSize = '0.8rem';
+                errorElement.style.textAlign = 'center';
+                errorElement.style.marginTop = '5px';
+                errorElement.innerText = "Please Select A Scene";
+                videoSelect.parentNode.insertBefore(errorElement, videoSelect.nextSibling);
             }
 
-            // If not valid, prevent form submission
-            if (!allValid) {
-                event.preventDefault();
+        } else {
+            // Remove red border if inputs are valid
+            fileInput.style.border = "";
+            topicFolderSelect.style.border = "";
+            videoSelect.style.border = "";
+
+            // Remove any existing error message if present
+            if (errorElement) {
+                errorElement.remove();
             }
-        });
+
+            // Reset the padding for the second select (in case it was previously adjusted)
+            videoSelect.style.paddingRight = ""; // Reset to default
+        }
+    }
+
+    // If not valid, prevent form submission
+    if (!allValid) {
+        event.preventDefault();
+    }
+});
 
     //    document.getElementById("scene_form").addEventListener("submit", function(event) {
     // // Get all looped elements
