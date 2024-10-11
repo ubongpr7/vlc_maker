@@ -242,65 +242,130 @@
     </div>
     </form>
      <script>
-       document.getElementById("scene_form").addEventListener("submit", function(event) {
-    // Get all looped elements
-        let allValid = true;
+        document.getElementById("scene_form").addEventListener("submit", function(event) {
+            // Get all looped elements
+            let allValid = true;
 
-        // Loop through each loop index
-        const loopLength = "{{ n_lines }}"; 
-        const textfileId = "{{ textfile_id }}"; 
+            // Loop through each loop index
+            const loopLength = "{{ n_lines }}"; 
+            const textfileId = "{{ textfile_id }}"; 
 
-        for (let i = 0; i < loopLength; i++) {
-            const fileInput = document.getElementById(`video_${i}`);
-            const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
-            const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
-            const errorElementId = `select_video_${i}_error`;
-            let errorElement = document.getElementById(errorElementId);
+            for (let i = 0; i < loopLength; i++) {
+                const fileInput = document.getElementById(`video_${i}`);
+                const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
+                const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
+                const errorElementId = `select_video_${i}_error`;
+                let errorElement = document.getElementById(errorElementId);
 
-            // Check if file input has value or both selects have values
-            const isFileProvided = fileInput && fileInput.files.length > 0;
-            const isSelectProvided = topicFolderSelect && topicFolderSelect.value && videoSelect && videoSelect.value;
+                // Check if file input has value or both selects have values
+                const isFileProvided = fileInput && fileInput.files.length > 0;
+                const isSelectProvided = topicFolderSelect && topicFolderSelect.value && videoSelect && videoSelect.value;
 
-            if (!isFileProvided && !isSelectProvided) {
-                // Highlight unselected inputs
-                fileInput.style.border = "2px solid red";
-                topicFolderSelect.style.border = "2px solid red";
-                videoSelect.style.border = "2px solid red";
+                if (!isFileProvided && !isSelectProvided) {
+                    // Highlight unselected inputs
+                    fileInput.style.border = "2px solid red";
+                    topicFolderSelect.style.border = "2px solid red";
+                    videoSelect.style.border = "2px solid red";
 
-                // Focus on the first invalid field
-                topicFolderSelect.focus();
+                    // Focus on the first invalid field
+                    topicFolderSelect.focus();
 
-                // Mark as invalid
-                allValid = false;
+                    // Mark as invalid
+                    allValid = false;
 
-                // Add error message just below the video select element if it doesn't exist
-                if (!errorElement) {
-                    errorElement = document.createElement('div');
-                    errorElement.id = errorElementId;
-                    errorElement.style.color = 'red';
-                    errorElement.innerText = "Please Select A Scene";
-                    videoSelect.parentNode.insertBefore(errorElement, videoSelect.nextSibling);
-                }
+                    // Add error message just below the video select element if it doesn't exist
+                    if (!errorElement) {
+                        errorElement = document.createElement('div');
+                        errorElement.id = errorElementId;
 
-                // Break after the first unselected loop
-            } else {
-                // Remove red border if inputs are valid
-                fileInput.style.border = "";
-                topicFolderSelect.style.border = "";
-                videoSelect.style.border = "";
+                        // Styling the error message
+                        errorElement.style.color = 'red';
+                        errorElement.style.fontSize = '0.8rem';  // Very small font
+                        errorElement.style.textAlign = 'center'; // Center the text
+                        errorElement.style.marginTop = '5px';    // Add some space between select and the error message
 
-                // Remove any existing error message if present
-                if (errorElement) {
-                    errorElement.remove();
+                        errorElement.innerText = "Please Select A Scene";
+                        videoSelect.parentNode.insertBefore(errorElement, videoSelect.nextSibling);
+                    }
+
+                } else {
+                    // Remove red border if inputs are valid
+                    fileInput.style.border = "";
+                    topicFolderSelect.style.border = "";
+                    videoSelect.style.border = "";
+
+                    // Remove any existing error message if present
+                    if (errorElement) {
+                        errorElement.remove();
+                    }
                 }
             }
-        }
 
-        // If not valid, prevent form submission
-        if (!allValid) {
-            event.preventDefault();
-        }
-    });
+            // If not valid, prevent form submission
+            if (!allValid) {
+                event.preventDefault();
+            }
+        });
+
+    //    document.getElementById("scene_form").addEventListener("submit", function(event) {
+    // // Get all looped elements
+    //     let allValid = true;
+
+    //     // Loop through each loop index
+    //     const loopLength = "{{ n_lines }}"; 
+    //     const textfileId = "{{ textfile_id }}"; 
+
+    //     for (let i = 0; i < loopLength; i++) {
+    //         const fileInput = document.getElementById(`video_${i}`);
+    //         const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
+    //         const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
+    //         const errorElementId = `select_video_${i}_error`;
+    //         let errorElement = document.getElementById(errorElementId);
+
+    //         // Check if file input has value or both selects have values
+    //         const isFileProvided = fileInput && fileInput.files.length > 0;
+    //         const isSelectProvided = topicFolderSelect && topicFolderSelect.value && videoSelect && videoSelect.value;
+
+    //         if (!isFileProvided && !isSelectProvided) {
+    //             // Highlight unselected inputs
+    //             fileInput.style.border = "2px solid red";
+    //             topicFolderSelect.style.border = "2px solid red";
+    //             videoSelect.style.border = "2px solid red";
+
+    //             // Focus on the first invalid field
+    //             topicFolderSelect.focus();
+
+    //             // Mark as invalid
+    //             allValid = false;
+
+    //             // Add error message just below the video select element if it doesn't exist
+    //             if (!errorElement) {
+    //                 errorElement = document.createElement('div');
+    //                 errorElement.id = errorElementId;
+    //                 errorElement.style.color = 'red';
+    //                 errorElement.innerText = "Please Select A Scene";
+    //                 videoSelect.parentNode.insertBefore(errorElement, videoSelect.nextSibling);
+    //             }
+
+    //             // Break after the first unselected loop
+    //         } else {
+    //             // Remove red border if inputs are valid
+    //             fileInput.style.border = "";
+    //             topicFolderSelect.style.border = "";
+    //             videoSelect.style.border = "";
+
+    //             // Remove any existing error message if present
+    //             if (errorElement) {
+    //                 errorElement.remove();
+    //             }
+    //         }
+    //     }
+
+    //     // If not valid, prevent form submission
+    //     if (!allValid) {
+    //         event.preventDefault();
+    //     }
+    // });
  
         // document.getElementById("scene_form").addEventListener("submit", function(event) {
         //     // Get all looped elements
