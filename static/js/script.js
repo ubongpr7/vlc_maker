@@ -102,7 +102,7 @@ document.querySelectorAll('.box').forEach(box => {
 });
 
 function adjustPreviewBox(resolution) {
-    const previewBox = document.querySelector('.preview-box');
+    const previewBox = document.querySelector('#preview-box');
     
     let width = 100;  // Set base width to 100% or adjust as needed
     let height;
