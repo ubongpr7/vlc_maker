@@ -185,7 +185,7 @@
                             Choose File
                         </div>
                         <!-- File input for selecting video -->
-                        <input type="file" accept="video/*" class="uploaded_file" name="uploaded_video_{{ forloop.counter0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
+                        <input type="file" accept="video/*" class="uploaded_file" id="video_{{ forloop.counter0 }}" name="uploaded_video_{{ forloop.counter0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
                         </div>
                     </div>
                     
@@ -243,39 +243,52 @@
     </form>
     {% endif %}
      <script>
-        // window.onload = function() {
-        //     // Get all inputs on the page
-        //     document.getElementById('scene_form').reset();
+        
+        document.getElementById("scene_form").addEventListener("submit", function(event) {
+            // Get all looped elements
+            let allValid = true;
 
-        //     // First, update all select inputs that start with 'topic_folder_'
-        //     const inputs = document.querySelectorAll('select');
+            // Loop through each loop index
+            const loopLength = "{{ n_lines }}"; // Replace with your loop length variable
+            const textfileId = "{{ textfile_id }}"; // Replace with textfile_id
 
-        //     // Process `topic_folder_` first
-        //     inputs.forEach(input => {
-        //             const storedValue = sessionStorage.getItem(input.id);
-        //             if (storedValue && input.id.startsWith('topic_folder_')) {
-        //                 console.log(input.id)
-        //                 input.value = storedValue;
+            for (let i = 0; i < loopLength; i++) {
+                const fileInput = document.getElementById(`video_${i}`);
+                const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
+                const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
 
-        //                 // Get the current number from the ID, assuming it's in the format 'topic_folder_X'
-        //                 var idParts = input.id.split('_');
-        //                 var currentNumber = idParts[idParts.length - 2];  // Extract the current number part
+                // Check if file input has value or both selects have values
+                const isFileProvided = fileInput && fileInput.files.length > 0;
+                const isSelectProvided = topicFolderSelect && topicFolderSelect.value && videoSelect && videoSelect.value;
 
-        //                 // Update the corresponding video select dropdown
-        //                 // fetchVideoClips(storedValue,currentNumber,input)
-        //                 console.log(storedValue + ' for category')
-        //                 htmx.ajax('GET', `/video/get_clip/${storedValue}`, `#videoSelect_${currentNumber}_{{textfile_id}}`);
-        //             }
-        //     });
+                if (!isFileProvided && !isSelectProvided) {
+                    // Highlight unselected inputs and focus the first select field
+                    fileInput.style.border = "2px solid red";
+                    topicFolderSelect.style.border = "2px solid red";
+                    videoSelect.style.border = "2px solid red";
 
-        //     // Now, update the rest of the `videoSelect_` inputs
-        //     inputs.forEach(input => {
-        //             const storedValue = sessionStorage.getItem(input.id);
-        //             if (storedValue && input.id.startsWith('videoSelect_')) {
-        //                 input.value = storedValue;
-        //             }
-        //     });
-        // };
+                    // Focus on the first select field
+                    topicFolderSelect.focus();
+
+                    // Mark as invalid
+                    allValid = false;
+                    
+                    // Break after the first unselected loop
+                    break;
+                } else {
+                    // Remove red border if the inputs are valid
+                    fileInput.style.border = "";
+                    topicFolderSelect.style.border = "";
+                    videoSelect.style.border = "";
+                }
+            }
+
+            // If not valid, prevent form submission
+            if (!allValid) {
+                event.preventDefault();
+            }
+        });
+
 
         window.addEventListener('load', async function() {
             // Ensure all elements are loaded
