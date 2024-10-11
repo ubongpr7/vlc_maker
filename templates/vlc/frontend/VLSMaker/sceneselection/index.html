@@ -241,7 +241,6 @@
             </div>
     </div>
     </form>
-    {% endif %}
      <script>
         
         document.getElementById("scene_form").addEventListener("submit", function(event) {
@@ -366,17 +365,7 @@
                 sessionStorage.setItem(inputElement.id, inputElement.value);
                 console.log(inputElement.value)
         }
-        const fileName= document.getElementById('fileName')
-        const fileUpload = document.getElementById('fileUpload');
-        fileUpload.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                fileName.textContent = `${file.name.slice(0,15)}`;
-            } else {
-                fileName.textContent = 'No file selected';
-            }
-        });
-
+        
         function fetchVideoClips(categoryId, counter,item) {
             select2=document.getElementById(`videoSelect_${counter}_{{textfile_id}}`)
             saveInput(item)
@@ -399,7 +388,21 @@
             
         }
     </script>
-        
+    {% endif %}
+
+    <script>
+        const fileName= document.getElementById('fileName')
+        const fileUpload = document.getElementById('fileUpload');
+        fileUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                fileName.textContent = `${file.name.slice(0,15)}`;
+            } else {
+                fileName.textContent = 'No file selected';
+            }
+        });
+
+    </script>
     <script src="{% static 'htmx.js' %}"></script>
 </body>
 </html>
