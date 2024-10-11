@@ -12,7 +12,17 @@
 
     <link rel="stylesheet" href="{% static 'css/music.css' %}">
     <style>
-        
+    .delete{
+        padding: 10px;
+        font-size: medium;
+        border-radius: 5px;
+    }
+    .delete-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* Or any specific width you need */
+}
+
 .slider {
     -webkit-appearance: none; /* Removes default styling */
     appearance: none;
@@ -144,11 +154,11 @@
                     </div>
 
                     <div class="uploadmp3"id="uploadmp3-2" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 24px; flex-direction: column;">
-                        <div style="justify-content:space-between;">
+                        <div class="delete-container" style="justify-content:space-between;">
                             <div class="text">
                                 <span>Upload MP3 <span>2</span>:</span>
                             </div>
-                            <button onclick="deleteButton(2)" style="background-color:white;color:black;border:1px solid #864af9">Delete</button>
+                            <button  class="delete" onclick="deleteButton(2)" style="background-color:white;color:black;border:1px solid #864af9">Delete</button>
                         </div>
                         <div style="width: 100%; box-sizing: border-box; height: fit-content; padding: 16px 24px; border-radius: 8px; border: 1px dashed #19191980; display: flex; align-items: center; position: relative; font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center; gap: 14px;">
                             <svg id="svg2" class="svgIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -258,11 +268,11 @@
     console.log(document.getElementById('no_of_mp3').value)
     const htmlCode = `
         <div class="uploadmp3" id="uploadmp3-${currentNumber}" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 24px; flex-direction: column;">
-            <div style="justify-content:space-between;">
+            <div class="delete-container" style="justify-content:space-between;">
                 <div class="text">
                     <span>Upload MP3 <span>${currentNumber}</span>:</span>
                 </div>
-                <button onclick="deleteButton(${currentNumber})" style="background-color:#864af9;color:white;border:none;">Delete</button>
+                <button class="delete" onclick="deleteButton(${currentNumber})" style="background-color:#864af9;color:white;border:none;">Delete</button>
             </div>
             <div style="width: 100%; box-sizing: border-box; height: fit-content; padding: 16px 24px; border-radius: 8px; border: 1px dashed #19191980; display: flex; align-items: center; position: relative; font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center; gap: 14px;">
                 <svg id="svg${currentNumber}" class="svgIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
