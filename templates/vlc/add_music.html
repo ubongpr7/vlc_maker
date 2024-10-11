@@ -318,6 +318,22 @@
         }
     });
 });
+function deleteButton(c_number) {
+    // Target the div by the id
+    const container = document.getElementById(`uploadmp3-${c_number}`);
+    
+    // Find all input elements within the div
+    const inputs = container.querySelectorAll('input');
+
+    // Clear the value of each input
+    inputs.forEach(input => {
+        input.value = '';  // Clear input values
+    });
+
+    // Hide the div by setting display to 'none'
+    container.style.display = 'none';
+}
+
 function inputHander(c_number){
     
     const fileInput = document.getElementById(`fileUpload_{{textfile_id}}_${c_number}`);
