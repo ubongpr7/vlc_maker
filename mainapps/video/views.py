@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from mainapps.vidoe_text.models import TextFile, TextLineVideoClip
+from mainapps.vidoe_text.models import TextFile, TextLineVideoClip,LogoModel
 from django.http import HttpResponse
 from django.forms import modelformset_factory
 from django.views.decorators.csrf import csrf_exempt
@@ -197,6 +197,7 @@ def upload_video_folder(request):
 @login_required
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
+    key=LogoModel.objects.get(id=2).logo.name
     if text_file.user != request.user:
         messages.error(request,'You Do Not have access to the Resources You Requested ')
         return render(request,'permission_denied.html')
@@ -283,8 +284,8 @@ def add_video_clips(request, textfile_id):
             lines = text_file.process_text_file()
             # Create a list of dictionaries with line numbers for the form
             form_data = [{'line_number': i + 1,'line':lines[i],'i':i} for i in range(len(lines))]
-            return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'text_file': text_file,'video_categories':video_categories,'textfile_id':textfile_id, 'form_data': form_data})
-        return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'text_file': text_file,'textfile_id':textfile_id})
+            return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'key':key,'text_file': text_file,'video_categories':video_categories,'textfile_id':textfile_id, 'form_data': form_data})
+        return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'key':key,'text_file': text_file,'textfile_id':textfile_id})
 
 def get_clip(request,cat_id):
     category=get_object_or_404(ClipCategory,id=cat_id)
