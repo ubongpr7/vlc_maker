@@ -60,7 +60,7 @@
     {% include 'messages.html' %}
 
     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px; z-index: 99;">
-        <form action="{% url 'video_text:add_text'%}" method="post" enctype="multipart/form-data" class="form" style="width: 504px; height: 2350px; border: 1px solid #0000004D; border-radius: 8px; padding: 40px 24px; background: white;">
+        <form action="{% url 'video_text:add_text'%}" method="post" enctype="multipart/form-data" class="form"id="text_form" style="width: 504px; height: 2250px; border: 1px solid #0000004D; border-radius: 8px; padding: 40px 24px; background: white;">
             {%csrf_token%}
 
             <div style="font-size: 24px; font-weight: 700; line-height: 29.26px; letter-spacing: -0.03em; text-align: center; margin-bottom: 40px;">
@@ -261,6 +261,7 @@
         const voiceIdInput = $('#voice_id');
         const apiKeyError = $('#api_key_error');
         const voiceIdError = $('#voice_id_error');
+        const text_form=document.getElementById('text_form')
 
         // Initially disable the submit button
         submitButton.prop('disabled', true);
@@ -287,8 +288,12 @@
                     success: function(response) {
                         console.log(response);  // Log the entire response to the console
                         if (response.valid) {
-                            submitButton.prop('disabled', false);  // Enable submit button if valid
+                            submitButton.prop('disabled', false); 
+                            text_form.style.height='2250px'
+                            
                         } else {
+                            text_form.style.height='2350px'
+
                             submitButton.prop('disabled', true);  // Disable submit button if not valid
                             if (response.error.includes('API key')) {
 
@@ -297,6 +302,7 @@
                             } else if (response.error.includes('Voice')) {
                                 voiceIdError.text(response.error);  // Show Voice ID error
                                 voiceIdInput.focus()
+                                
                             } else {
                                 apiKeyError.text(response.error);  // Fallback for unknown errors
                                 apiKeyInput.focus()
