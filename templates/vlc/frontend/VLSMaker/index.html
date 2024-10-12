@@ -285,7 +285,7 @@
         apiKeyError.text('');
         voiceIdError.text('');
         font_error.text('');
-        font_err.style.color='black';
+        font_select.style.color='black';
 
         if (apiKey && voiceId && font_) {
             // Send AJAX request to validate the API key and voice ID
@@ -343,7 +343,7 @@
             }else if(!font_){
                 font_select.required=true
                 // font_error.text('Select font from the list')
-                font_err.style.color='red';
+                font_select.style.color='red';
                 font_select.focus();
             }
         }
