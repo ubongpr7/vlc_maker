@@ -187,7 +187,7 @@
                         </div>
                         
                     </div>
-                        <p id="font_error" style="color:red; "></p>
+                        <!-- <p id="font_error" style="color:red; "></p> -->
 
                     <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
                         <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
@@ -339,7 +339,8 @@
                 voiceIdError.text('Voice ID is required.');
                 voiceIdInput.focus();
             }else if(!font_){
-                font_error.text('Select font from the list')
+                font_select.required=true
+                // font_error.text('Select font from the list')
                 font_select.focus()
             }
         }
