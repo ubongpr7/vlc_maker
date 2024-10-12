@@ -331,15 +331,19 @@
         } else {
             // If either API key or Voice ID is missing, display the appropriate error and focus the field
             if (!apiKey) {
-                text_form.style.height = '2330px';
+                text_form.style.height = '2325px';
 
                 apiKeyError.text('API key is required.');
                 apiKeyInput.focus();
             } else if (!voiceId) {
+                text_form.style.height = '2325px';
+
                 voiceIdError.text('Voice ID is required.');
                 voiceIdInput.focus();
             }else if(!font_){
                 font_select.required=true
+                text_form.style.height = '2320px';
+
                 font_error.text('Select font from the list')
                 font_select.focus()
             }
