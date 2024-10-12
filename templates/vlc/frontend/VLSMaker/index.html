@@ -266,7 +266,7 @@
     const apiKeyError = $('#api_key_error');
     const voiceIdError = $('#voice_id_error');
     const text_form = document.getElementById('text_form');
-    const font_select=$('#font_select');
+    const font_select=document.getElementById('font_select');
     const font_error=$('#font_error');
 
     // Always enable the submit button
@@ -278,7 +278,7 @@
 
         const apiKey = apiKeyInput.val().trim();
         const voiceId = voiceIdInput.val().trim();
-        const font_ =font_select.val().trim()
+        const font_ =font_select.value
 
         // Remove any previous error messages
         apiKeyError.text('');
