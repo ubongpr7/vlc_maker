@@ -319,13 +319,14 @@
 
     
     function validateAPIKey(event) {
+        startProcessingAnimation('#button-text');  // Start the processing animation
+
         event.preventDefault();  // Prevent the default form submission
 
         const apiKey = apiKeyInput.val().trim();
         const voiceId = voiceIdInput.val().trim();
         const font_ = font_select.value;
         
-        startProcessingAnimation('#button-text');  // Start the processing animation
 
         // Remove any previous error messages
         apiKeyError.text('');
