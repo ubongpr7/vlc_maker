@@ -242,7 +242,7 @@
                         </div>
                     </div>
                     <button id="submit_form" type="submit" class="done-button">
-                        <span style="font-size: 18px; font-weight: 500; line-height: 21.94px; text-align: left;">
+                        <span id="button-text" style="font-size: 18px; font-weight: 500; line-height: 21.94px; text-align: left;">
                                 Proceed To Scene Selection    
                         </span>
                     </button>
@@ -265,8 +265,9 @@
         window.onpageshow = function(event) {
         if (event.persisted) {
             // If the page is loaded from cache (e.g., via back button)
-            text_form.reset();  // Reset the form fields
+           // text_form.reset();  // Reset the form fields
             text_form.style.height = '2290px';  // Reset any custom heights
+            button_text.text('Proceed To Scene Selection')
         }
     };
     const submitButton = $('#submit_form');
@@ -276,7 +277,7 @@
     const voiceIdError = $('#voice_id_error');
     const font_select=document.getElementById('font_select');
     const font_error=$('#font_error');
-
+    const button_text=$('#button-text')
     // Always enable the submit button
     submitButton.prop('disabled', false);
 
@@ -287,6 +288,7 @@
         const apiKey = apiKeyInput.val().trim();
         const voiceId = voiceIdInput.val().trim();
         const font_ =font_select.value
+        button_text.text('Processing')
 
         // Remove any previous error messages
         apiKeyError.text('');
@@ -308,22 +310,25 @@
                     if (response.valid) {
                         // API key and Voice ID are valid, proceed to submit the form
                         text_form.submit();
+
                     } else {
                         // If the API key or Voice ID is invalid, show the appropriate error and focus the field
-                        if (response.error.includes('API key')) {
-                            text_form.style.height = '2330px';
+                        button_text.text('Proceed To Scene Selection')
 
-                            apiKeyError.text(response.error);  // Show API key error
+                        if (response.error.includes('API key')) {
+                            
                             apiKeyInput.focus();
+                            apiKeyError.text(response.error);  // Show API key error
+                            text_form.style.height = '2330px';
                         } else if (response.error.includes('Voice')) {
 
+                            voiceIdInput.focus();
                             voiceIdError.text(response.error);  // Show Voice ID error
                             text_form.style.height = '2330px';
 
-                            voiceIdInput.focus();
                         } else {
-                            apiKeyError.text(response.error);  // Fallback for unknown errors
                             apiKeyInput.focus();
+                            apiKeyError.text(response.error);  // Fallback for unknown errors
                             text_form.style.height = '2340px';
 
                         }
@@ -334,26 +339,29 @@
                     console.log("Error: ", error);          // Log error message
                     apiKeyError.text('Error validating the API key.');
                     apiKeyInput.focus();
+                    button_text.text('Proceed To Scene Selection')
+
                 }
             });
         } else {
             // If either API key or Voice ID is missing, display the appropriate error and focus the field
+            button_text.text('Proceed To Scene Selection')
+
             if (!apiKey) {
+                apiKeyInput.focus();
                 text_form.style.height = '2325px';
 
                 apiKeyError.text('API key is required.');
-                apiKeyInput.focus();
             } else if (!voiceId) {
+                voiceIdInput.focus();
                 text_form.style.height = '2325px';
 
                 voiceIdError.text('Voice ID is required.');
-                voiceIdInput.focus();
             }else if(!font_){
                 font_select.required=true
-                text_form.style.height = '2320px';
-
-                font_error.text('Please Select A Font From The Dropdown')
                 font_select.focus()
+                font_error.text('Please Select A Font From The Dropdown')
+                text_form.style.height = '2320px';
             }
         }
     }
