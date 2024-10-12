@@ -270,6 +270,7 @@
             button_text.text('Proceed To Scene Selection')
         }
     };
+    
     const submitButton = $('#submit_form');
     const apiKeyInput = $('#api_key');
     const voiceIdInput = $('#voice_id');
@@ -280,22 +281,141 @@
     const button_text=$('#button-text')
     // Always enable the submit button
     submitButton.prop('disabled', false);
+    function startProcessingAnimation(selector) {
+        const button_text = $(selector);
+        let dots = 0;
+
+        // Clear any existing interval to avoid multiple intervals running
+        if (button_text.data('intervalId')) {
+            clearInterval(button_text.data('intervalId'));
+        }
+
+        // Set the interval to change the text every 500 milliseconds
+        const intervalId = setInterval(function() {
+            dots = (dots + 1) % 4;  // Cycle between 0, 1, 2, and 3
+            let loadingText = 'Processing' + '.'.repeat(dots); // Add dots dynamically
+            button_text.text(loadingText);
+        }, 500);  // 500 milliseconds = 0.5 seconds
+
+        // Store the interval ID in the button text element for later use
+        button_text.data('intervalId', intervalId);
+    }
+
+    // To stop the animation, you can create a separate function
+    function stopProcessingAnimation(selector) {
+        const button_text = $(selector);
+        const intervalId = button_text.data('intervalId');
+
+        // Clear the interval if it exists
+        if (intervalId) {
+            clearInterval(intervalId);
+            button_text.data('intervalId', null); // Remove the stored interval ID
+            button_text.text(''); // Optionally reset the text or set it to another value
+        }
+    }
+
 
     // Function to validate the API key and Voice ID
+    // function validateAPIKey(event) {
+    //     event.preventDefault();  // Prevent the default form submission
+
+    //     const apiKey = apiKeyInput.val().trim();
+    //     const voiceId = voiceIdInput.val().trim();
+    //     const font_ =font_select.value
+        
+    //     button_text.text('Processing')
+
+    //     // Remove any previous error messages
+    //     apiKeyError.text('');
+    //     voiceIdError.text('');
+    //     font_error.text('');
+    //     text_form.style.height = '2290px';
+
+
+    //     if (apiKey && voiceId && font_) {
+    //         // Send AJAX request to validate the API key and voice ID
+    //         $.ajax({
+    //             url: '/text/validate_api_key/',  // URL for the Django view
+    //             type: 'POST',
+    //             data: {
+    //                 'eleven_labs_api_key': apiKey,
+    //                 'voice_id': voiceId,
+    //                 'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include CSRF token for security
+    //             },
+    //             success: function(response) {
+    //                 console.log(response);  // Log the entire response to the console
+    //                 if (response.valid) {
+    //                     // API key and Voice ID are valid, proceed to submit the form
+    //                     text_form.submit();
+
+    //                 } else {
+    //                     // If the API key or Voice ID is invalid, show the appropriate error and focus the field
+    //                     button_text.text('Proceed To Scene Selection')
+
+    //                     if (response.error.includes('API key')) {
+                            
+    //                         apiKeyInput.focus();
+    //                         apiKeyError.text(response.error);  // Show API key error
+    //                         text_form.style.height = '2330px';
+    //                     } else if (response.error.includes('Voice')) {
+
+    //                         voiceIdInput.focus();
+    //                         voiceIdError.text(response.error);  // Show Voice ID error
+    //                         text_form.style.height = '2330px';
+
+    //                     } else {
+    //                         apiKeyInput.focus();
+    //                         apiKeyError.text(response.error);  // Fallback for unknown errors
+    //                         text_form.style.height = '2340px';
+
+    //                     }
+    //                 }
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 console.log("Error Status: ", status);  // Log error status
+    //                 console.log("Error: ", error);          // Log error message
+    //                 apiKeyError.text('Error validating the API key.');
+    //                 apiKeyInput.focus();
+    //                 button_text.text('Proceed To Scene Selection')
+
+    //             }
+    //         });
+    //     } else {
+    //         // If either API key or Voice ID is missing, display the appropriate error and focus the field
+    //         button_text.text('Proceed To Scene Selection')
+
+    //         if (!apiKey) {
+    //             apiKeyInput.focus();
+    //             text_form.style.height = '2325px';
+
+    //             apiKeyError.text('API key is required.');
+    //         } else if (!voiceId) {
+    //             voiceIdInput.focus();
+    //             text_form.style.height = '2325px';
+
+    //             voiceIdError.text('Voice ID is required.');
+    //         }else if(!font_){
+    //             font_select.required=true
+    //             font_select.focus()
+    //             font_error.text('Please Select A Font From The Dropdown')
+    //             text_form.style.height = '2320px';
+    //         }
+    //     }
+    // }
     function validateAPIKey(event) {
         event.preventDefault();  // Prevent the default form submission
 
         const apiKey = apiKeyInput.val().trim();
         const voiceId = voiceIdInput.val().trim();
-        const font_ =font_select.value
-        button_text.text('Processing')
+        const font_ = font_select.value;
+        
+        startProcessingAnimation('#button-text');  // Start the processing animation
 
         // Remove any previous error messages
         apiKeyError.text('');
         voiceIdError.text('');
         font_error.text('');
         text_form.style.height = '2290px';
-
 
         if (apiKey && voiceId && font_) {
             // Send AJAX request to validate the API key and voice ID
@@ -309,60 +429,56 @@
                 },
                 success: function(response) {
                     console.log(response);  // Log the entire response to the console
+                    stopProcessingAnimation('#button-text');  // Stop the processing animation
+                    
                     if (response.valid) {
                         // API key and Voice ID are valid, proceed to submit the form
                         text_form.submit();
-
                     } else {
                         // If the API key or Voice ID is invalid, show the appropriate error and focus the field
-                        button_text.text('Proceed To Scene Selection')
+                        button_text.text('Proceed To Scene Selection');
 
                         if (response.error.includes('API key')) {
-                            
                             apiKeyInput.focus();
                             apiKeyError.text(response.error);  // Show API key error
                             text_form.style.height = '2330px';
                         } else if (response.error.includes('Voice')) {
-
                             voiceIdInput.focus();
                             voiceIdError.text(response.error);  // Show Voice ID error
                             text_form.style.height = '2330px';
-
                         } else {
                             apiKeyInput.focus();
                             apiKeyError.text(response.error);  // Fallback for unknown errors
                             text_form.style.height = '2340px';
-
                         }
                     }
                 },
                 error: function(xhr, status, error) {
                     console.log("Error Status: ", status);  // Log error status
                     console.log("Error: ", error);          // Log error message
+                    stopProcessingAnimation('#button-text');  // Stop the processing animation
                     apiKeyError.text('Error validating the API key.');
                     apiKeyInput.focus();
-                    button_text.text('Proceed To Scene Selection')
-
+                    button_text.text('Proceed To Scene Selection');
                 }
             });
         } else {
             // If either API key or Voice ID is missing, display the appropriate error and focus the field
-            button_text.text('Proceed To Scene Selection')
+            stopProcessingAnimation('#button-text');  // Stop the processing animation
+            button_text.text('Proceed To Scene Selection');
 
             if (!apiKey) {
                 apiKeyInput.focus();
                 text_form.style.height = '2325px';
-
                 apiKeyError.text('API key is required.');
             } else if (!voiceId) {
                 voiceIdInput.focus();
                 text_form.style.height = '2325px';
-
                 voiceIdError.text('Voice ID is required.');
-            }else if(!font_){
-                font_select.required=true
-                font_select.focus()
-                font_error.text('Please Select A Font From The Dropdown')
+            } else if (!font_) {
+                font_select.required = true;
+                font_select.focus();
+                font_error.text('Please Select A Font From The Dropdown');
                 text_form.style.height = '2320px';
             }
         }
