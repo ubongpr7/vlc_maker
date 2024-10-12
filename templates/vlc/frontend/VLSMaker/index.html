@@ -429,14 +429,15 @@
                 },
                 success: function(response) {
                     console.log(response);  // Log the entire response to the console
-                    stopProcessingAnimation('#button-text');  // Stop the processing animation
                     
                     if (response.valid) {
                         // API key and Voice ID are valid, proceed to submit the form
                         text_form.submit();
                     } else {
                         // If the API key or Voice ID is invalid, show the appropriate error and focus the field
-                        button_text.text('Proceed To Scene Selection');
+                        stopProcessingAnimation('#button-text');  // Stop the processing animation
+
+                        // button_text.text('Proceed To Scene Selection');
 
                         if (response.error.includes('API key')) {
                             apiKeyInput.focus();
@@ -465,7 +466,7 @@
         } else {
             // If either API key or Voice ID is missing, display the appropriate error and focus the field
             stopProcessingAnimation('#button-text');  // Stop the processing animation
-            button_text.text('Proceed To Scene Selection');
+            // button_text.text('Proceed To Scene Selection');
 
             if (!apiKey) {
                 apiKeyInput.focus();
