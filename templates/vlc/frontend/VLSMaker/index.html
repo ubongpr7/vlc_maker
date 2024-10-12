@@ -260,12 +260,20 @@
     
 
     $(document).ready(function() {
+    const text_form = document.getElementById('text_form');
+
+        window.onpageshow = function(event) {
+        if (event.persisted) {
+            // If the page is loaded from cache (e.g., via back button)
+            text_form.reset();  // Reset the form fields
+            text_form.style.height = '2290px';  // Reset any custom heights
+        }
+    };
     const submitButton = $('#submit_form');
     const apiKeyInput = $('#api_key');
     const voiceIdInput = $('#voice_id');
     const apiKeyError = $('#api_key_error');
     const voiceIdError = $('#voice_id_error');
-    const text_form = document.getElementById('text_form');
     const font_select=document.getElementById('font_select');
     const font_error=$('#font_error');
 
