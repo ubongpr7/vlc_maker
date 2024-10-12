@@ -60,7 +60,7 @@
     {% include 'messages.html' %}
 
     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px; z-index: 99;">
-        <form action="{% url 'video_text:add_text'%}" method="post" enctype="multipart/form-data" class="form"id="text_form" style="width: 504px; height: 2270px; border: 1px solid #0000004D; border-radius: 8px; padding: 40px 24px; background: white;">
+        <form action="{% url 'video_text:add_text'%}" method="post" enctype="multipart/form-data" class="form"id="text_form" style="width: 504px; height: 2290px; border: 1px solid #0000004D; border-radius: 8px; padding: 40px 24px; background: white;">
             {%csrf_token%}
 
             <div style="font-size: 24px; font-weight: 700; line-height: 29.26px; letter-spacing: -0.03em; text-align: center; margin-bottom: 40px;">
@@ -185,6 +185,8 @@
                                 <option class="text3" style="font-family:Montserrat;font-weight:600;" value="Montserrat">Montserrat</option>
                             </select>
                         </div>
+                        <p id="font_error" style="color:red; "></p>
+
                     </div>
 
                     <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
@@ -264,6 +266,8 @@
     const apiKeyError = $('#api_key_error');
     const voiceIdError = $('#voice_id_error');
     const text_form = document.getElementById('text_form');
+    const font_select=document.getElementById('font_select')
+    const font_error=document.getElementById('font_error')
 
     // Always enable the submit button
     submitButton.prop('disabled', false);
@@ -274,12 +278,14 @@
 
         const apiKey = apiKeyInput.val().trim();
         const voiceId = voiceIdInput.val().trim();
+        const font_ =font_select.value
 
         // Remove any previous error messages
         apiKeyError.text('');
         voiceIdError.text('');
+        font_error.text('');
 
-        if (apiKey && voiceId) {
+        if (apiKey && voiceId && font_) {
             // Send AJAX request to validate the API key and voice ID
             $.ajax({
                 url: '/text/validate_api_key/',  // URL for the Django view
@@ -295,13 +301,17 @@
                         // API key and Voice ID are valid, proceed to submit the form
                         text_form.submit();
                     } else {
-                        text_form.style.height = '2330px';
                         // If the API key or Voice ID is invalid, show the appropriate error and focus the field
                         if (response.error.includes('API key')) {
+                            text_form.style.height = '2330px';
+
                             apiKeyError.text(response.error);  // Show API key error
                             apiKeyInput.focus();
                         } else if (response.error.includes('Voice')) {
+
                             voiceIdError.text(response.error);  // Show Voice ID error
+                            text_form.style.height = '2330px';
+
                             voiceIdInput.focus();
                         } else {
                             apiKeyError.text(response.error);  // Fallback for unknown errors
@@ -321,13 +331,15 @@
         } else {
             // If either API key or Voice ID is missing, display the appropriate error and focus the field
             if (!apiKey) {
-                text_form.style.height = '2340px';
+                text_form.style.height = '2330px';
 
                 apiKeyError.text('API key is required.');
                 apiKeyInput.focus();
             } else if (!voiceId) {
                 voiceIdError.text('Voice ID is required.');
                 voiceIdInput.focus();
+            }else if(!font_){
+                font_error.text('Select font from the list')
             }
         }
     }
