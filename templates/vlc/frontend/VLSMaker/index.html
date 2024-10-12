@@ -261,12 +261,17 @@
 
     $(document).ready(function() {
     const text_form = document.getElementById('text_form');
-
         window.onpageshow = function(event) {
         if (event.persisted) {
+
             // If the page is loaded from cache (e.g., via back button)
            // text_form.reset();  // Reset the form fields
+           const slider2=document.getElementById('mySlider')
             text_form.style.height = '2290px';  // Reset any custom heights
+            slider2.style.background= `linear-gradient(to right, #864AF9 ${slider.value*4}%, #D9D9D9 ${slider.value*4}%)`; 
+            // document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
+
+
             stopProcessingAnimation('#button-text');  // Stop the processing animation
             // button_text.text('Proceed To Scene Selection')
 
