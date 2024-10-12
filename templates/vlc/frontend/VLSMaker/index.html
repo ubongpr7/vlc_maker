@@ -145,7 +145,7 @@
                     </div>
                     <div class="11Labs-Api-key-textarea" style="margin-bottom: 24px;">
                         <input id="api_key" type="text" class="text3"name="elevenlabs_apikey" placeholder="ElevenLabs Api Key" style="width: 100%; height: 56px; border: 1px solid #E3E3E3; box-sizing: border-box; border-radius: 8px; padding: 12px 24px; display: flex; align-items: center; transition: 0.3s ease;">
-                        <p id="api_key_error" style="color:red;"></p>
+                        <p id="api_key_error" style="color:red;font-size:10px;"></p>
                     </div>
                     <div class="Voice-ID-text" style="display: flex; align-items: center; margin-bottom: 16px;">
                         <div style="font-size: 18px; font-weight: 600; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
@@ -164,7 +164,7 @@
                     
                     <div class="Voice-ID-textarea" style="margin-bottom: 24px;">
                         <input type="text" id="voice_id" class="text3" placeholder="Enter Voice ID"name="voiceid" style="width: 100%; height: 56px; border: 1px solid #E3E3E3; box-sizing: border-box; border-radius: 8px; padding: 12px 24px; display: flex; align-items: center; transition: 0.3s ease;">
-                        <p id="voice_id_error" style="color:red;"></p>
+                        <p id="voice_id_error" style="color:red; font-size:10px;"></p>
                     </div>
 
                     <div class="Line" style="width: 100%; border: 1px solid #E3E3E3; margin-bottom: 24px;"></div>
@@ -295,7 +295,7 @@
                         // API key and Voice ID are valid, proceed to submit the form
                         text_form.submit();
                     } else {
-                        text_form.style.height = '2350px';
+                        text_form.style.height = '2330px';
                         // If the API key or Voice ID is invalid, show the appropriate error and focus the field
                         if (response.error.includes('API key')) {
                             apiKeyError.text(response.error);  // Show API key error
@@ -306,6 +306,8 @@
                         } else {
                             apiKeyError.text(response.error);  // Fallback for unknown errors
                             apiKeyInput.focus();
+                            text_form.style.height = '2340px';
+
                         }
                     }
                 },
@@ -319,6 +321,8 @@
         } else {
             // If either API key or Voice ID is missing, display the appropriate error and focus the field
             if (!apiKey) {
+                text_form.style.height = '2340px';
+
                 apiKeyError.text('API key is required.');
                 apiKeyInput.focus();
             } else if (!voiceId) {
