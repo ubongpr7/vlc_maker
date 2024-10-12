@@ -186,8 +186,8 @@
                             </select>
                         </div>
                         
+                        <p id="font_error" style="color:red; "></p>
                     </div>
-                        <!-- <p id="font_error" style="color:red; "></p> -->
 
                     <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
                         <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
@@ -268,7 +268,6 @@
     const text_form = document.getElementById('text_form');
     const font_select=$('#font_select');
     const font_error=$('#font_error');
-    const   font_err=document.getElementById("font_s")
 
     // Always enable the submit button
     submitButton.prop('disabled', false);
@@ -285,7 +284,6 @@
         apiKeyError.text('');
         voiceIdError.text('');
         font_error.text('');
-        font_select.style.color='black';
 
         if (apiKey && voiceId && font_) {
             // Send AJAX request to validate the API key and voice ID
@@ -342,9 +340,8 @@
                 voiceIdInput.focus();
             }else if(!font_){
                 font_select.required=true
-                // font_error.text('Select font from the list')
-                font_select.style.color='red';
-                font_select.focus();
+                font_error.text('Select font from the list')
+                font_select.focus()
             }
         }
     }
