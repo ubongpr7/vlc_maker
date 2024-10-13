@@ -66,7 +66,7 @@ def contact_view(request):
 
         # Send the email to the support team
         try:
-            send_mail(subject, email_body, email, [settings.DEFAULT_FROM_EMAIL,])  # Replace with your support email
+            send_mail(subject, email_body, settings.DEFAULT_FROM_EMAIL, [settings.DEFAULT_FROM_EMAIL,])  # Replace with your support email
             return JsonResponse({'success': True, 'message': 'Your message has been sent successfully!'})
         except Exception as e:
             return JsonResponse({'success': False, 'message': f'An error occurred: {str(e)}'})
