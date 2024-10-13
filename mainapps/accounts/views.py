@@ -8,6 +8,9 @@ from django.contrib.auth import get_user_model
 from mainapps.accounts.emails import send_user_password_email
 from mainapps.accounts.models import Credit
 import stripe
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
 
 from django.contrib.auth import get_user_model
 from djstripe.settings import djstripe_settings
@@ -185,6 +188,117 @@ def stripe_webhook(request):
 
 
 
+# def subscription_confirm(request):
+#     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
+#     if not stripe_api_key:
+#         messages.error(request, "Stripe API key not found.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     # Set the Stripe API key dynamically
+#     stripe.api_key = str(stripe_api_key.secret)
+
+#     # Get the session ID from the URL
+#     session_id = request.GET.get("session_id")
+#     if not session_id:
+#         messages.error(request, "Session ID is missing.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     try:
+#         # Retrieve the session from Stripe
+#         session = stripe.checkout.Session.retrieve(session_id)
+
+#         # Extract customer email and subscription ID from the session
+#         customer_email = session.customer_details.email
+#         subscription_id = session.subscription
+#         customer_name = session.customer_details.name  # Get the name
+#         # Retrieve or create the customer from Stripe data
+#         stripe_customer = stripe.Customer.retrieve(session.customer)
+
+#         # Check if there's an existing user or create a new one based on the customer email
+#         User = get_user_model()
+#         user, user_created = User.objects.get_or_create(email=customer_email, defaults={
+#             'username': customer_email,
+#             'password': User.objects.make_random_password(),
+#             'first_name': customer_name.split()[0] if customer_name else "",  # Save first name
+#             'last_name': " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else "",  # Save last name
+#         })
+
+
+#         # Link the user to the Stripe customer
+#         djstripe_customer, created = Customer.get_or_create(
+#             subscriber=user
+#         )
+#         # Sync the subscription from Stripe
+        
+        
+#         user.save()
+
+#         # Automatically log the user in
+#         subscription = stripe.Subscription.retrieve(subscription_id)
+#         stripe_product_id = subscription["items"]["data"][0]["plan"]["product"]
+
+#         # Retrieve the product from the database
+#         try:
+#             djstripe_product = Product.objects.get(id=stripe_product_id)
+#         except Product.DoesNotExist:
+#             messages.error(request, "Product not found in the database.")
+#             return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#         # Define credits based on the product
+#         product_credits = {
+#             "prod_QsWVUlHaCH4fqL": 25,    # Credits for a basic plan
+#             "prod_QsWWDNjdR6j22q": 50,  # Credits for a premium plan
+#             "prod_QsWWaDzX83oGhP": 100, 
+#             "prod_QrRbiNv4BrEp4L": 25,  
+#             "prod_QrRcSTxkwx207Z": 50, 
+#             "prod_QrRcGMHuLrp4Lz": 100,  
+#         }
+#         credits = product_credits.get(stripe_product_id, 0)  
+
+#         # Create or update the user's credits based on the product
+#         Credit.create_or_update_credit(user=user, product=djstripe_product, credits=credits)
+#         # plan = Plan.objects.get(product__id=stripe_product_id)  # Replace with the actual Product ID
+    
+#         # # Step 3: Create the subscription using the Plan
+#         # stripe_subscription = djstripe_customer.subscribe(
+#         #     items=[{
+#         #         "plan": plan.id  # The plan the user is subscribing to
+#         #     }]
+#         # )
+#         # Automatically l
+#         auth_login(request, user)
+#         # Success message
+#         if  user_created :
+#             if not user.first_name or not user.last_name:
+#                 user.first_name = customer_name.split()[0] if customer_name else ""
+#                 user.last_name = " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else ""
+#                 user.save()
+#             send_user_password_email(user)
+
+#             messages.success(request, "You've successfully signed up, and an account was created for you!")
+#         else:
+
+#             # send_user_password_email(user)
+#             messages.success(request, "Your subscription was successfully updated!")
+
+#         return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
+
+#     except stripe.error.StripeError as e:
+#         # Handle Stripe-related errors
+#         messages.error(request, f"Stripe error: {e}")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     except IntegrityError:
+#         # Handle database errors
+#         messages.error(request, "Error creating your account. Please contact support.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     except Exception as e:
+#         # Catch any other unforeseen errors
+#         messages.error(request, f"An unexpected error occurred.{e}")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+
 def subscription_confirm(request):
     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
     if not stripe_api_key:
@@ -220,17 +334,13 @@ def subscription_confirm(request):
             'last_name': " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else "",  # Save last name
         })
 
-
         # Link the user to the Stripe customer
-        djstripe_customer, created = Customer.get_or_create(
-            subscriber=user
-        )
+        djstripe_customer, created = Customer.get_or_create(subscriber=user)
+        
         # Sync the subscription from Stripe
-        
-        
         user.save()
 
-        # Automatically log the user in
+        # Retrieve the subscription from Stripe
         subscription = stripe.Subscription.retrieve(subscription_id)
         stripe_product_id = subscription["items"]["data"][0]["plan"]["product"]
 
@@ -243,59 +353,51 @@ def subscription_confirm(request):
 
         # Define credits based on the product
         product_credits = {
-            "prod_QsWVUlHaCH4fqL": 25,    # Credits for a basic plan
-            "prod_QsWWDNjdR6j22q": 50,  # Credits for a premium plan
-            "prod_QsWWaDzX83oGhP": 100, 
-            "prod_QrRbiNv4BrEp4L": 25,  
-            "prod_QrRcSTxkwx207Z": 50, 
-            "prod_QrRcGMHuLrp4Lz": 100,  
+            "prod_QsWVUlHaCH4fqL": 25,  # Basic plan credits
+            "prod_QsWWDNjdR6j22q": 50,  # Premium plan credits
+            "prod_QsWWaDzX83oGhP": 100,
+            "prod_QrRbiNv4BrEp4L": 25,
+            "prod_QrRcSTxkwx207Z": 50,
+            "prod_QrRcGMHuLrp4Lz": 100,
         }
-        credits = product_credits.get(stripe_product_id, 0)  
+        credits = product_credits.get(stripe_product_id, 0)
 
         # Create or update the user's credits based on the product
         Credit.create_or_update_credit(user=user, product=djstripe_product, credits=credits)
-        # plan = Plan.objects.get(product__id=stripe_product_id)  # Replace with the actual Product ID
-    
-        # # Step 3: Create the subscription using the Plan
-        # stripe_subscription = djstripe_customer.subscribe(
-        #     items=[{
-        #         "plan": plan.id  # The plan the user is subscribing to
-        #     }]
-        # )
-        # Automatically l
-        auth_login(request, user)
-        # Success message
-        if  user_created :
-            if not user.first_name or not user.last_name:
-                user.first_name = customer_name.split()[0] if customer_name else ""
-                user.last_name = " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else ""
-                user.save()
-            send_user_password_email(user)
 
-            messages.success(request, "You've successfully signed up, and an account was created for you!")
+        # If the user was just created, redirect to the password reset form
+        if user_created:
+            # Create password reset token
+            from django.contrib.auth.tokens import default_token_generator
+            from django.utils.http import urlsafe_base64_encode
+            from django.utils.encoding import force_bytes
+
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+
+            # Redirect to password reset confirm page
+            reset_url = reverse('password_reset_confirm', kwargs={
+                'uidb64': uid,
+                'token': token
+            })
+
+            messages.success(request, "Account created successfully. Please reset your password.")
+            return HttpResponseRedirect(reset_url)
         else:
-
-            # send_user_password_email(user)
             messages.success(request, "Your subscription was successfully updated!")
-
-        return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
-
+            return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+        send_user_password_email(user)
     except stripe.error.StripeError as e:
-        # Handle Stripe-related errors
         messages.error(request, f"Stripe error: {e}")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     except IntegrityError:
-        # Handle database errors
         messages.error(request, "Error creating your account. Please contact support.")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
     except Exception as e:
-        # Catch any other unforeseen errors
-        messages.error(request, f"An unexpected error occurred.{e}")
+        messages.error(request, f"An unexpected error occurred: {e}")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
-
-
 
 
 # class CustomPasswordResetView(auth_views.PasswordResetView):
