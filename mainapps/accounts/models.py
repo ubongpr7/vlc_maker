@@ -73,7 +73,7 @@ class Credit(models.Model):
     product = models.ForeignKey(Product,null=True,blank=True, on_delete=models.SET_NULL)
     credits = models.IntegerField(default=0)
     last_reset = models.DateTimeField(auto_now_add=True)
-    @classmethod
+    # @classmethod
     def deduct_credits(self, amount):
         self.refresh_from_db(fields=['credits'])
     
@@ -84,8 +84,9 @@ class Credit(models.Model):
 
 
     def reset_credits(self, monthly_credits):
+        self.refresh_from_db(fields=['credits'])
         if (now() - self.last_reset) >= timedelta(days=30):
-            self.credits = monthly_credits
+            self.credits += monthly_credits  # Increase credits by monthly_credits
             self.last_reset = now()
             self.save()
 

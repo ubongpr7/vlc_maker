@@ -1,6 +1,7 @@
 
 import os
 from pathlib import Path
+# from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -188,3 +189,22 @@ STORAGES={
         'BACKEND':'storages.backends.s3boto3.S3Boto3Storage'
     },
 }
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # URL for Redis
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    'reset-user-credits-every-30-days': {
+        'task': 'yourapp.tasks.reset_all_user_credits',
+        # 'schedule': crontab(hour=0, minute=0),  # Runs every day at midnight
+    },
+}
+
+# Start the Celery worker
+# celery -A core worker --loglevel=info
+
+# # Start Celery Beat
+# celery -A core beat --loglevel=info
+
