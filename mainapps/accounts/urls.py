@@ -8,6 +8,7 @@ urlpatterns=[
     path('confirm-subscription/',subscription_confirm,name='subscription_confirm'),
     path('logout/', logout_view, name='logout'),  
     path('profile/', subscription_details, name='subscription_details'),  
+    path('contact/', contact_view, name='contact'),  
 ]
 
 

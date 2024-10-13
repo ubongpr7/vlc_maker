@@ -360,29 +360,31 @@
     <div class="contact-section">
         <h1>Contact us</h1>
         <p>We’d love to hear from you. Please fill out this form.</p>
-        <form class="contact-form">
+        <form class="contact-form" id="contactForm">
             <div class="form-row">
                 <div class="form-group">
                     <label for="first-name">First name</label>
-                    <input type="text" id="first-name" placeholder="First name">
+                    <input type="text" id="first-name" name="first_name" placeholder="First name" required>
                 </div>
                 <div class="form-group">
                     <label for="last-name">Last name</label>
-                    <input type="text" id="last-name" placeholder="Last name">
+                    <input type="text" id="last-name" name="last_name" placeholder="Last name" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="you@company.com">
+                <input type="email" id="email" name="email" placeholder="you@company.com" required>
             </div>
             <div class="form-group">
                 <label for="message">Message</label>
-                <textarea id="message" placeholder=""></textarea>
+                <textarea id="message" name="message" placeholder="" required></textarea>
             </div>
             <button type="submit">Send Message</button>
         </form>
+        
     </div>
    </div>
+
 
    <div class="footer-wrapper">
     <footer class="footer">
@@ -447,6 +449,32 @@ function toggleMenu() {
 hamburger.addEventListener("click", () => {
   toggleMenu();
 });
+document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        // Create FormData object from the form
+        const formData = new FormData(this);
+
+        // Send the POST request to the server
+        fetch('accounts/contact/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',  // Include CSRF token if using Django CSRF protection
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);  // Display success message
+                this.reset();  // Clear the form
+            } else {
+                alert(data.message);  // Display error message
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
 </script>
 
    <script src="{% static 'landing/script.js' %}"></script>

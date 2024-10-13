@@ -45,6 +45,33 @@ from django.utils.html import strip_tags
 from django.contrib.auth import logout
 
 
+# views.py
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt  # Only use this for development; consider CSRF protection in production.
+def contact_view(request):
+    if request.method == 'POST':
+        # Extract the data from the request
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        # Prepare the email content
+        subject = f"New Contact Form Submission from {first_name} {last_name}"
+        email_body = f"First Name: {first_name}\nLast Name: {last_name}\nEmail: {email}\nMessage:\n{message}"
+
+        # Send the email to the support team
+        try:
+            send_mail(subject, email_body, email, ['support@example.com'])  # Replace with your support email
+            return JsonResponse({'success': True, 'message': 'Your message has been sent successfully!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'An error occurred: {str(e)}'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 
 def logout_view(request):
@@ -368,9 +395,6 @@ def subscription_confirm(request):
         # If the user was just created, redirect to the password reset form
         if user_created:
             # Create password reset token
-            from django.contrib.auth.tokens import default_token_generator
-            from django.utils.http import urlsafe_base64_encode
-            from django.utils.encoding import force_bytes
 
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
@@ -382,11 +406,16 @@ def subscription_confirm(request):
             })
 
             messages.success(request, "Account created successfully. Please reset your password.")
+            send_user_password_email(user)
+
             return HttpResponseRedirect(reset_url)
         else:
+            send_user_password_email(user)
+
+            auth_login(request, user)
+
             messages.success(request, "Your subscription was successfully updated!")
-            return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
-        send_user_password_email(user)
+            return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
     except stripe.error.StripeError as e:
         messages.error(request, f"Stripe error: {e}")
         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
