@@ -214,5 +214,5 @@ CELERY_BEAT_SCHEDULE = {
 
 # # Start Celery Beat
 # celery -A core beat --loglevel=info
-PASSWORD_RESET_TIMEOUT = 3600
+PASSWORD_RESET_TIMEOUT = 3600*24
 
