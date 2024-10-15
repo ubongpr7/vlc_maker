@@ -327,62 +327,149 @@ def stripe_webhook(request):
 #         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
 
 
+# def subscription_confirm(request):
+#     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
+#     if not stripe_api_key:
+#         messages.error(request, "Stripe API key not found.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     # Set the Stripe API key dynamically
+#     stripe.api_key = str(stripe_api_key.secret)
+
+#     # Get the session ID from the URL
+#     session_id = request.GET.get("session_id")
+#     if not session_id:
+#         messages.error(request, "Session ID is missing.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     try:
+#         # Retrieve the session from Stripe
+#         session = stripe.checkout.Session.retrieve(session_id)
+
+#         # Extract customer email and subscription ID from the session
+#         customer_email = session.customer_details.email
+#         subscription_id = session.subscription
+#         customer_name = session.customer_details.name  # Get the name
+#         # Retrieve or create the customer from Stripe data
+#         stripe_customer = stripe.Customer.retrieve(session.customer)
+
+#         # Check if there's an existing user or create a new one based on the customer email
+#         User = get_user_model()
+#         user, user_created = User.objects.get_or_create(email=customer_email, defaults={
+#             'username': customer_email,
+#             'password': User.objects.make_random_password(),
+#             'first_name': customer_name.split()[0] if customer_name else "",  # Save first name
+#             'last_name': " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else "",  # Save last name
+#         })
+
+#         # Link the user to the Stripe customer
+#         djstripe_customer, created = Customer.get_or_create(subscriber=user)
+        
+#         # Sync the subscription from Stripe
+#         user.save()
+
+#         # Retrieve the subscription from Stripe
+#         subscription = stripe.Subscription.retrieve(subscription_id)
+#         stripe_product_id = subscription["items"]["data"][0]["plan"]["product"]
+
+#         # Retrieve the product from the database
+#         try:
+#             djstripe_product = Product.objects.get(id=stripe_product_id)
+#         except Product.DoesNotExist:
+#             messages.error(request, "Product not found in the database.")
+#             return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#         # Define credits based on the product
+#         product_credits = {
+#             "prod_QsWVUlHaCH4fqL": 25,  # Basic plan credits
+#             "prod_QsWWDNjdR6j22q": 50,  # Premium plan credits
+#             "prod_QsWWaDzX83oGhP": 100,
+#             "prod_QrRbiNv4BrEp4L": 25,
+#             "prod_QrRcSTxkwx207Z": 50,
+#             "prod_QrRcGMHuLrp4Lz": 100,
+#         }
+#         credits = product_credits.get(stripe_product_id, 0)
+
+#         # Create or update the user's credits based on the product
+#         Credit.create_or_update_credit(user=user, product=djstripe_product, credits=credits)
+
+#         # If the user was just created, redirect to the password reset form
+#         if user_created:
+#             # Create password reset token
+
+#             uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+#             # Create an instance of the PasswordResetTokenGenerator
+#             token_generator = PasswordResetTokenGenerator()
+
+#             # Get the user instance for whom you want to generate the token
+#             user = User.objects.get(username=user.email)
+
+#             # Generate the token
+#             token = token_generator.make_token(user)
+
+#             print(token)  # This will print the generated token
+
+#             # Redirect to password reset confirm page
+#             reset_url = reverse('password_reset_confirm', kwargs={
+#                 'uidb64': uid,
+#                 'token': token
+#             })
+
+#             messages.success(request, "Account created successfully. Please reset your password.")
+#             send_user_password_email(user)
+
+#             return HttpResponseRedirect(reset_url)
+#         else:
+
+#             auth_login(request, user)
+
+#             messages.success(request, "Your subscription was successfully updated!")
+#             return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
+#     except stripe.error.StripeError as e:
+#         messages.error(request, f"Stripe error: {e}")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     except IntegrityError:
+#         messages.error(request, "Error creating your account. Please contact support.")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+#     except Exception as e:
+#         messages.error(request, f"An unexpected error occurred: {e}")
+#         return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
 def subscription_confirm(request):
     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
     if not stripe_api_key:
         messages.error(request, "Stripe API key not found.")
-        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+        return HttpResponseRedirect(reverse("home:home"))
 
-    # Set the Stripe API key dynamically
     stripe.api_key = str(stripe_api_key.secret)
 
-    # Get the session ID from the URL
     session_id = request.GET.get("session_id")
     if not session_id:
         messages.error(request, "Session ID is missing.")
-        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+        return HttpResponseRedirect(reverse("home:home"))
 
     try:
-        # Retrieve the session from Stripe
         session = stripe.checkout.Session.retrieve(session_id)
-
-        # Extract customer email and subscription ID from the session
         customer_email = session.customer_details.email
         subscription_id = session.subscription
-        customer_name = session.customer_details.name  # Get the name
-        # Retrieve or create the customer from Stripe data
+        customer_name = session.customer_details.name
         stripe_customer = stripe.Customer.retrieve(session.customer)
 
-        # Check if there's an existing user or create a new one based on the customer email
-        User = get_user_model()
-        user, user_created = User.objects.get_or_create(email=customer_email, defaults={
-            'username': customer_email,
-            'password': User.objects.make_random_password(),
-            'first_name': customer_name.split()[0] if customer_name else "",  # Save first name
-            'last_name': " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else "",  # Save last name
-        })
+        # Extract names
+        first_name = customer_name.split()[0] if customer_name else ""
+        last_name = " ".join(customer_name.split()[1:]) if customer_name and len(customer_name.split()) > 1 else ""
 
-        # Link the user to the Stripe customer
-        djstripe_customer, created = Customer.get_or_create(subscriber=user)
-        
-        # Sync the subscription from Stripe
-        user.save()
-
-        # Retrieve the subscription from Stripe
+        # Retrieve subscription and product
         subscription = stripe.Subscription.retrieve(subscription_id)
         stripe_product_id = subscription["items"]["data"][0]["plan"]["product"]
 
-        # Retrieve the product from the database
-        try:
-            djstripe_product = Product.objects.get(id=stripe_product_id)
-        except Product.DoesNotExist:
-            messages.error(request, "Product not found in the database.")
-            return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
-
-        # Define credits based on the product
+        # Set product credits
         product_credits = {
-            "prod_QsWVUlHaCH4fqL": 25,  # Basic plan credits
-            "prod_QsWWDNjdR6j22q": 50,  # Premium plan credits
+            "prod_QsWVUlHaCH4fqL": 25,
+            "prod_QsWWDNjdR6j22q": 50,
             "prod_QsWWaDzX83oGhP": 100,
             "prod_QrRbiNv4BrEp4L": 25,
             "prod_QrRcSTxkwx207Z": 50,
@@ -390,66 +477,81 @@ def subscription_confirm(request):
         }
         credits = product_credits.get(stripe_product_id, 0)
 
-        # Create or update the user's credits based on the product
-        Credit.create_or_update_credit(user=user, product=djstripe_product, credits=credits)
+        # Save necessary information in session
+        request.session['stripe_customer_email'] = customer_email
+        request.session['first_name'] = first_name
+        request.session['last_name'] = last_name
+        request.session['stripe_product_id'] = stripe_product_id
+        request.session['credits'] = credits
 
-        # If the user was just created, redirect to the password reset form
-        if user_created:
-            # Create password reset token
+        # Redirect to registration page
+        return HttpResponseRedirect(reverse('accounts:create'))
 
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-
-            # Create an instance of the PasswordResetTokenGenerator
-            token_generator = PasswordResetTokenGenerator()
-
-            # Get the user instance for whom you want to generate the token
-            user = User.objects.get(username=user.email)
-
-            # Generate the token
-            token = token_generator.make_token(user)
-
-            print(token)  # This will print the generated token
-
-            # Redirect to password reset confirm page
-            reset_url = reverse('password_reset_confirm', kwargs={
-                'uidb64': uid,
-                'token': token
-            })
-
-            messages.success(request, "Account created successfully. Please reset your password.")
-            send_user_password_email(user)
-
-            return HttpResponseRedirect(reset_url)
-        else:
-
-            auth_login(request, user)
-
-            messages.success(request, "Your subscription was successfully updated!")
-            return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
     except stripe.error.StripeError as e:
         messages.error(request, f"Stripe error: {e}")
-        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
-
-    except IntegrityError:
-        messages.error(request, "Error creating your account. Please contact support.")
-        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+        return HttpResponseRedirect(reverse("home:home"))
 
     except Exception as e:
         messages.error(request, f"An unexpected error occurred: {e}")
-        return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+        return HttpResponseRedirect(reverse("home:home"))
 
 
-# class CustomPasswordResetView(auth_views.PasswordResetView):
-#     template_name = 'registration/password_reset_form.html'
-#     email_template_name = 'registration/password_reset_email.html'
-#     success_url = reverse_lazy('password_reset_done')
 
-# class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-#     template_name = 'registration/password_reset_confirm.html'
-#     success_url = reverse_lazy('password_reset_complete')
+def custom_registration_view(request):
+    product_credits = {
+            "prod_QsWVUlHaCH4fqL": 25,
+            "prod_QsWWDNjdR6j22q": 50,
+            "prod_QsWWaDzX83oGhP": 100,
+            "prod_QrRbiNv4BrEp4L": 25,
+            "prod_QrRcSTxkwx207Z": 50,
+            "prod_QrRcGMHuLrp4Lz": 100,
+        }
+    if request.method == 'POST':
+        # Get data from HTML form
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
 
+        # Basic validation for passwords
+        if password1 != password2:
+            messages.error(request, "Passwords do not match.")
+            return HttpResponseRedirect(reverse("accounts:create"))  # Update with correct view name
 
-# views.py
+        # Check if the email is already registered
+        User = get_user_model()
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "This email is already registered. Please log in.")
+            return HttpResponseRedirect(reverse("accounts:login"))  # Update with correct view name
+
+        # Create a new user
+        user = User.objects.create_user(email=email, password=password1)
+
+        # Fetch Stripe details from the session
+        first_name = request.session.get('first_name', '')
+        last_name = request.session.get('last_name', '')
+        stripe_product_id = request.session.get('stripe_product_id')
+
+        # Set first and last name from session
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+
+        # Assign credits based on Stripe product
+        try:
+            djstripe_product = Product.objects.get(id=stripe_product_id)
+            Credit.create_or_update_credit(user=user, product=djstripe_product, credits=product_credits.get(stripe_product_id, 0))
+        except Product.DoesNotExist:
+            messages.error(request, "Product not found.")
+            return HttpResponseRedirect(reverse("home:home"))  # Update with correct view name
+
+        # Log the user in
+        auth_login(request, user)
+        messages.success(request, "Account created successfully!")
+        return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
+
+    else:
+        # Handle GET request (render the registration form)
+        return render(request, 'accounts/register.html')  # Update with your actual registration template
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
     template_name = 'accounts/password_reset_form.html'

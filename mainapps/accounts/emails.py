@@ -7,6 +7,19 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 import threading
+from django.contrib.auth.views import PasswordResetView
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib.auth import get_user_model
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+
+
+from django.contrib.auth import login
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.utils.http import urlsafe_base64_decode
 
 from mainapps.accounts.models import User
 
@@ -44,32 +57,17 @@ def send_user_password_email(user):
     # Prepare the email context
     context = {
         'user_name': user.username,
-        'password_reset_link': password_reset_link,
-        'logo_url': f"{settings.DOMAIN_NAME}/media/vlc/logo.png"  # Update with your logo path
     }
 
     # Send the email with the custom template
     send_html_email(
-        subject="Reset Your Password",
-        message="Click the link below to reset your password:",
+        subject="Welcome to CreativeMaker.io – Let’s Create Some Amazing Creatives!",
+        message=None,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_email=user.email,
         html_file='accounts/password_reset.html',  # Path to your HTML email template
         context=context
     )
-from django.contrib.auth.views import PasswordResetView
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.contrib.auth import get_user_model
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-
-
-from django.contrib.auth import login
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.utils.http import urlsafe_base64_decode
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     # Override the default success URL (redirect to '/text')
@@ -85,27 +83,26 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
         # Redirect to the desired page after login
         return redirect(self.success_url)
+    def get(self, request, *args, **kwargs):
+        # Token and UID are provided via the URL
+        user = self.get_user(kwargs['uidb64'])
+        token = kwargs['token']
 
-    # def dispatch(self, *args, **kwargs):
-    #     user = self.get_user(kwargs['uidb64'])
-    #     token = kwargs['token']
-    #     if user is not None and not default_token_generator.check_token(user, token):
-    #         messages.error(self.request, "The reset link has expired. Please request a new password reset.")
-    #         return HttpResponseRedirect(reverse_lazy('password_reset'))
-    #     return super().dispatch(*args, **kwargs)
+        # If user exists but token is invalid or expired
+        if user is not None and not default_token_generator.check_token(user, token):
+            messages.error(self.request, _("The reset link has expired. Please request a new password reset."))
+            return HttpResponseRedirect(reverse_lazy('password_reset'))
+        
+        # If everything is valid, proceed with the regular process
+        return super().get(request, *args, **kwargs)
+
+    def get_user(self, uidb64):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            return User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return None    # def get_user(self, uidb64):
     
-
-    # def get_user(self, uidb64):
-    #     try:
-    #         from django.utils.http import urlsafe_base64_decode
-    #         uid = urlsafe_base64_decode(uidb64).decode()
-    #         return User.objects.get(pk=uid)
-    #     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-    #         return None
-
-# class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-
-
 
 class CustomPasswordResetView(PasswordResetView):
     html_email_template_name = 'registration/password_reset_email.html'  # HTML email template
