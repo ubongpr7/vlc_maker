@@ -34,26 +34,38 @@ class EmailThread(threading.Thread):
         self.email_message.send()
         if self.email_message.send():
             print('Email sent successfully')
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+def send_html_email2(subject, message, from_email, to_email, html_file, context):
+    # Render the HTML content with the provided context
+    html_content = render_to_string(html_file, context)
+    
+    # Create a plain text version (optional)
+    text_content = strip_tags(html_content)
+
+    # Send the email using send_mail
+    send_mail(
+        subject,
+        text_content,  # You can leave this empty if you don't want a text version
+        from_email,
+        [to_email],
+        html_message=html_content  # Send the HTML content
+    )
+    
+    print("Email sent to:", to_email)
+
+
 
 def send_html_email(subject, message, from_email, to_email, html_file, context):
-    # Render the HTML content
     html_content = render_to_string(html_file, context)
+    text_content = strip_tags(html_content)
 
-    # Create the email object with just the HTML content
-    msg = EmailMultiAlternatives(subject, "", from_email, [to_email])  # Empty text content
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
     msg.attach_alternative(html_content, "text/html")
-    
     print("Sending email...")
     EmailThread(msg).start()
-
-# def send_html_email(subject, message, from_email, to_email, html_file, context):
-#     html_content = render_to_string(html_file, context)
-#     text_content = strip_tags(html_content)
-
-#     msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
-#     msg.attach_alternative(html_content, "text/html")
-#     print("Sending email...")
-#     EmailThread(msg).start()
 
 
 def welcome_message(user):

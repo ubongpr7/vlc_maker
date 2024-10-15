@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth import get_user_model
-from mainapps.accounts.emails import send_html_email, welcome_message
+from mainapps.accounts.emails import send_html_email2, welcome_message
 from mainapps.accounts.models import Credit
 import stripe
 from django.utils.http import urlsafe_base64_encode
@@ -281,7 +281,7 @@ def welcome(request,id):
             'user_name': user.first_name,
         }
 
-    send_html_email(
+    send_html_email2(
         subject="Welcome to CreativeMaker.io – Let’s Create Some Amazing Creatives!",
         message=None,
         from_email=settings.DEFAULT_FROM_EMAIL,
