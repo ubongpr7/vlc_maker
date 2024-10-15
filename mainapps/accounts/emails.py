@@ -59,6 +59,8 @@ from django.contrib.auth.views import PasswordResetView
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.auth import get_user_model
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
 from django.contrib.auth import login
@@ -81,7 +83,28 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
         # Redirect to the desired page after login
         return redirect(self.success_url)
+
+    def dispatch(self, *args, **kwargs):
+        user = self.get_user(kwargs['uidb64'])
+        token = kwargs['token']
+        if user is not None and not default_token_generator.check_token(user, token):
+            messages.error(self.request, "The reset link has expired. Please request a new password reset.")
+            return HttpResponseRedirect(reverse_lazy('password_reset'))
+        return super().dispatch(*args, **kwargs)
     
+
+
+# class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+#     def get_user(self, uidb64):
+#         try:
+#             from django.utils.http import urlsafe_base64_decode
+#             uid = urlsafe_base64_decode(uidb64).decode()
+#             return User.objects.get(pk=uid)
+#         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+#             return None
+
+
+
 class CustomPasswordResetView(PasswordResetView):
     html_email_template_name = 'registration/password_reset_email.html'  # HTML email template
 
