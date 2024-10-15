@@ -46,20 +46,11 @@ def send_html_email(subject, message, from_email, to_email, html_file, context):
     EmailThread(msg).start()
 
 
-def send_user_password_email(user):
-    # Generate a password reset link using Django's token generator
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    token = default_token_generator.make_token(user)
-    
-    # Build the password reset link using Django's built-in views
-    # password_reset_link = f"{settings.DOMAIN_NAME}{reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})}"
-    
-    # Prepare the email context
+def welcome_message(user):
     context = {
-        'user_name': user.username,
+        'user_name': user.first_name,
     }
 
-    # Send the email with the custom template
     send_html_email(
         subject="Welcome to CreativeMaker.io – Let’s Create Some Amazing Creatives!",
         message=None,
