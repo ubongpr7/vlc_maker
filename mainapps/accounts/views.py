@@ -513,11 +513,16 @@ def registration_view(request):
         password2 = request.POST.get('password2')
 
         # Basic validation for passwords
+        if len(password1) <6:
+            messages.error(request, "At least 6 characters are required")
+            return HttpResponseRedirect(reverse("accounts:registration")) 
+
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
-            return HttpResponseRedirect(reverse("accounts:registration"))  # Update with correct view name
+            return HttpResponseRedirect(reverse("accounts:registration")) 
 
         # Check if the email is already registered
+        
         User = get_user_model()
         if User.objects.filter(email=email).exists():
             messages.error(request, "This email is already registered. Please log in.")
