@@ -60,6 +60,28 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.auth import get_user_model
 
+
+from django.contrib.auth import login
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.utils.http import urlsafe_base64_decode
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    # Override the default success URL (redirect to '/text')
+    success_url = '/text'
+
+    def form_valid(self, form):
+        # Reset the password
+        response = super().form_valid(form)
+
+        # Automatically log the user in after password reset
+        user = form.user
+        login(self.request, user)
+
+        # Redirect to the desired page after login
+        return redirect(self.success_url)
+
 class CustomPasswordResetView(PasswordResetView):
     def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name=None, use_django_email=True):
         subject = render_to_string(subject_template_name, context)

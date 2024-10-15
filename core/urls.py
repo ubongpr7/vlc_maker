@@ -4,7 +4,7 @@ from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from mainapps.accounts.emails import CustomPasswordResetView
+from mainapps.accounts.emails import CustomPasswordResetConfirmView, CustomPasswordResetView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,6 +13,11 @@ urlpatterns = [
     path('video/', include('mainapps.video.urls',namespace='video')),
     path('text/', include('mainapps.vidoe_text.urls',namespace='video_text')),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
+     path(
+        'auth/reset/<uidb64>/<token>/',
+        CustomPasswordResetConfirmView.as_view(),
+        name='password_reset_confirm'
+    ),
     path("auth/", include("django.contrib.auth.urls")),  # new
     # path('auth/password_reset/', CustomPasswordResetV ;liew.as_view(), name='password_reset'),
 
