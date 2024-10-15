@@ -52,7 +52,7 @@ def send_user_password_email(user):
     token = default_token_generator.make_token(user)
     
     # Build the password reset link using Django's built-in views
-    password_reset_link = f"{settings.DOMAIN_NAME}{reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})}"
+    # password_reset_link = f"{settings.DOMAIN_NAME}{reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})}"
     
     # Prepare the email context
     context = {
