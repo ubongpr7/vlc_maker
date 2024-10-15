@@ -294,6 +294,11 @@ def welcome(request,id):
     
 
 def registration_view(request):
+    stripe_product_id = request.session.get('stripe_product_id')
+    if not stripe_product_id:
+        messages.info(request,'You need to subscribe to register')
+        return redirect('/accounts/pricing')
+
     product_credits = {
             "prod_QsWVUlHaCH4fqL": 25,
             "prod_QsWWDNjdR6j22q": 50,
@@ -330,7 +335,6 @@ def registration_view(request):
         # Fetch Stripe details from the session
         first_name = request.session.get('first_name', '')
         last_name = request.session.get('last_name', '')
-        stripe_product_id = request.session.get('stripe_product_id')
 
         # Set first and last name from session
         user.first_name = first_name
