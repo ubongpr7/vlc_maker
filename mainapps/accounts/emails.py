@@ -83,25 +83,6 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
         # Redirect to the desired page after login
         return redirect(self.success_url)
-    def get(self, request, *args, **kwargs):
-        # Token and UID are provided via the URL
-        user = self.get_user(kwargs['uidb64'])
-        token = kwargs['token']
-
-        # If user exists but token is invalid or expired
-        if not default_token_generator.check_token(user, token):
-            messages.error(self.request, "The reset link has expired. Please request a new password reset.")
-            return HttpResponseRedirect(reverse_lazy('password_reset'))
-        
-        # If everything is valid, proceed with the regular process
-        return super().get(request, *args, **kwargs)
-
-    def get_user(self, uidb64):
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            return User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            return None    # def get_user(self, uidb64):
     
 
 class CustomPasswordResetView(PasswordResetView):

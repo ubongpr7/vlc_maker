@@ -485,7 +485,7 @@ def subscription_confirm(request):
         request.session['credits'] = credits
 
         # Redirect to registration page
-        return HttpResponseRedirect(reverse('accounts:create'))
+        return HttpResponseRedirect(reverse('accounts:registration'))
 
     except stripe.error.StripeError as e:
         messages.error(request, f"Stripe error: {e}")
@@ -497,7 +497,7 @@ def subscription_confirm(request):
 
 
 
-def custom_registration_view(request):
+def registration_view(request):
     product_credits = {
             "prod_QsWVUlHaCH4fqL": 25,
             "prod_QsWWDNjdR6j22q": 50,

@@ -3,6 +3,7 @@ from .views import *
 from django.contrib.auth import views as auth_views
 app_name='accounts'
 urlpatterns=[
+    path('create-account/',registration_view,name='registration'),
     path('login/',login,name='signin'),
     path('pricing/',embedded_pricing_page,name='embedded_pricing_page'),
     path('confirm-subscription/',subscription_confirm,name='subscription_confirm'),
