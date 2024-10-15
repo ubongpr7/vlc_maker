@@ -7,6 +7,19 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 import threading
+from django.contrib.auth.views import PasswordResetView
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib.auth import get_user_model
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+
+
+from django.contrib.auth import login
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.utils.http import urlsafe_base64_decode
 
 from mainapps.accounts.models import User
 
@@ -43,33 +56,18 @@ def send_user_password_email(user):
     
     # Prepare the email context
     context = {
-        'user_name': user.username,
-        'password_reset_link': password_reset_link,
-        'logo_url': f"{settings.DOMAIN_NAME}/media/vlc/logo.png"  # Update with your logo path
+        'user_name': user.first_name,
     }
 
     # Send the email with the custom template
     send_html_email(
-        subject="Reset Your Password",
-        message="Click the link below to reset your password:",
+        subject="Welcome to CreativeMaker.io – Let’s Create Some Amazing Creatives!",
+        message="Welcome",
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_email=user.email,
-        html_file='accounts/password_reset.html',  # Path to your HTML email template
+        html_file='accounts/password_reset.html', 
         context=context
     )
-from django.contrib.auth.views import PasswordResetView
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.contrib.auth import get_user_model
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-
-
-from django.contrib.auth import login
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.utils.http import urlsafe_base64_decode
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     # Override the default success URL (redirect to '/text')
