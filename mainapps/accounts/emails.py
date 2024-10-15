@@ -115,8 +115,8 @@ class CustomPasswordResetView(PasswordResetView):
         
         # Call your custom function to send the HTML email
         send_html_email(
-            subject=subject,
-            message=None,  # Since you're using HTML, no need for a plain message here
+            subject="Reset Your Password for CreativeMaker.io",
+            message=None,  
             from_email=from_email,
             to_email=to_email,
             html_file=html_file,
