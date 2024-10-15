@@ -81,15 +81,17 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
         # Redirect to the desired page after login
         return redirect(self.success_url)
-
+    
 class CustomPasswordResetView(PasswordResetView):
     def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name=None, use_django_email=True):
         subject = render_to_string(subject_template_name, context)
         subject = ''.join(subject.splitlines())  # Remove line breaks
-        html_message = render_to_string(email_template_name, context)
+
+        # Render HTML and plain-text versions of the email
+        html_message = render_to_string(html_email_template_name or email_template_name, context)
         plain_message = strip_tags(html_message)
 
-        # Send the email
+        # Send the email using Django's send_mail function
         get_user_model().send_mail(
             subject,
             plain_message,
