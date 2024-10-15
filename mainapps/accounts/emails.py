@@ -83,19 +83,19 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         return redirect(self.success_url)
     
 class CustomPasswordResetView(PasswordResetView):
+    html_email_template_name = 'password_reset_email.html'  # HTML email template
+
     def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name=None, use_django_email=True):
-        subject = render_to_string(subject_template_name, context)
-        subject = ''.join(subject.splitlines())  # Remove line breaks
-
-        # Render HTML and plain-text versions of the email
-        html_message = render_to_string(html_email_template_name or email_template_name, context)
-        plain_message = strip_tags(html_message)
-
-        # Send the email using Django's send_mail function
-        get_user_model().send_mail(
-            subject,
-            plain_message,
-            from_email,
-            [to_email],
-            html_message=html_message,
+        # Render the subject and email context
+        subject = render_to_string(subject_template_name, context).strip()
+        html_file = html_email_template_name or self.html_email_template_name
+        
+        # Call your custom function to send the HTML email
+        send_html_email(
+            subject=subject,
+            message=None,  # Since you're using HTML, no need for a plain message here
+            from_email=from_email,
+            to_email=to_email,
+            html_file=html_file,
+            context=context
         )
