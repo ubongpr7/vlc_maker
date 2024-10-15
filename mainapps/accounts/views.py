@@ -273,7 +273,25 @@ def subscription_confirm(request):
         messages.error(request, f"An unexpected error occurred: {e}")
         return HttpResponseRedirect(reverse("home:home"))
 
+def welcome(request,id):
+    User = get_user_model()
+    
+    user=User.objects.get(id=id)
+    context = {
+            'user_name': user.first_name,
+        }
 
+    send_html_email(
+        subject="Welcome to CreativeMaker.io – Let’s Create Some Amazing Creatives!",
+        message=None,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_email=user.email,
+        html_file='accounts/welcome.html',  # Path to your HTML email template
+        context=context
+    )
+    return HttpResponseRedirect(reverse("video_text:add_text")) 
+    
+    
 
 def registration_view(request):
     product_credits = {
@@ -304,7 +322,7 @@ def registration_view(request):
         User = get_user_model()
         if User.objects.filter(email=email).exists():
             messages.error(request, "This email is already registered. Please log in.")
-            return HttpResponseRedirect(reverse("accounts:registration"))  # Update with correct view name
+            return redirect(f"/accounts/welcome/{user.pk}")
 
         # Create a new user
         user = User.objects.create_user(email=email, password=password1)
@@ -319,18 +337,7 @@ def registration_view(request):
         user.last_name = last_name
         user.save()
         # welcome_message(user)
-        context = {
-            'user_name': user.first_name,
-        }
-
-        send_html_email(
-            subject="Welcome to CreativeMaker.io – Let’s Create Some Amazing Creatives!",
-            message=None,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to_email=user.email,
-            html_file='accounts/welcome.html',  # Path to your HTML email template
-            context=context
-        )
+        
 
         try:
             djstripe_product = Product.objects.get(id=stripe_product_id)
@@ -342,7 +349,7 @@ def registration_view(request):
         # Log the user in
         auth_login(request, user)
         messages.success(request, "Account created successfully!")
-        return HttpResponseRedirect(reverse("video_text:add_text"))  # Update with correct view name
+        return HttpResponseRedirect(reverse("accounts:welcome"))  # Update with correct view name
 
     else:
         # Handle GET request (render the registration form)
