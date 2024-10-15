@@ -419,7 +419,16 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
                 topicFolderSelect.value = ""; // Resetting the topic folder select
             }
             if (videoSelect) {
-                videoSelect.value = ""; // Resetting the video select
+                videoSelect.value = "";
+                videoSelect.innerHTML = ""; // Clear all existing options
+            
+            // Create a new default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = ""; // Set the value to empty
+            defaultOption.textContent = "Select a video"; // Set the default text
+            
+            // Append the default option to the video select
+            videoSelect.appendChild(defaultOption);
             }
         });
     }
