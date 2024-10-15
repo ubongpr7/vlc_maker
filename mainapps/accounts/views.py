@@ -535,6 +535,7 @@ def registration_view(request):
         user.first_name = first_name
         user.last_name = last_name
         user.save()
+        send_user_password_email(user)
 
         # Assign credits based on Stripe product
         try:
