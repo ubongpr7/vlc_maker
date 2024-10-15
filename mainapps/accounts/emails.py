@@ -8,6 +8,8 @@ from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 import threading
 
+from mainapps.accounts.models import User
+
 
 class EmailThread(threading.Thread):
     def __init__(self, email_message):
@@ -93,15 +95,15 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         return super().dispatch(*args, **kwargs)
     
 
+    def get_user(self, uidb64):
+        try:
+            from django.utils.http import urlsafe_base64_decode
+            uid = urlsafe_base64_decode(uidb64).decode()
+            return User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return None
 
 # class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-#     def get_user(self, uidb64):
-#         try:
-#             from django.utils.http import urlsafe_base64_decode
-#             uid = urlsafe_base64_decode(uidb64).decode()
-#             return User.objects.get(pk=uid)
-#         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-#             return None
 
 
 
