@@ -56,7 +56,7 @@ def welcome_message(user):
         message=None,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_email=user.email,
-        html_file='accounts/password_reset.html',  # Path to your HTML email template
+        html_file='accounts/welcome.html',  # Path to your HTML email template
         context=context
     )
 
