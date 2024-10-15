@@ -421,7 +421,6 @@ def subscription_confirm(request):
 
             return HttpResponseRedirect(reset_url)
         else:
-            send_user_password_email(user)
 
             auth_login(request, user)
 
