@@ -408,6 +408,27 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
                 console.log(inputElement.value)
         }
         
+    function resetSelectsOnFileChange(index, textfileId) {
+        const fileInput = document.getElementById(`video_${index}`);
+        const topicFolderSelect = document.getElementById(`topic_folder_${index}_${textfileId}`);
+        const videoSelect = document.getElementById(`videoSelect_${index}_${textfileId}`);
+
+        fileInput.addEventListener('change', function() {
+            // Reset the values of the two selects
+            if (topicFolderSelect) {
+                topicFolderSelect.value = ""; // Resetting the topic folder select
+            }
+            if (videoSelect) {
+                videoSelect.value = ""; // Resetting the video select
+            }
+        });
+    }
+
+    // Initialize the reset function for each file input
+    for (let i = 0; i < loopLength; i++) {
+        resetSelectsOnFileChange(i, "{{ textfile_id }}");
+    }
+        
         function fetchVideoClips(categoryId, counter,item) {
             select2=document.getElementById(`videoSelect_${counter}_{{textfile_id}}`)
             saveInput(item)
