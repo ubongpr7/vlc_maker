@@ -83,7 +83,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         return redirect(self.success_url)
     
 class CustomPasswordResetView(PasswordResetView):
-    html_email_template_name = 'password_reset_email.html'  # HTML email template
+    html_email_template_name = 'registration/password_reset_email.html'  # HTML email template
 
     def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name=None, use_django_email=True):
         # Render the subject and email context
