@@ -322,7 +322,7 @@ def registration_view(request):
         User = get_user_model()
         if User.objects.filter(email=email).exists():
             messages.error(request, "This email is already registered. Please log in.")
-            return redirect(f"/accounts/welcome/{user.pk}")
+            return HttpResponseRedirect(reverse("accounts:registration")) 
 
         # Create a new user
         user = User.objects.create_user(email=email, password=password1)
@@ -349,7 +349,7 @@ def registration_view(request):
         # Log the user in
         auth_login(request, user)
         messages.success(request, "Account created successfully!")
-        return HttpResponseRedirect(reverse("accounts:welcome"))  # Update with correct view name
+        return redirect(f"/accounts/welcome/{user.pk}")
 
     else:
         # Handle GET request (render the registration form)
