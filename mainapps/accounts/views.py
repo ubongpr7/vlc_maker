@@ -515,13 +515,13 @@ def registration_view(request):
         # Basic validation for passwords
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
-            return HttpResponseRedirect(reverse("accounts:create"))  # Update with correct view name
+            return HttpResponseRedirect(reverse("accounts:registration"))  # Update with correct view name
 
         # Check if the email is already registered
         User = get_user_model()
         if User.objects.filter(email=email).exists():
             messages.error(request, "This email is already registered. Please log in.")
-            return HttpResponseRedirect(reverse("accounts:login"))  # Update with correct view name
+            return HttpResponseRedirect(reverse("accounts:registration"))  # Update with correct view name
 
         # Create a new user
         user = User.objects.create_user(email=email, password=password1)
