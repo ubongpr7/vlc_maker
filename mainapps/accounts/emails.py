@@ -90,7 +90,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
         # If user exists but token is invalid or expired
         if user is not None and not default_token_generator.check_token(user, token):
-            messages.error(self.request, _("The reset link has expired. Please request a new password reset."))
+            messages.error(self.request, "The reset link has expired. Please request a new password reset.")
             return HttpResponseRedirect(reverse_lazy('password_reset'))
         
         # If everything is valid, proceed with the regular process
