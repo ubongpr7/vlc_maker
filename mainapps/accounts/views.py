@@ -11,6 +11,7 @@ import stripe
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from django.contrib.auth import get_user_model
 from djstripe.settings import djstripe_settings
@@ -397,7 +398,17 @@ def subscription_confirm(request):
             # Create password reset token
 
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
+
+            # Create an instance of the PasswordResetTokenGenerator
+            token_generator = PasswordResetTokenGenerator()
+
+            # Get the user instance for whom you want to generate the token
+            user = User.objects.get(username=user.email)
+
+            # Generate the token
+            token = token_generator.make_token(user)
+
+            print(token)  # This will print the generated token
 
             # Redirect to password reset confirm page
             reset_url = reverse('password_reset_confirm', kwargs={
