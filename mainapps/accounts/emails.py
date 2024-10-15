@@ -86,22 +86,22 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         # Redirect to the desired page after login
         return redirect(self.success_url)
 
-    def dispatch(self, *args, **kwargs):
-        user = self.get_user(kwargs['uidb64'])
-        token = kwargs['token']
-        if user is not None and not default_token_generator.check_token(user, token):
-            messages.error(self.request, "The reset link has expired. Please request a new password reset.")
-            return HttpResponseRedirect(reverse_lazy('password_reset'))
-        return super().dispatch(*args, **kwargs)
+    # def dispatch(self, *args, **kwargs):
+    #     user = self.get_user(kwargs['uidb64'])
+    #     token = kwargs['token']
+    #     if user is not None and not default_token_generator.check_token(user, token):
+    #         messages.error(self.request, "The reset link has expired. Please request a new password reset.")
+    #         return HttpResponseRedirect(reverse_lazy('password_reset'))
+    #     return super().dispatch(*args, **kwargs)
     
 
-    def get_user(self, uidb64):
-        try:
-            from django.utils.http import urlsafe_base64_decode
-            uid = urlsafe_base64_decode(uidb64).decode()
-            return User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            return None
+    # def get_user(self, uidb64):
+    #     try:
+    #         from django.utils.http import urlsafe_base64_decode
+    #         uid = urlsafe_base64_decode(uidb64).decode()
+    #         return User.objects.get(pk=uid)
+    #     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+    #         return None
 
 # class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
