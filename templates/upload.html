@@ -1,18 +1,18 @@
 
 <div class="card">
     <div class="card-header">
-        <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
+        <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center; padding-top: 15px; display: inline-block;">
             Upload To Your Asset Folder
 
         </span>
         <h5>These Files Will be Saved In Your Asset Library Which You Can Manage Through The Profile Icon Above</h5>
     </div>
-    <div class="card-body">
+    <div class="card-body upload">
         <form method="POST" id="uploadForm" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="Script-text-file-text" style="display: flex; align-items: center; margin-bottom: 16px;">
 
-                <div style="  font-weight: bold; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                <div style="  font-weight: bold; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px; font-size: 15px;">
                     Upload Folder:
 
                 </div>
@@ -153,3 +153,4 @@ uploadForm.addEventListener('submit', function(event) {
     xhr.send(formData);
 });
 </script>
+
