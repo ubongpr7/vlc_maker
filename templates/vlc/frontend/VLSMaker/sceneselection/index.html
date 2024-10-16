@@ -49,7 +49,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* margin: 0 auto; */
-    /* height: 200px; */
+    height: 352px; 
     padding: 20px;
     font-size: 14px;
 
@@ -62,12 +62,44 @@
     font-weight: bold;
 
 }
-
+.card-header h5 {
+	
+font-family: "Montserrat", sans-serif;
+     
+    font-weight: 400;
+}
 .card-body {
     font-weight: bold;
     padding: 10px;
 }
-
+    .card-body a{
+	margin-left: 12px;
+    }
+    .download-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #6c25be;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 15px;
+    border: 2px solid;
+    margin-bottom: 8px;
+    font-weight: 500;
+    margin-top: 4px;
+    margin-left: 73px !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    left: 19px;
+    top: 0;
+}
+    .card-body.upload {
+    position: relative;
+    top: -25px;
+    left: 0;
+    padding-bottom: 2px;
+}
     </style>
 </head>
 <body style="position: relative; overflow-x: hidden;">
@@ -103,14 +135,14 @@
                 <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center;">
                     Upload Your Script 
                 </span>
-            
+           	<h5></h5> 
             </div>
             <div class="card-body">
                 <form method="POST" action="." enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="Script-text-file-text" style="display: flex; align-items: center; margin-bottom: 16px;">
         
-                        <div style="  font-weight: bold; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+                        <div style="  font-weight: bold; line-height: 26.1px; letter-spacing: 0.02em; text-align: left; margin-right: 10px; font-size: 15px;">
                             Script Text File: 
                         </div>
                         <div class="vh-parent">
@@ -121,10 +153,12 @@
                             </div>
                             ?
                         </div>
+			 <a href="{%  url 'video_text:download_file_' file_key=key %}" download="" class="download-btn">Click Here To Download An Empty Template</a>
                     </div>
                     </div>
 
-                    <a href="{%  url 'video_text:download_file_' file_key=key %}" download style="margin-bottom:5px;margin-top:-10px;">Click Here To Download An Empty Template </a>
+		    <!--    <a href="{%  url 'video_text:download_file_' file_key=key %}" download style="margin-bottom:5px;margin-top:-10px; margin-left: 9px;">Click Here To Download An Empty Template </a> -->
+
                     <div class="Script-text-file-Upload" style="width: 100%; height: 50px; border: 1px solid #000000B2; box-sizing: border-box; border-radius: 8px; padding: 8px; gap: 24px; display: flex; align-items: center; margin-bottom: 24px;">
                         <div style="padding: 8px 24px; border-radius: 8px; cursor: pointer; background: #864AF9; width: fit-content; color: white; display: flex; align-items: center; gap: 10px; position: relative;">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -408,36 +442,6 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
                 console.log(inputElement.value)
         }
         
-    function resetSelectsOnFileChange(index, textfileId) {
-        const fileInput = document.getElementById(`video_${index}`);
-        const topicFolderSelect = document.getElementById(`topic_folder_${index}_${textfileId}`);
-        const videoSelect = document.getElementById(`videoSelect_${index}_${textfileId}`);
-
-        fileInput.addEventListener('change', function() {
-            // Reset the values of the two selects
-            if (topicFolderSelect) {
-                topicFolderSelect.value = ""; // Resetting the topic folder select
-            }
-            if (videoSelect) {
-                videoSelect.value = "";
-                videoSelect.innerHTML = ""; // Clear all existing options
-            
-            // Create a new default option
-            const defaultOption = document.createElement('option');
-            defaultOption.value = ""; // Set the value to empty
-            defaultOption.textContent = "Select a video"; // Set the default text
-            
-            // Append the default option to the video select
-            videoSelect.appendChild(defaultOption);
-            }
-        });
-    }
-
-    // Initialize the reset function for each file input
-    for (let i = 0; i < loopLength; i++) {
-        resetSelectsOnFileChange(i, "{{ textfile_id }}");
-    }
-        
         function fetchVideoClips(categoryId, counter,item) {
             select2=document.getElementById(`videoSelect_${counter}_{{textfile_id}}`)
             saveInput(item)
@@ -478,3 +482,4 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
     <script src="{% static 'htmx.js' %}"></script>
 </body>
 </html>
+
