@@ -154,7 +154,7 @@ uploadForm.addEventListener('submit', function(event) {
 
     const directories = document.getElementById('directories').value;
     document.getElementById('videoUploadButton').disabled = true;
-    document.getElementById('videoUploadButton').textContent = 'Saving files...';
+    document.getElementById('videoUploadButton').textContent = 'Uploading Files...';
 
     // Start the chunked upload process
     uploadFilesInChunks(files, directories);
