@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth import get_user_model
 from mainapps.accounts.emails import send_html_email2, welcome_message
@@ -18,7 +17,6 @@ from djstripe.settings import djstripe_settings
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.contrib import messages
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
 
@@ -28,7 +26,6 @@ from django.http import HttpResponse
 from django.contrib.auth import login as auth_login
 from django.db import IntegrityError
 import stripe
-from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from djstripe.models import Subscription, Customer, Product,Subscription,APIKey,Plan
@@ -83,7 +80,7 @@ def logout_view(request):
     logout(request)
     
     # Add a success message
-    messages.success(request, "You have been Successfully Logged Out.")
+    messages.success(request, "You Have Been Successfully Logged Out.")
     
     # Redirect to the login page or homepage
     return redirect('/')  # Replace 'login' with the name of the URL to redirect to (e.g., 'home' or 'login')
@@ -149,7 +146,7 @@ def login(request):
 
         else:
             # If login failed, send an error message
-            messages.error(request, 'Invalid username or password. Please try again.')
+            messages.error(request, 'Invalid Username or Password. Please Try Again.')
     next=request.GET.get('next','')
     request.session['next']=next
     return render(request,'accounts/login.html',)
@@ -219,14 +216,14 @@ def stripe_webhook(request):
 def subscription_confirm(request):
     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
     if not stripe_api_key:
-        messages.error(request, "Stripe API key not found.")
+        messages.error(request, "Stripe API key Not Found.")
         return HttpResponseRedirect(reverse("home:home"))
 
     stripe.api_key = str(stripe_api_key.secret)
 
     session_id = request.GET.get("session_id")
     if not session_id:
-        messages.error(request, "Session ID is missing.")
+        messages.error(request, "Session ID Is Missing.")
         return HttpResponseRedirect(reverse("home:home"))
 
     try:
@@ -296,7 +293,7 @@ def welcome(request,id):
 def registration_view(request):
     stripe_product_id = request.session.get('stripe_product_id')
     if not stripe_product_id:
-        messages.info(request,'You need to subscribe to register')
+        messages.info(request,'You Need To Subscribe To Register')
         return redirect('/accounts/pricing')
 
     product_credits = {
@@ -315,18 +312,18 @@ def registration_view(request):
 
         # Basic validation for passwords
         if len(password1) <6:
-            messages.error(request, "At least 6 characters are required")
+            messages.error(request, "At Least 6 Characters Are Required")
             return HttpResponseRedirect(reverse("accounts:registration")) 
 
         if password1 != password2:
-            messages.error(request, "Passwords do not match.")
+            messages.error(request, "Passwords Do Not Match.")
             return HttpResponseRedirect(reverse("accounts:registration")) 
 
         # Check if the email is already registered
         
         User = get_user_model()
         if User.objects.filter(email=email).exists():
-            messages.error(request, "This email is already registered. Please log in.")
+            messages.error(request, "This Email Is Already Registered.")
             return HttpResponseRedirect(reverse("accounts:registration")) 
 
         # Create a new user
@@ -352,7 +349,7 @@ def registration_view(request):
 
         # Log the user in
         auth_login(request, user)
-        messages.success(request, "Account created successfully!")
+        messages.success(request, "Account Created Successfully!")
         return redirect(f"/accounts/welcome/{user.pk}")
 
     else:
