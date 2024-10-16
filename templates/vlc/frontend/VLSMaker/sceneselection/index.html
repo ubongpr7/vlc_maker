@@ -362,7 +362,8 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
                     // Clear the corresponding topic folder select and video select fields
                     topicFolderSelect.value = "";
                     videoSelect.value = "";
-
+                    saveInput(topicFolderSelect);
+                    saveInput(videoSelect);
                     // Remove all options from videoSelect except the default "Select a Video"
                     while (videoSelect.options.length > 0) {
                         videoSelect.remove(0); // Clear all existing options
@@ -373,6 +374,7 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
                     defaultOption.value = "";
                     defaultOption.text = "Select a Video";
                     videoSelect.add(defaultOption);
+
                 }
             });
         }
