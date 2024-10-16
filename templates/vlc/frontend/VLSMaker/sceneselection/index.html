@@ -348,10 +348,41 @@ document.getElementById("scene_form").addEventListener("submit", function(event)
         event.preventDefault();
     }
 });
+    // Function to handle changes in dynamically generated video inputs
+    function setupDynamicListeners(loopLength, textfileId) {
+        for (let i = 0; i < loopLength; i++) {
+            const videoInput = document.getElementById(`video_${i}`);
+            const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
+            const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
+
+            // Listen for changes in the video input field
+            videoInput.addEventListener("change", function() {
+                // If the video input has a file selected
+                if (videoInput.files.length > 0) {
+                    // Clear the corresponding topic folder select and video select fields
+                    topicFolderSelect.value = "";
+                    videoSelect.value = "";
+
+                    // Remove all options from videoSelect except the default "Select a Video"
+                    while (videoSelect.options.length > 0) {
+                        videoSelect.remove(0); // Clear all existing options
+                    }
+
+                    // Add default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.text = "Select a Video";
+                    videoSelect.add(defaultOption);
+                }
+            });
+        }
+    }
+
 
     
         const loopLength = "{{ n_lines }}";
         const textfileId = "{{ textfile_id }}";
+        setupDynamicListeners(loopLength, textfileId);
 
         for (let i = 0; i < loopLength; i++) {
             const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);

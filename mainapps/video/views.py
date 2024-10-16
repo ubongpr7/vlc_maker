@@ -177,9 +177,9 @@ def upload_video_folder(request):
                             )
                         else:
                             # Optionally, handle files that aren't valid video types
-                            messages.warning(request, f"File '{file_name}' is not a valid video format.")
+                            messages.warning(request, f"File '{file_name}' Is Not A Valid Video Format.")
                     else:
-                        messages.warning(request, f"File '{file_name}' is empty and has been skipped.")
+                        messages.warning(request, f"File '{file_name}' Is Empty And Has Been Skipped.")
 
                         continue
                 else:
@@ -188,8 +188,8 @@ def upload_video_folder(request):
             if len(cat.video_clips.all())== 0:
                 messages.info(request, f'The Folder {cat.name} Was Deleted Since It Has No Fideo Files In It')        
                 cat.delete()
-        messages.success(request, 'Files uploaded successfully!')
-        return HttpResponse('Upload successful!')
+        messages.success(request, 'Files Uploaded Successfully!')
+        return HttpResponse('Upload Successful!')
 
     return render(request, 'dir_upload.html')
 
@@ -199,7 +199,7 @@ def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
     key=LogoModel.objects.get(id=2).logo.name
     if text_file.user != request.user:
-        messages.error(request,'You Do Not have access to the Resources You Requested ')
+        messages.error(request,'You Do Not Have Access To The Resources You Requested ')
         return render(request,'permission_denied.html')
     video_categories=ClipCategory.objects.filter(user=request.user)
     if request.method == 'POST':
@@ -237,14 +237,14 @@ def add_video_clips(request, textfile_id):
                         )
                     )
                 else:
-                    messages.error(request,"You did not choose the clips completely")
+                    messages.error(request,"You Did Not Choose The Clips Completely")
                     return redirect(reverse('video:add_scenes', args=[textfile_id]))
                 
 
 
             TextLineVideoClip.objects.bulk_create(video_clips_data)
             
-            return redirect(f'/text/process-textfile/{textfile_id}')  # Redirect to a success page or another appropriate view
+            return redirect(f'/text/process-textfile/{textfile_id}')  
 
         elif request.POST.get('purpose') == 'text_file':
             if request.FILES.get('text_file'):
@@ -258,7 +258,7 @@ def add_video_clips(request, textfile_id):
                 text_file.save()
                 return redirect(reverse('video:add_scenes', args=[textfile_id]))
             
-            messages.error(request,'You did not upload text file')
+            messages.error(request,'You Did Not Upload Text File')
             return redirect(reverse('video:add_scenes', args=[textfile_id]))
         # elif request.POST.get('purpose') == 'text_file':
         #     if request.FILES.get('text_file'):
