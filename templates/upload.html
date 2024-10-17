@@ -1,43 +1,5 @@
 <style>
-    #uploadStatus {
-            margin-bottom: 16px;
-        }
-
-        #progressWrapper {
-            width: 250px; /* Adjust width as needed */
-            height: 30px;
-            background-color: #f3f3f3;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            overflow: hidden;
-            display: block;
-        }
-
-        #progressBar {
-            height: 100%;
-            background-color: #864af9;
-            transition: width 0.3s ease;
-            text-align: center;
-            line-height: 30px;
-            color: white;
-        }
-
-        #percent {
-            margin-top: 4px;
-            font-size: 12px;
-        }
-
-        .file-button {
-            padding: 10px 50px;
-            background-color: #864AF9;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-            font-family: 'Montserrat';
-            font-weight: 600;
-        }
+    
     .center-containered {
     display: flex;
     flex-direction: column;
@@ -91,7 +53,7 @@
 }
 
 </style>    
-<div class="card" style="height: fit-content;">
+<div class="card" id="uploadCard">
     <div class="card-header">
         <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center; padding-top: 15px; display: inline-block;">
             Upload To Your Asset Folder
@@ -152,11 +114,11 @@
 </div>
 
 <script>
+const uploadCard=document.getElementById('uploadCard')
 document.querySelector("#fileInput").addEventListener("change", function() {
     let files = document.querySelector("#fileInput").files;
     let directories = {};  // This will store folder paths and their corresponding files
     document.getElementById('uploadStatus').textContent =''
-
     // Loop through all selected files
     for (let file of files) {
         const folderPath = file.webkitRelativePath.split('/').slice(0, -1).join('/');
@@ -209,6 +171,7 @@ uploadForm.addEventListener('submit', function(event) {
     xhr.upload.addEventListener('progress', function(e) {
         if (e.lengthComputable) {
             const percentComplete = (e.loaded / e.total) * 100;
+            uploadCard.style.height='390px'
             document.getElementById('progressWrapper').style.display='block'
             document.getElementById('videoUploadButton').disabled=true
             document.getElementById('videoUploadButton').textContent='Uploading Files...'
@@ -223,6 +186,8 @@ uploadForm.addEventListener('submit', function(event) {
         if (xhr.status === 200) {
             uploadStatus.textContent = 'Upload completed successfully!';
             // Example with relative URL
+            uploadCard.style.height='400px'
+
             window.location.reload();
 
             
