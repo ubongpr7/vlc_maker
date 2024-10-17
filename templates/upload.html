@@ -14,12 +14,13 @@
 }
 
 #progressWrapper {
-    width: 200px;
+    width: 250px;
     display: none;
     margin-top: -10px;
     margin-bottom: 24px;
     background-color: #f3f3f3;
     position: relative; /* Position relative to hold absolute children */
+    border-radius: 10px;
 }
 
 #progressBar {
@@ -33,8 +34,8 @@
 
 #percent {
     position: absolute;
-    top: 0;
-    left: 50%;
+    top: 10px;
+    left: 0;
     transform: translateX(-50%);
     line-height: 30px;
     color: black;
@@ -99,8 +100,8 @@
             <div class="center-containered" >
                 <div id="uploadStatus" style="text-align: center;"></div>
                     
-                <div id="progressWrapper"  style="display:none; margin-top: 24px;  background-color: #f3f3f3; margin-bottom: 24px;">
-                    <div id="progressBar" style="width: 0%; height: 30px; background-color: #864af9; text-align: center; line-height: 30px; color: white;">
+                <div id="progressWrapper"  style="display:none;   background-color: #f3f3f3; margin-bottom: 10px;">
+                    <div id="progressBar" style="width: 0%; height: 20px; background-color: #864af9; text-align: center; line-height: 30px; color: white;">
                         
                     </div>
                     <div id="percent">77%</div>
