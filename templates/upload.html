@@ -1,4 +1,41 @@
+<style>
+    #uploadStatus {
+            margin-bottom: 16px;
+        }
 
+        #progressWrapper {
+            width: 250px; /* Adjust width as needed */
+            height: 30px;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            height: 100%;
+            background-color: #864af9;
+            transition: width 0.3s ease;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+
+        #percent {
+            margin-top: 4px;
+            font-size: 12px;
+        }
+
+        .file-button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+</style>
 <div class="card">
     <div class="card-header">
         <span style="font-size: 24px; font-weight: 700; line-height: 29.26px; text-align: center; padding-top: 15px; display: inline-block;">
@@ -40,20 +77,21 @@
             </div>
             <input type="text" id="directories" name="directories" hidden />
 
+    
             <input type="text" name="purpose" hidden value='text_file'>
             <div class="center-container" >
+                <div id="uploadStatus" style="text-align: center;"></div>
+                    
+                <div id="progressWrapper"  style="width: 100%;display:none; margin-top: 24px;  background-color: #f3f3f3; margin-bottom: 24px;">
+                    <div id="progressBar" style="width: 0%; height: 30px; background-color: #864af9; text-align: center; line-height: 30px; color: white;">
+                        
+                    </div>
+                    <div id="percent"></div>
+                </div>
                 <button class="file-button" id="videoUploadButton" type="submit">Load Files</button>
             </div>
             
-        <!-- Progress bar -->
-        <div id="progressWrapper"  style="width: 100%;display:none; margin-top: 24px;  background-color: #f3f3f3; margin-bottom: 24px;">
-            <div id="progressBar" style="width: 0%; height: 30px; background-color: #864af9; text-align: center; line-height: 30px; color: white;">
-                0%
-            </div>
-        </div>
 
-        <!-- Display upload status -->
-        <div id="uploadStatus" style="text-align: center;"></div>
         </form>
     </div>
 </div>
