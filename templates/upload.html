@@ -96,8 +96,7 @@
             <input type="text" id="directories" name="directories" hidden />
 
     
-            <input type="text" name="purpose" hidden value='text_file'>
-            <div class="center-containered" >
+            <div id="centered-c" class="center-containered" >
                 <div id="uploadStatus" style="text-align: center;"></div>
                     
                 <div id="progressWrapper"  style="display:none;   background-color: #f3f3f3; margin-bottom: 30px;">
@@ -152,7 +151,7 @@ const uploadStatus = document.getElementById('uploadStatus');
 
 uploadForm.addEventListener('submit', function(event) {
     event.preventDefault();
-
+    const centeredContainer =document.getElementById('centered-c')
     const files = document.getElementById('fileInput').files;
     if (files.length === 0) {
         alert('Please select files to upload.');
@@ -188,7 +187,7 @@ uploadForm.addEventListener('submit', function(event) {
         if (xhr.status === 200) {
             uploadStatus.textContent = 'Upload completed successfully!';
             // Example with relative URL
-            uploadCard.style.height='405px'
+            centeredContainer.style.marginTop='-40px'
 
             window.location.reload();
 
