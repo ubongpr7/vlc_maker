@@ -101,10 +101,10 @@
                 <div id="uploadStatus" style="text-align: center;"></div>
                     
                 <div id="progressWrapper"  style="display:none;   background-color: #f3f3f3; margin-bottom: 30px;">
-                    <div id="progressBar" style="width: 0%; height: 20px; background-color: #864af9; text-align: center; line-height: 30px; color: white;">
+                    <div id="progressBar" style="width: 0%; height: 20px; background-color: #08BD54; text-align: center; line-height: 30px; color: white;">
                         
                     </div>
-                    <div id="percent">77%</div>
+                    <div id="percent"></div>
                 </div>
                 <button class="file-button" id="videoUploadButton" type="submit">Upload and Process</button>
             </div>
@@ -147,6 +147,7 @@ const fileUpload2 = document.getElementById('fileInput');
     });
 const uploadForm = document.getElementById('uploadForm');
 const progressBar = document.getElementById('progressBar');
+const percent = document.getElementById('percent');
 const uploadStatus = document.getElementById('uploadStatus');
 
 uploadForm.addEventListener('submit', function(event) {
@@ -178,7 +179,7 @@ uploadForm.addEventListener('submit', function(event) {
             document.getElementById('videoUploadButton').textContent='Uploading Files...'
             
             progressBar.style.width = percentComplete + '%';
-            progressBar.textContent = Math.round(percentComplete) + '%';
+            percent.textContent = Math.round(percentComplete) + '%';
         }
     });
 
