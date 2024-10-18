@@ -177,7 +177,6 @@ uploadForm.addEventListener('submit', function(event) {
             document.getElementById('progressWrapper').style.display='block'
             document.getElementById('videoUploadButton').disabled=true
             document.getElementById('videoUploadButton').textContent='Uploading Files...'
-            centeredContainer.style.marginTop='-25px'
             
             percent.textContent = Math.round(percentComplete) + '%';
         }
@@ -186,8 +185,11 @@ uploadForm.addEventListener('submit', function(event) {
     // Complete event listener
     xhr.addEventListener('load', function() {
         if (xhr.status === 200) {
+            document.getElementById('progressWrapper').style.display='none'
+
             uploadStatus.textContent = 'Upload completed successfully!';
             // Example with relative URL
+
 
             window.location.reload();
 
