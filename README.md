@@ -47,6 +47,7 @@ docker pull nas415/vlc_maker:latest
 # To run the application, run the following on your terminal
 cd vlc_maker
 docker compose up
+# Visit the the web at your_ip:8000
 ```
 ## Contributing
 ```bash
