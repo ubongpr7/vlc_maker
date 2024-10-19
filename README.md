@@ -7,7 +7,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
+- [Screenshots](#screenshots)
 
 ## Installation
 
@@ -62,6 +62,7 @@ git commit -m "Description of the feature added or bug fixed"
 git push origin feature-name
 
 ```
+## Screenshots
 
 
 
