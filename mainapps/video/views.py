@@ -294,7 +294,7 @@ def add_video_clips(request, textfile_id):
             n_lines=len(lines)
             
             form_data = [{'line_number': i + 1,'line':lines[i],'i':i,'clip':existing_clips[i]} for i in range(len(lines))]
-            return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'clips':existing_clips,'key':key,'text_file': text_file,'video_categories':video_categories,'textfile_id':textfile_id, 'form_data': form_data})
+            return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'n_lines':n_lines, 'key':key,'text_file': text_file,'video_categories':video_categories,'textfile_id':textfile_id, 'form_data': form_data})
 
         return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'key':key,'text_file': text_file,'textfile_id':textfile_id})
 
