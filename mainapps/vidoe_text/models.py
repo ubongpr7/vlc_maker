@@ -159,7 +159,7 @@ class TextLineVideoClip(models.Model):
     def get_video_file_name(self):
         filename= self.video_file_path.name.split('/')[-1]
         
-        return filename
+        return filename[:15]
 
     def __str__(self):
         return f"VideoClip for line {self.line_number} of {self.text_file}"
