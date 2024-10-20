@@ -156,6 +156,11 @@ class TextLineVideoClip(models.Model):
             "timestamp_start": self.timestamp_start,
             "timestamp_end": self.timestamp_end
         }
+    def get_file_status(self):
+        if self.video_file_path:
+            return 'filled'
+        else:
+            return 'empty'
     def get_video_file_name(self):
         filename= self.video_file_path.name.split('/')[-1]
         
