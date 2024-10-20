@@ -39,7 +39,7 @@
                         <!-- File input for selecting video -->
                         <input type="file" accept="video/*" class="uploaded_file" id="video_{{ forloop.counter0 }}" name="uploaded_video_{{ forloop.counter0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
                         
-                        <input hidden type="text" name="video_{{ forloop.counter0 }}_status" value="{{ data.clip.get_file_status}}">
+                        <input hidden type="text" name="video_{{ forloop.counter0 }}_status" id="video_{{ forloop.counter0 }}_status" value="{{ data.clip.get_file_status}}">
 
                         </div>
                     </div>
@@ -113,14 +113,16 @@
             const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
             const errorElementId = `select_video_${i}_error`;
             const svgItemid=`svg_${i}`
+            const videoSyatus=document.getElementById(`video_${i}_status`)
+
             let svgItemElement= document.getElementById(svgItemid)
             let errorElement = document.getElementById(errorElementId);
 
             // Check if file input has value or both selects have values
-            const isFileProvided = fileInput && fileInput.files.length > 0;
+            const isFileProvided = fileInput && fileInput.files.length  > 0;
             const isSelectProvided = topicFolderSelect && topicFolderSelect.value && videoSelect && videoSelect.value;
 
-            if (!isFileProvided && !isSelectProvided) {
+            if (!isFileProvided && !isSelectProvided && videoSyatus.value !=='filled') {
                 // Highlight unselected inputs
                 fileInput.style.border = "0.5px solid red";
                 topicFolderSelect.style.border = "0.5px solid red";
@@ -176,13 +178,14 @@
             const videoInput = document.getElementById(`video_${i}`);
             const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
             const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
-
+            const viderSyatus=document.getElementById(`video_${i}_status`)
             // Listen for changes in the video input field
             videoInput.addEventListener("change", function() {
                 // If the video input has a file selected
                 if (videoInput.files.length > 0) {
                     topicFolderSelect.value = "";
                     videoSelect.value = "";
+                    viderSyatus.value='changed'
                     saveInput(topicFolderSelect);
                     saveInput(videoSelect);
                     while (videoSelect.options.length > 0) {
@@ -201,122 +204,123 @@
     }
 
 
-    
-        const loopLength = "{{ n_lines }}";
-        const textfileId = "{{ textfile_id }}";
-        setupDynamicListeners(loopLength, textfileId);
 
-        for (let i = 0; i < loopLength; i++) {
-            const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
-            const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
-            const errorElementId = `select_video_${i}_error`;
-            const svgItemid=`svg_${i}`
-            let svgItemElement= document.getElementById(svgItemid)
-            // Event listener for the first select field
-            topicFolderSelect.addEventListener("change", function() {
-                if (this.value !== "") {
-                    this.style.border = "";
-                    svgItemElement.style.top='50%'
-                    
-                    const errorElement = document.getElementById(errorElementId);
-                    if (errorElement) {
-                        errorElement.remove();  // Remove error message if it exists
-                    }
-                }
-            });
+    const loopLength = "{{ n_lines }}";
+    const textfileId = "{{ textfile_id }}";
+    setupDynamicListeners(loopLength, textfileId);
 
-            // Event listener for the second dependent select field
-            videoSelect.addEventListener("change", function() {
-                if (this.value !== "") {
-                    this.style.border = ""; 
-                    svgItemElement.style.top='50%'
-                    const errorElement = document.getElementById(errorElementId);
-                    if (errorElement) {
-                        errorElement.remove();  // Remove error message if it exists
-                    }
-                }
-            });
-        }
-        window.onload = function() {
-        // Get all inputs on the page
-        document.getElementById('scene_update_form').reset();
-
-        }
-        window.addEventListener('load', async function() {
-            // Ensure all elements are loaded
-
-            const inputs = document.querySelectorAll('select');
-            
-            // Helper function to return a promise for each htmx request
-            const fetchClip = (url, targetId) => {
-                return new Promise((resolve, reject) => {
-                    htmx.ajax('GET', url, targetId)
-                        .then(() => resolve())
-                        .catch((err) => reject(err));
-                });
-            };
-
-            // First, update all select inputs that start with 'topic_folder_'
-            for (const input of inputs) {
-                const storedValue = sessionStorage.getItem(input.id);
-                if (storedValue && input.id.startsWith('topic_folder_')) {
-                    input.value = storedValue;
-
-                    // Get the current number from the ID, assuming it's in the format 'topic_folder_X'
-                    const idParts = input.id.split('_');
-                    const currentNumber = idParts[idParts.length - 2];  // Extract the current number part
-
-                    // Build the URL and target ID
-                    const url = `/video/get_clip/${storedValue}`;
-                    const targetId = `#videoSelect_${currentNumber}_{{textfile_id}}`;
-
-                    // Check if the target element exists before making the HTMX request
-                    if (document.querySelector(targetId)) {
-                        try {
-                            await fetchClip(url, targetId);  // Wait for each HTMX request to complete
-                        } catch (error) {
-                            console.error(`Error fetching clip for ${input.id}:`, error);
-                        }
-                    } else {
-                        console.warn(`Target element ${targetId} not found.`);
-                    }
+    for (let i = 0; i < loopLength; i++) {
+        const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
+        const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
+        const errorElementId = `select_video_${i}_error`;
+        const svgItemid=`svg_${i}`
+        let svgItemElement= document.getElementById(svgItemid)
+        // Event listener for the first select field
+        topicFolderSelect.addEventListener("change", function() {
+            if (this.value !== "") {
+                this.style.border = "";
+                svgItemElement.style.top='50%'
+                
+                const errorElement = document.getElementById(errorElementId);
+                if (errorElement) {
+                    errorElement.remove();  // Remove error message if it exists
                 }
             }
-
-            inputs.forEach(input => {
-                const storedValue = sessionStorage.getItem(input.id);
-                if (storedValue && input.id.startsWith('videoSelect_')) {
-                    input.value = storedValue;
-                }
-            });
         });
 
+        // Event listener for the second dependent select field
+        videoSelect.addEventListener("change", function() {
+            if (this.value !== "") {
+                this.style.border = ""; 
+                svgItemElement.style.top='50%'
+                const errorElement = document.getElementById(errorElementId);
+                if (errorElement) {
+                    errorElement.remove();  // Remove error message if it exists
+                }
+            }
+        });
+    }
+    window.onload = function() {
+    // Get all inputs on the page
+    document.getElementById('scene_update_form').reset();
 
-        function saveInput(inputElement) {
-            
-                sessionStorage.setItem(inputElement.id, inputElement.value);
-                console.log(inputElement.value)
-        }
+    }
+    window.addEventListener('load', async function() {
+        // Ensure all elements are loaded
+
+        const inputs = document.querySelectorAll('select');
         
-        function fetchVideoClips(categoryId, counter,item) {
-            select2=document.getElementById(`videoSelect_${counter}_{{textfile_id}}`)
-            saveInput(item)
+        // Helper function to return a promise for each htmx request
+        const fetchClip = (url, targetId) => {
+            return new Promise((resolve, reject) => {
+                htmx.ajax('GET', url, targetId)
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
+            });
+        };
 
-            if (categoryId === ""){
-                select2.value=""
-                select2.innerHTML = "";
+        // First, update all select inputs that start with 'topic_folder_'
+        for (const input of inputs) {
+            const storedValue = sessionStorage.getItem(input.id);
+            if (storedValue && input.id.startsWith('topic_folder_')) {
+                input.value = storedValue;
 
-                const defaultOption = document.createElement('option');
-                defaultOption.value = "";
-                defaultOption.text = "Select a video";
-                select2.appendChild(defaultOption);
+                // Get the current number from the ID, assuming it's in the format 'topic_folder_X'
+                const idParts = input.id.split('_');
+                const currentNumber = idParts[idParts.length - 2];  // Extract the current number part
 
+                // Build the URL and target ID
+                const url = `/video/get_clip/${storedValue}`;
+                const targetId = `#videoSelect_${currentNumber}_{{textfile_id}}`;
+
+                // Check if the target element exists before making the HTMX request
+                if (document.querySelector(targetId)) {
+                    try {
+                        await fetchClip(url, targetId);  // Wait for each HTMX request to complete
+                    } catch (error) {
+                        console.error(`Error fetching clip for ${input.id}:`, error);
+                    }
+                } else {
+                    console.warn(`Target element ${targetId} not found.`);
+                }
             }
-            else{
-
-                htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}_{{textfile_id}}`)
-            }
-    
-            
         }
+
+        inputs.forEach(input => {
+            const storedValue = sessionStorage.getItem(input.id);
+            if (storedValue && input.id.startsWith('videoSelect_')) {
+                input.value = storedValue;
+            }
+        });
+    });
+
+
+    function saveInput(inputElement) {
+        
+            sessionStorage.setItem(inputElement.id, inputElement.value);
+            console.log(inputElement.value)
+    }
+    
+    function fetchVideoClips(categoryId, counter,item) {
+        select2=document.getElementById(`videoSelect_${counter}_{{textfile_id}}`)
+        saveInput(item)
+
+        if (categoryId === ""){
+            select2.value=""
+            select2.innerHTML = "";
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.text = "Select a video";
+            select2.appendChild(defaultOption);
+
+        }
+        else{
+
+            htmx.ajax('GET',`/video/get_clip/${categoryId}`, `#videoSelect_${counter}_{{textfile_id}}`)
+        }
+
+        
+    }
+
     </script>
