@@ -136,15 +136,15 @@ def text_clip_upload_path(instance, filename):
     filename = f'{uuid.uuid4()}.{ext}'  # Use UUID to ensure unique file names
     if instance.id:
         return os.path.join('text_files', 'new', filename)
-    return os.path.join('text_clip', str(instance.id), filename)
+    return os.path.join('text_clip', str(instance.text_file.id), filename)
 
 class TextLineVideoClip(models.Model):
     text_file = models.ForeignKey(TextFile, on_delete=models.CASCADE, related_name='video_clips')
     video_file = models.ForeignKey('video.VideoClip', on_delete=models.SET_NULL, null=True, related_name='usage')
-    video_file_path = models.FileField(upload_to=text_clip_upload_path)
-    line_number = models.IntegerField()  # Corresponds to the line number in the text file
-    timestamp_start = models.FloatField(null=True, blank=True)  # Start time for where this clip begins in the final video
-    timestamp_end = models.FloatField(null=True, blank=True)  # End time for where this clip ends in the final video
+    video_file_path = models.FileField(upload_to='textfiel/videos')
+    line_number = models.IntegerField() 
+    timestamp_start = models.FloatField(null=True, blank=True) 
+    timestamp_end = models.FloatField(null=True, blank=True)  
 
     def to_dict(self):
         if self.video_file:
@@ -165,10 +165,8 @@ class TextLineVideoClip(models.Model):
         return f"VideoClip for line {self.line_number} of {self.text_file}"
 
     class Meta:
-        # Add unique constraint on text_file and line_number
         unique_together = ('text_file', 'line_number')
         
-        # Set default ordering by line_number, then by text_file
         ordering = ['line_number', 'text_file']
 
 
