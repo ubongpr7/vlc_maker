@@ -31,9 +31,11 @@
                         <div class="uploadText" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
                             {{ data.clip.get_video_file_name}}
                         </div>
+                        {% else %}
                         <div class="uploadText" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
                             Choose File
                         </div>
+                        {% endif %}
                         <!-- File input for selecting video -->
                         <input type="file" accept="video/*" class="uploaded_file" id="video_{{ forloop.counter0 }}" name="uploaded_video_{{ forloop.counter0 }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0; cursor: pointer;">
                         </div>
