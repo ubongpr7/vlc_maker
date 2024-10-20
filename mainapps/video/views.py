@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
+from django.forms import modelformset_factory
 
 
 
@@ -198,13 +199,14 @@ def upload_video_folder(request):
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
     key=LogoModel.objects.get(id=2).logo.name
+    existing_clips = TextLineVideoClip.objects.filter(text_file=text_file)
     if text_file.user != request.user:
         messages.error(request,'You Do Not Have Access To The Resources You Requested ')
         return render(request,'permission_denied.html')
     video_categories=ClipCategory.objects.filter(user=request.user)
     if request.method == 'POST':
         if  text_file.text_file and request.POST.get('purpose') == 'process':
-            if text_file.video_clips:
+            if text_file.video_clips.all():
 
                 for video_clip in TextLineVideoClip.objects.filter(text_file=text_file):
                     video_clip.delete()
@@ -245,6 +247,14 @@ def add_video_clips(request, textfile_id):
             TextLineVideoClip.objects.bulk_create(video_clips_data)
             
             return redirect(f'/text/process-textfile/{textfile_id}')  
+        
+        elif  text_file.text_file and request.POST.get('purpose') == 'update':
+            for i, clip in enumerate(existing_clips):
+                clip.line_number = request.POST.get(f"line_{i}")
+                clip.video_file_path = request.FILES.get(f"uploaded_video_{i}")
+                clip.timestamp_start = request.POST.get(f"timestamp_start_{i}")
+                clip.timestamp_end = request.POST.get(f"timestamp_end_{i}")
+                clip.save()
 
         elif request.POST.get('purpose') == 'text_file':
             if request.FILES.get('text_file'):
@@ -260,32 +270,20 @@ def add_video_clips(request, textfile_id):
             
             messages.error(request,'You Did Not Upload Text File')
             return redirect(reverse('video:add_scenes', args=[textfile_id]))
-        # elif request.POST.get('purpose') == 'text_file':
-        #     if request.FILES.get('text_file'):
-        #         uploaded_file = request.FILES.get('text_file')
-                
-        #         # Read the uploaded file
-        #         file_content = uploaded_file.read().decode('utf-8')  # Assuming it's a text file
-                
-        #         # Split the content into lines and remove empty ones
-        #         non_empty_lines = [line for line in file_content.splitlines() if line.strip()]
-                
-        #         # Join the non-empty lines back into a single string
-        #         cleaned_content = "\n".join(non_empty_lines)
-                
-        #         # Save the cleaned content to the model
-        #         text_file.text_file.save(f"{uploaded_file.name}_{textfile_id}", ContentFile(cleaned_content))
-                
-        #         return redirect(reverse('video:add_scenes', args=[textfile_id]))
-
+       
 
     else:
-        if text_file.text_file:
+        if text_file.text_file and not existing_clips:
             lines = text_file.process_text_file()
             n_lines=len(lines)
             # Create a list of dictionaries with line numbers for the form
             form_data = [{'line_number': i + 1,'line':lines[i],'i':i} for i in range(len(lines))]
             return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'n_lines':n_lines,'key':key,'text_file': text_file,'video_categories':video_categories,'textfile_id':textfile_id, 'form_data': form_data})
+        elif text_file.text_file and  existing_clips:
+            
+            form_data = [{'line_number': i + 1,'line':lines[i],'i':i,'clip':existing_clips[i]} for i in range(len(lines))]
+            return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'clips':existing_clips,'key':key,'text_file': text_file,'video_categories':video_categories,'textfile_id':textfile_id, 'form_data': form_data})
+
         return render(request, 'vlc/frontend/VLSMaker/sceneselection/index.html', {'key':key,'text_file': text_file,'textfile_id':textfile_id})
 
 def get_clip(request,cat_id):

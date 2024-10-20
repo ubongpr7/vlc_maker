@@ -344,7 +344,6 @@ def validate_api_keyv(request):
         api_key = request.POST.get('eleven_labs_api_key', '')
         voice_id = request.POST.get('voice_id')
 
-        # Try making a request to Eleven Labs API to validate the key
         url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
         headers = {"xi-api-key": api_key}
         data = {
@@ -377,42 +376,6 @@ def validate_api_keyv(request):
 
     return JsonResponse({'valid': False, 'error': 'Invalid request method'})
 
-
-# def validate_api_keyv(request):
-#     if request.method == 'POST':
-#         api_key = request.POST.get('eleven_labs_api_key', '')
-#         voice_id = request.POST.get('voice_id') # Replace with a valid default voice ID to test the API key
-
-#         # Try making a request to Eleven Labs API to validate the key
-#         url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-#         headers = {"xi-api-key": api_key}
-#         data = {
-#             "text": "Test voice synthesis",  # Small test text to avoid large requests
-#             "model_id": "eleven_monolingual_v1",
-#             "voice_settings": {
-#                 "stability": 0.5,
-#                 "similarity_boost": 0.75
-#             }
-#         }
-
-#         try:
-#             response = requests.post(url, json=data, headers=headers)
-            
-#             if response.status_code == 200:
-#                 return JsonResponse({'valid': True})
-#             elif response.status_code == 401:
-#                 error_detail = response.json().get('detail', {})
-#                 if 'status' in error_detail and error_detail['status'] == 'quota_exceeded':
-#                     return JsonResponse({
-#                         'valid': False, 
-#                         'error': f"Quota exceeded: {error_detail.get('message', 'Insufficient credits')}"
-#                     })
-#                 else:
-#                     return JsonResponse({'valid': False, 'error': "Invalid API key"})
-#             else:
-#                 return JsonResponse({'valid': False, 'error': f"API request failed with status code {response.status_code}"})
-#         except requests.exceptions.RequestException as e:
-#             return JsonResponse({'valid': False, 'error': 'Error connecting to Eleven Labs API'})
 
 @login_required
 @check_user_credits(minimum_credits_required=1)
@@ -462,11 +425,6 @@ def add_text(request):
         
     return render(request, 'vlc/frontend/VLSMaker/index.html')
 
-# @login_required
-# def add_text_file(request, textfile_id):
-#     text_file_present=False
-#     text_file_obj= get_object_or_404(TextFile,id=textfile_id)
-#     return render(request,'vlc/frontend/VLSMaker/index.html',{"textfile_id":textfile_id,})
 
 @login_required
 @check_credits_and_ownership(textfile_id_param='textfile_id', credits_required=1)

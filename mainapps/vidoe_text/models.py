@@ -132,16 +132,12 @@ class TextFile(models.Model):
         
 def text_clip_upload_path(instance, filename):
     """Generate a unique file path for each uploaded text file."""
-    ext = filename.split('.')[-1]
-    filename = f'{uuid.uuid4()}.{ext}'  # Use UUID to ensure unique file names
-    if instance.id:
-        return os.path.join('text_files', 'new', filename)
     return os.path.join('text_clip', str(instance.text_file.id), filename)
 
 class TextLineVideoClip(models.Model):
     text_file = models.ForeignKey(TextFile, on_delete=models.CASCADE, related_name='video_clips')
     video_file = models.ForeignKey('video.VideoClip', on_delete=models.SET_NULL, null=True, related_name='usage')
-    video_file_path = models.FileField(upload_to='textfiel/videos')
+    video_file_path = models.FileField(upload_to=text_clip_upload_path)
     line_number = models.IntegerField() 
     timestamp_start = models.FloatField(null=True, blank=True) 
     timestamp_end = models.FloatField(null=True, blank=True)  
@@ -160,6 +156,10 @@ class TextLineVideoClip(models.Model):
             "timestamp_start": self.timestamp_start,
             "timestamp_end": self.timestamp_end
         }
+    @staticmethod
+    def get_video_file_name(self):
+        filename= self.video_file_path.name.split('/')[-1]
+        return filename
 
     def __str__(self):
         return f"VideoClip for line {self.line_number} of {self.text_file}"
