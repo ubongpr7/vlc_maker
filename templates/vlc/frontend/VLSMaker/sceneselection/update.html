@@ -1,6 +1,6 @@
 <form method="POST" action="." id="scene_form" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="text", hidden name="purpose" value='process'>
+    <input type="text", hidden name="purpose" value='update'>
     <div class="scene-container" style="display: flex;padding:30px 30px;  justify-content: center; align-items: center;">
         <div class="Scene"style="width: fit-content;  margin-bottom: 30px; border: 1px solid #0000004D; box-sizing: border-box; border-radius: 8px; padding: 40px 24px;  background: white;">
             <div class="select-scene-text" style="display: flex; justify-content: center; margin-bottom:30px;">
@@ -181,12 +181,10 @@
             videoInput.addEventListener("change", function() {
                 // If the video input has a file selected
                 if (videoInput.files.length > 0) {
-                    // Clear the corresponding topic folder select and video select fields
                     topicFolderSelect.value = "";
                     videoSelect.value = "";
                     saveInput(topicFolderSelect);
                     saveInput(videoSelect);
-                    // Remove all options from videoSelect except the default "Select a Video"
                     while (videoSelect.options.length > 0) {
                         videoSelect.remove(0); // Clear all existing options
                     }

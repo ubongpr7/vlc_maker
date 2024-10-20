@@ -220,8 +220,6 @@ def add_video_clips(request, textfile_id):
             for index, line in enumerate(lines):
                 video_file = request.FILES.get(f'uploaded_video_{index}')
                 video_clip_id = request.POST.get(f'selected_video_{index}')
-                # timestamp_start = request.POST.get(f'timestamp_start_{index}')
-                # timestamp_end = request.POST.get(f'timestamp_end_{index}')
                 if video_clip_id:
                     video_clip= get_object_or_404(VideoClip,id=video_clip_id)
                 else:
@@ -234,8 +232,6 @@ def add_video_clips(request, textfile_id):
                             video_file=video_clip,
                             video_file_path=video_file,
                             line_number=index + 1,
-                            # timestamp_start=timestamp_start,
-                            # timestamp_end=timestamp_end
                         )
                     )
                 else:
@@ -250,11 +246,25 @@ def add_video_clips(request, textfile_id):
         
         elif  text_file.text_file and request.POST.get('purpose') == 'update':
             for i, clip in enumerate(existing_clips):
-                clip.line_number = request.POST.get(f"line_{i}")
-                clip.video_file_path = request.FILES.get(f"uploaded_video_{i}")
-                clip.timestamp_start = request.POST.get(f"timestamp_start_{i}")
-                clip.timestamp_end = request.POST.get(f"timestamp_end_{i}")
+                video_file = request.FILES.get(f'uploaded_video_{i}')
+                video_clip_id = request.POST.get(f'selected_video_{i}')
+                if video_clip_id:
+                    video_clip= get_object_or_404(VideoClip,id=video_clip_id)
+                else:
+                    video_clip=None
+                if video_clip:
+                    clip.video_file= video_clip
+                if request.POST.get(f"video_{i}_status") =='filled':
+                    pass 
+                elif request.POST.get(f"video_{i}_status") =='empty' and clip.video_file_path:
+                    clip.video_file_path.delete()
+                if video_file:
+                    clip.video_file_path = video_file
                 clip.save()
+            messages.success(request, 'TextFile updated successfully')
+            return redirect(reverse('video:add_scenes', args=[textfile_id]))
+
+
 
         elif request.POST.get('purpose') == 'text_file':
             if request.FILES.get('text_file'):
