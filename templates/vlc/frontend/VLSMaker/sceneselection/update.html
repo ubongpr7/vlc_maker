@@ -24,7 +24,7 @@
                     
                     <div class="grid-item center">
                         {% if data.clip.video_file_path %}  
-                        <div>
+                        <div style="width: 100%;">
                             <p style="font-size: 10px; font-family: 'Montserrat'; display: block;" id="video_{{ forloop.counter0 }}_current">Current:{{ data.clip.get_video_file_name}}</p>                          
                             <div style="width: 100%; height: fit-content; padding: 16px 24px; border-radius: 8px; border: 1px dashed #19191980; display: flex; align-items: center; position: relative; font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center; gap: 14px;">
                             <svg id="svg1" class="uploadFileIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
