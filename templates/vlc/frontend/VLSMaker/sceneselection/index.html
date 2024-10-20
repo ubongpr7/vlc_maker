@@ -184,10 +184,10 @@ font-family: "Montserrat", sans-serif;
         
     </div>    
     {% if text_file.text_file and not text_file.video_clips.all  %}
-    {%include  'vlc/frontend/VLSMaker/sceneselection/update.html' %}
-
-    {% elif text_file.text_file and text_file.video_clips.all %}
     {%include  'vlc/frontend/VLSMaker/sceneselection/new_form.html' %}
+    
+    {% elif text_file.text_file and text_file.video_clips.all %}
+    {%include  'vlc/frontend/VLSMaker/sceneselection/update.html' %}
     {% endif %}
 
     <script>
