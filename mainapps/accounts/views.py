@@ -1,55 +1,26 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout, get_user_model
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseRedirect
-from django.contrib.auth import get_user_model
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from mainapps.accounts.emails import send_html_email2, welcome_message
 from mainapps.accounts.models import Credit
 import stripe
 from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-
-from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
 from djstripe.settings import djstripe_settings
 from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
-
-# Set the Stripe secret key
-from django.http import HttpResponse
-
-from django.contrib.auth import login as auth_login
-from django.db import IntegrityError
-import stripe
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from djstripe.models import Subscription, Customer, Product,Subscription,APIKey,Plan
+from djstripe.models import Subscription, Customer, Product, APIKey, Plan
 from django.utils.timezone import now
-
-from django.contrib.auth import views as auth_views
-from django.urls import reverse_lazy
-
-
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.contrib.auth import views as auth_views
 
-
-from django.contrib.auth import logout
-
-
-# views.py
-from django.shortcuts import render
-from django.core.mail import send_mail
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt  # Only use this for development; consider CSRF protection in production.
+@csrf_exempt  
 def contact_view(request):
     if request.method == 'POST':
         # Extract the data from the request
@@ -85,44 +56,8 @@ def logout_view(request):
     # Redirect to the login page or homepage
     return redirect('/')  # Replace 'login' with the name of the URL to redirect to (e.g., 'home' or 'login')
 
-def send_registration_email(user, password, request):
-    subject = 'Welcome to Our Platform!'
-    from_email = 'no-reply@example.com'
-    to = user.email
-    
-    # Prepare the context for the email template
-    context = {
-        'user': user,
-        'password': password,
-        'password_reset_link': request.build_absolute_uri(reverse('password_reset'))
-    }
-    
-    # Render the HTML template
-    html_content = render_to_string('partials/regiter_email.html', context)
-    text_content = strip_tags(html_content)  # Fallback for plain text email
-
-    # Create the email
-    email = EmailMultiAlternatives(subject, text_content, from_email, [to])
-    email.attach_alternative(html_content, "text/html")
-    
-    # Send the email
-    email.send()
-
-from django.contrib.auth import views as auth_views
-from django.urls import reverse_lazy
-
-class CustomPasswordResetView(auth_views.PasswordResetView):
-    template_name = 'registration/password_reset_form.html'
-    email_template_name = 'registration/password_reset_email.html'
-    success_url = reverse_lazy('password_reset_done')
-
-class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    template_name = 'registration/password_reset_confirm.html'
-    success_url = reverse_lazy('password_reset_complete')
 
 
-
-# Create your views here.
 def login(request):
     if request.user.is_authenticated:
         return redirect('/text')
@@ -209,9 +144,6 @@ def stripe_webhook(request):
         # Implement user creation and subscription processing here
 
     return HttpResponse(status=200)
-
-
-
 
 def subscription_confirm(request):
     stripe_api_key = APIKey.objects.filter(livemode=False, type="secret").first()
@@ -355,20 +287,6 @@ def registration_view(request):
     else:
         # Handle GET request (render the registration form)
         return render(request, 'accounts/register.html')  # Update with your actual registration template
-
-class CustomPasswordResetView(auth_views.PasswordResetView):
-    template_name = 'accounts/password_reset_form.html'
-
-class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
-    template_name = 'accounts/password_reset_done.html'
-
-class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    template_name = 'accounts/password_reset_confirm.html'
-    success_url ='/accounts/login'
-
-class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
-    template_name = 'accounts/password_reset_complete.html'
-
 
 def subscription_details(request):
     user = request.user

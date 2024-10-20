@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import os
 from django.core.files.storage import FileSystemStorage
-from pathlib import Path
 import json
 from django.urls import reverse
 from django.http import JsonResponse

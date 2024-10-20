@@ -1,4 +1,4 @@
-<form method="POST" action="." id="scene_form" enctype="multipart/form-data">
+<form method="POST" action="." id="scene_update_form" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="text", hidden name="purpose" value='process'>
     <div class="scene-container" style="display: flex;padding:30px 30px;  justify-content: center; align-items: center;">
@@ -91,7 +91,7 @@
     </div>
     </form>
      <script>
-    document.getElementById("scene_form").addEventListener("submit", function(event) {
+    document.getElementById("scene_update_form").addEventListener("submit", function(event) {
         let allValid = true;
 
         // Loop through each loop index
@@ -232,7 +232,7 @@
         }
         window.onload = function() {
         // Get all inputs on the page
-        document.getElementById('scene_form').reset();
+        document.getElementById('scene_update_form').reset();
 
         }
         window.addEventListener('load', async function() {
