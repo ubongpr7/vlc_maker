@@ -261,7 +261,9 @@ def add_video_clips(request, textfile_id):
                     clip.video_file_path = video_file
                 clip.save()
             messages.success(request, 'TextFile updated successfully')
-            return redirect(reverse('video:add_scenes', args=[textfile_id]))
+            # return redirect(reverse('video:add_scenes', args=[textfile_id]))
+            return redirect(f'/text/process-textfile/{textfile_id}')  
+        
 
 
 
