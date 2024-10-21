@@ -166,8 +166,9 @@ def process_background_music(request, textfile_id):
     textfile = TextFile.objects.get(pk=textfile_id)
 
     musics=textfile.background_musics.all()
+    n_musics=len(musics)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.POST.GET('purpose')=='new':
         if textfile.background_musics:
             for bg in BackgroundMusic.objects.filter(text_file=textfile):
                 bg.delete()
@@ -260,7 +261,99 @@ def process_background_music(request, textfile_id):
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-    n_musics=len(musics)
+    elif request.method == 'POST' and request.POST.GET('purpose')=='update': 
+        no_of_mp3 = int(request.POST.get('no_of_mp3', 0)) 
+    
+        # Check if the necessary fields are present in TextFile
+        if not textfile.text_file:
+            return JsonResponse({"error": "Text file is missing."}, status=400)
+        # Check for text file and return error if missing
+        music_files = []
+        start_times_str = {}
+        bg_levels = {}
+        end_times_str = {}
+
+        # Loop through each item based on the number of MP3s
+        for i in range(1, no_of_mp3+1):
+            # Get the music file and check if it's not None before adding to the list
+            changed_music_file = request.FILES.get(f'bg_music_{i}')
+            if changed_music_file is not None:
+                changed_music_file.append(music_file)
+
+            # Get start time and check if it's not None before adding to the dictionary
+            start_time = request.POST.get(f'from_when_{i}')
+            if start_time is not None:
+                start_times_str[f'bg_music_{i}'] = start_time
+
+            # Get background level and check if it's not None before adding to the dictionary
+            bg_level = request.POST.get(f'bg_level_{i}')
+            if bg_level is not None:
+                bg_levels[f'bg_music_{i}'] = float(bg_level) / 1000.0
+
+            # Get end time and check if it's not None before adding to the dictionary
+            end_time = request.POST.get(f'to_when_{i}')
+            if end_time is not None:
+                end_times_str[f'bg_music_{i}'] = end_time
+
+        start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
+        end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
+
+        music_paths = []
+        bg_musics=[]
+        for i, music in enumerate(musics):
+            if changed_music_file[i]:
+                music.music.delete(save=False)
+                music.music=changed_music_file[i]
+            music.start_time=start_times[i]
+            music.end_time=end_times[i]
+            music.bg_level=bg_levels[f"bg_music_{i+1}"]
+
+        
+
+        for i, music_file in enumerate(music_files, start=n_musics):
+            if music_file:
+                bg_music=BackgroundMusic(
+                        text_file=textfile,
+                        music=music_file,
+                        start_time=start_times[i-1],
+                        end_time=end_times[i-1],
+                        bg_level=bg_levels[f"bg_music_{i}"]
+
+                    )
+                
+                bg_musics.append(bg_music)
+                # Perform bulk creation
+        if bg_musics:
+            BackgroundMusic.objects.bulk_create(bg_musics)
+
+        lines = []
+        bg_musics=BackgroundMusic.objects.filter(text_file=textfile)
+        for bg_music in bg_musics:
+            start_time_str = bg_music.start_time
+            end_time_str = bg_music.end_time
+            bg_level=str(float(bg_music.bg_level))
+            lines.append(f"{bg_music.music.name} {start_time_str} {end_time_str} {bg_level}")
+
+        content = "\n".join(lines)
+        
+        # Save the content to a text file
+        file_name = f'background_music_info_{textfile_id}_.txt'
+
+        textfile.bg_music_text.save(file_name, ContentFile(content))
+        # textfile.bg_level=float(request.POST.get('bg_level'))/100.0
+        textfile.save()
+
+        try:
+            # call_command('music_processor', textfile_id)
+            # # Start the background process/
+            thread = threading.Thread(target=run_process_command, args=(textfile_id,))
+            thread.start()
+            return redirect(f'/text/progress_page/bg_music/{textfile_id}')
+
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id,'textfile':textfile,'musics':musics, 'n_musics':n_musics})
 
 
