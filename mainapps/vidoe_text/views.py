@@ -305,6 +305,7 @@ def process_background_music(request, textfile_id):
             music.start_time=start_times[i]
             music.end_time=end_times[i]
             music.bg_level=bg_levels[f"bg_music_{i+1}"]
+            music.save()
 
         
         if n_musics< no_of_mp3:
