@@ -268,16 +268,17 @@ def process_background_music(request, textfile_id):
             return JsonResponse({"error": "Text file is missing."}, status=400)
         # Check for text file and return error if missing
         music_files = []
+        music_files_dict={}
         start_times_str = {}
         bg_levels = {}
         end_times_str = {}
 
-        # Loop through each item based on the number of MP3s
         for i in range(1, no_of_mp3+1):
             # Get the music file and check if it's not None before adding to the list
             changed_music_file = request.FILES.get(f'bg_music_{i}')
             if changed_music_file is not None:
                 music_files.append(changed_music_file)
+                music_files_dict[f'bg_music_{i}']=changed_music_file
 
             # Get start time and check if it's not None before adding to the dictionary
             start_time = request.POST.get(f'from_when_{i}')
@@ -298,13 +299,13 @@ def process_background_music(request, textfile_id):
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
 
         bg_musics=[]
-        for i, music in enumerate(musics):
-            if music_files[i]:
+        for i, music in enumerate(musics,start=1):
+            if music_files_dict.get(f'bg_music_{i}'):
                 music.music.delete(save=False)
-                music.music=music_files[i]
+                music.music=music_files_dict.get(f'bg_music_{i}')
             music.start_time=start_times[i]
             music.end_time=end_times[i]
-            music.bg_level=bg_levels[f"bg_music_{i+1}"]
+            music.bg_level=bg_levels[f"bg_music_{i}"]
             music.save()
 
         
