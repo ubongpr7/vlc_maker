@@ -318,7 +318,14 @@
         
             sessionStorage.setItem(inputElement.id, inputElement.value);
             console.log(inputElement.value)
-    }
+            if (inputElement.id.startsWith('videoSelect_')){
+                const cNumber= inputElement.id.split('_')[1]
+                console.log(cNumber);
+                document.getElementById(`video_${cNumber}`).value='';
+
+            };
+            
+    };
     
     function fetchVideoClips(categoryId, counter,item) {
         select2=document.getElementById(`videoSelect_${counter}_{{textfile_id}}`)
