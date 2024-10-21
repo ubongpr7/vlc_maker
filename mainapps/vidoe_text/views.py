@@ -278,7 +278,7 @@ def process_background_music(request, textfile_id):
             # Get the music file and check if it's not None before adding to the list
             changed_music_file = request.FILES.get(f'bg_music_{i}')
             if changed_music_file is not None:
-                music_files.append(music_file)
+                music_files.append(changed_music_file)
 
             # Get start time and check if it's not None before adding to the dictionary
             start_time = request.POST.get(f'from_when_{i}')
