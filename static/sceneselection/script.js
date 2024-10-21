@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
-                uploadTexts[index].textContent = `${file.name.slice(0,10)}`;
+                uploadTexts[index].textContent = `${file.name.slice(0,15)}`;
                 svgs[index].style.position = 'absolute';
                 svgs[index].style.opacity = '0';
                 selected_clips[index].value= ""
