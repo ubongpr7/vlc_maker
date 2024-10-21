@@ -303,8 +303,8 @@ def process_background_music(request, textfile_id):
             if music_files_dict.get(f'bg_music_{i}'):
                 music.music.delete(save=False)
                 music.music=music_files_dict.get(f'bg_music_{i}')
-            music.start_time=start_times[i]
-            music.end_time=end_times[i]
+            music.start_time=start_times[i-1]
+            music.end_time=end_times[i-1]
             music.bg_level=bg_levels[f"bg_music_{i}"]
             music.save()
 
