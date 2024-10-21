@@ -32,23 +32,23 @@
                 <div style="display: flex; gap: 24px; width: 100%;">
                     <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                         <span class="text" style="width: 100%; text-align: left;">Start:</span>
-                        <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time startTime" id="from_when_{{textfile_id}}_2" name="from_when_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                        <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time startTime" id="from_when_{{textfile_id}}_2" name="from_when_{{ forloop.counter0 }}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                     </div>
                     <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                         <span class="text" style="width: 100%; text-align: left;">End:</span>
-                        <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time endTime" name="to_when_2" id="to_when_{{textfile_id}}_2" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                        <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time endTime" name="to_when_2" id="to_when_{{textfile_id}}_{{ forloop.counter0 }}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                     </div>
                 </div>
             
                 <div>
                     <div class="Font-Size-text" style="display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between;">
                         <div style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                            MP3 2 Volume:
+                            MP3 {{ forloop.counter0 }} Volume:
                         </div>
                         <span id="SliderValue_{{ forloop.counter0 }}" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                     </div>
                     <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                        <input type="range" onchange="saveInput(this)" name="bg_level_2" min="0" max="100" value="50" class="slider" id="mySlider_{{textfile_id}}_{{ forloop.counter0 }}" style="width: 100%;">
+                        <input type="range" onchange="saveInput(this)" name="bg_level_{{ forloop.counter0 }}" min="0" max="100" value="50" class="slider" id="mySlider_{{textfile_id}}_{{ forloop.counter0 }}" style="width: 100%;">
                     </div>
                 </div>
             </div>
