@@ -12,7 +12,7 @@ urlpatterns=[
     path('process-background-music/<str:textfile_id>/', process_background_music, name='process_background_music'),path('media/<str:file_name>/', serve_file, name='serve_file'),
     re_path(r'^media/(?P<file_key>.+)/(?P<textfile_id>\w+)/$', download_file_from_s3, name='download_file'),
     re_path(r'^media/(?P<file_key>.+)/$', download_file_from_s3, name='download_file_'),
-
+    path('text/delete-background-music/<int:id>/', delete_background_music, name='delete_background_music'),
     path('validate_api_key/',validate_api_keyv, name='validate_api_key'),
 
 ]

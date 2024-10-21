@@ -2,7 +2,7 @@ import json
 import threading
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
-
+from django.views.decorators.http import require_http_methods
 from mainapps.audio.models import BackgroundMusic
 from mainapps.vidoe_text.color_converter import convert_color_input_to_normalized_rgb
 from mainapps.vidoe_text.decorators import check_credits_and_ownership, check_user_credits
@@ -33,15 +33,28 @@ import boto3
 from django.http import HttpResponse
 from django.conf import settings
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-
-
-
-
-
-
-
 import requests
 
+
+
+
+
+
+@require_http_methods(["DELETE"])
+def delete_background_music(request, id):
+    try:
+        # Get the BackgroundMusic object with the given id
+        background_music = get_object_or_404(BackgroundMusic, id=id)
+        
+        # Delete the object
+        background_music.music.delete()
+        background_music.delete()
+        
+        # Return a success response
+        return JsonResponse({'message': 'Music deleted successfully!'}, status=200)
+    except Exception as e:
+        # Return an error response in case something goes wrong
+        return JsonResponse({'error': str(e)}, status=400)
 def check_credits(api_key):
     # Define the endpoint for fetching user information
     url = "https://api.elevenlabs.io/v1/usage/character-stats"

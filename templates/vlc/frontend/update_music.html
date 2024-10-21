@@ -15,7 +15,7 @@
                         <p style="font-size: 10px; font-family: 'Montserrat'; display: flex; position: relative; top: 55%;left: 0;" id="mp3_{{ forloop.counter }}_current">Current: {{ music.get_music_file_name}}</p>                          
 
                     </div>
-                    <button  class="delete" onclick="deleteButton('{{ forloop.counter }}')"  type="button"  style="background-color:#864af9;color:white;border:none">Delete</button>
+                    <button  class="delete" onclick="deleteMusicButton('{{ music.id }}')"  type="button"  style="background-color:#864af9;color:white;border:none">Delete</button>
                 </div>
 
                 <div style="width: 100%; box-sizing: border-box; height: fit-content; padding: 16px 24px; border-radius: 8px; border: 1px dashed #19191980; display: flex; align-items: center; position: relative; font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center; gap: 14px;">
@@ -54,6 +54,8 @@
                     </div>
                 </div>
             </div>
+            <input hidden type="text" name="mp3_{{ forloop.counter }}_status" id="mp3_{{ forloop.counter }}_status" value="unchanged">
+
             
             {% endfor %}
 
@@ -93,3 +95,24 @@
     </div>
     
 </form>
+<script>
+    function deleteMusicButton(musicId) {
+        // Send AJAX request to delete the background music
+        $.ajax({
+            url: '/text/delete-background-music/' + musicId + '/',  // URL for delete view
+            type: 'DELETE',  // HTTP DELETE method
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'  // CSRF token for security
+            },
+            success: function(response) {
+                // On success, refresh the page
+                alert("Music deleted successfully!");
+                location.reload();  // Refresh the page
+            },
+            error: function(xhr, status, error) {
+                // Handle any errors
+                alert("Error deleting music: " + error);
+            }
+        });
+    }
+</script>
