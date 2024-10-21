@@ -251,13 +251,12 @@ def add_video_clips(request, textfile_id):
                     video_clip= get_object_or_404(VideoClip,id=video_clip_id)
                 else:
                     video_clip=None
-                if video_clip:
-                    clip.video_file= video_clip
+                clip.video_file= video_clip
                 if request.POST.get(f"video_{i}_status") =='filled':
                     pass 
                 elif request.POST.get(f"video_{i}_status") =='empty' and clip.video_file_path:
                     clip.video_file_path.delete()
-                if video_file:
+                if video_file and request.POST.get(f"video_{i}_status") =='changed' :
                     clip.video_file_path = video_file
                 clip.save()
             messages.success(request, 'TextFile updated successfully')
