@@ -301,6 +301,7 @@ def process_background_music(request, textfile_id):
         bg_musics=[]
         for i, music in enumerate(musics,start=1):
             if music_files_dict.get(f'bg_music_{i}'):
+                
                 music.music.delete(save=False)
                 music.music=music_files_dict.get(f'bg_music_{i}')
             music.start_time=start_times[i-1]

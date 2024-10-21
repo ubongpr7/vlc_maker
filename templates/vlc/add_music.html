@@ -206,10 +206,13 @@
     // Add file upload event listener
     const fileInput = document.getElementById(`fileUpload_{{textfile_id}}_${currentNumber}`);
     const uploadText = document.getElementById(`uploadText${currentNumber}`);
-
+    const currentFile= document.getElementById(`mp3_${currentNumber}_current`)
     fileInput.addEventListener('change', function() {
         if (fileInput.files.length > 0) {
             uploadText.textContent = fileInput.files[0].name;
+            if (currentFile){
+                currentFile.style.display='none'
+            };
         } else {
             uploadText.textContent = 'Choose File';
         }
