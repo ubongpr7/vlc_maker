@@ -18,7 +18,7 @@ def bg_music_file_upload_path(instance, filename):
 class BackgroundMusic(models.Model):
     text_file=models.ForeignKey(TextFile, on_delete=models.CASCADE, related_name='background_musics')
     title = models.CharField(max_length=255,null=True,blank=True)
-    music=models.FileField(null=True, blank=True, upload_to='bg_misics')
+    music=models.FileField(null=True, blank=True, upload_to=bg_music_file_upload_path)
     start_time = models.FloatField(help_text="Start time in seconds")
     end_time = models.FloatField(help_text="End time in seconds")
     bg_level = models.DecimalField(null=True,blank=True,max_digits=12,decimal_places=9,default=0.1)
@@ -26,6 +26,7 @@ class BackgroundMusic(models.Model):
     # video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='background_music')
     def get_music_file_name(self):
         filename= self.music.name.split('/')[-1]
+        return filename
         
     def __str__(self):
         return f'{self.text_file} {self.start_time}-{self.end_time}'
