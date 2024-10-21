@@ -301,7 +301,7 @@ def process_background_music(request, textfile_id):
         music_paths = []
         bg_musics=[]
         for i, music in enumerate(musics):
-            if changed_music_file[i]:
+            if music_files[i]:
                 music.music.delete(save=False)
                 music.music=music_files[i]
             music.start_time=start_times[i]
