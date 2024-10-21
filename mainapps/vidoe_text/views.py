@@ -168,7 +168,7 @@ def process_background_music(request, textfile_id):
     musics=textfile.background_musics.all()
     n_musics=len(musics)
 
-    if request.method == 'POST' and request.POST.GET('purpose')=='new':
+    if request.method == 'POST' and request.POST.get('purpose')=='new':
         if textfile.background_musics:
             for bg in BackgroundMusic.objects.filter(text_file=textfile):
                 bg.delete()
@@ -261,7 +261,7 @@ def process_background_music(request, textfile_id):
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-    elif request.method == 'POST' and request.POST.GET('purpose')=='update': 
+    elif request.method == 'POST' and request.POST.get('purpose')=='update': 
         no_of_mp3 = int(request.POST.get('no_of_mp3', 0)) 
     
         # Check if the necessary fields are present in TextFile
