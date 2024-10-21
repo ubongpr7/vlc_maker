@@ -195,13 +195,16 @@
             const topicFolderSelect = document.getElementById(`topic_folder_${i}_${textfileId}`);
             const videoSelect = document.getElementById(`videoSelect_${i}_${textfileId}`);
             const viderSyatus=document.getElementById(`video_${i}_status`)
-            // Listen for changes in the video input field
+            const current_video=document.getElementById(`video_${i}_current`)
             videoInput.addEventListener("change", function() {
                 // If the video input has a file selected
                 if (videoInput.files.length > 0) {
                     topicFolderSelect.value = "";
                     videoSelect.value = "";
-                    viderSyatus.value='changed'
+                    viderSyatus.value='changed';
+                    if (current_video){
+                        current_video.style.display='none';
+                    };
                     saveInput(topicFolderSelect);
                     saveInput(videoSelect);
                     while (videoSelect.options.length > 0) {
