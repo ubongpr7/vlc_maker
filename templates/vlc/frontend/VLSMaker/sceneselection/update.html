@@ -318,12 +318,12 @@
         
             sessionStorage.setItem(inputElement.id, inputElement.value);
             console.log(inputElement.value)
-            // if (inputElement.id.startsWith('videoSelect_')){
-            //     const cNumber= inputElement.id.split('_')[1]
-            //     console.log(cNumber);
-            //     document.getElementById(`video_${cNumber}`).value='';
+            if (inputElement.id.startsWith('videoSelect_') && inputElement.value !==''){
+                const cNumber= inputElement.id.split('_')[1]
+                console.log(cNumber);
+                document.getElementById(`video_${cNumber}`).value='';
 
-            // };
+            };
             
     };
     
