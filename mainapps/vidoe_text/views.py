@@ -217,7 +217,6 @@ def process_background_music(request, textfile_id):
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
 
         # Save music files and their paths
-        music_paths = []
         bg_musics=[]
         for i, music_file in enumerate(music_files, start=1):
             if music_file:
@@ -298,7 +297,6 @@ def process_background_music(request, textfile_id):
         start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
 
-        music_paths = []
         bg_musics=[]
         for i, music in enumerate(musics):
             if music_files[i]:
@@ -309,22 +307,22 @@ def process_background_music(request, textfile_id):
             music.bg_level=bg_levels[f"bg_music_{i+1}"]
 
         
+        if n_musics< no_of_mp3:
+            for i, music_file in enumerate(music_files, start=n_musics):
+                if music_file:
+                    bg_music=BackgroundMusic(
+                            text_file=textfile,
+                            music=music_file,
+                            start_time=start_times[i-1],
+                            end_time=end_times[i-1],
+                            bg_level=bg_levels[f"bg_music_{i}"]
 
-        for i, music_file in enumerate(music_files, start=n_musics):
-            if music_file:
-                bg_music=BackgroundMusic(
-                        text_file=textfile,
-                        music=music_file,
-                        start_time=start_times[i-1],
-                        end_time=end_times[i-1],
-                        bg_level=bg_levels[f"bg_music_{i}"]
-
-                    )
-                
-                bg_musics.append(bg_music)
-                # Perform bulk creation
-        if bg_musics:
-            BackgroundMusic.objects.bulk_create(bg_musics)
+                        )
+                    
+                    bg_musics.append(bg_music)
+                    # Perform bulk creation
+            if bg_musics:
+                BackgroundMusic.objects.bulk_create(bg_musics)
 
         lines = []
         bg_musics=BackgroundMusic.objects.filter(text_file=textfile)
