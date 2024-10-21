@@ -10,9 +10,9 @@
 
             <div class="uploadmp3"id="uploadmp3-{{ forloop.counter0 }}" style="display: flex; width: 100%; height: fit-content; justify-content: center; gap: 24px; flex-direction: column;">
                 <div class="delete-container" style="justify-content:space-between;">
-                    <div class="text">
+                    <div class="text" >
                         <span>Upload MP3 <span>{{ forloop.counter0 }}</span>:</span>
-                        <p style="font-size: 10px; font-family: 'Montserrat';position: relative;" id="mp3_{{ forloop.counter0 }}_current">Current: {{ music.get_music_file_name}}</p>                          
+                        <p style="font-size: 10px; font-family: 'Montserrat'; display: flex; position: relative;" id="mp3_{{ forloop.counter0 }}_current">Current: {{ music.get_music_file_name}}</p>                          
 
                     </div>
                     <button  class="delete" onclick="deleteButton('{{ forloop.counter0 }}')"  type="button"  style="background-color:#864af9;color:white;border:none">Delete</button>
