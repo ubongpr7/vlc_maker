@@ -12,10 +12,11 @@
                 <div class="delete-container" style="justify-content:space-between;">
                     <div class="text">
                         <span>Upload MP3 <span>{{ forloop.counter0 }}</span>:</span>
+                        <p style="font-size: 10px; font-family: 'Montserrat';position: relative;" id="mp3_{{ forloop.counter0 }}_current">Current: {{ music.get_music_file_name}}</p>                          
+
                     </div>
                     <button  class="delete" onclick="deleteButton('{{ forloop.counter0 }}')"  type="button"  style="background-color:#864af9;color:white;border:none">Delete</button>
                 </div>
-                <p style="font-size: 10px; font-family: 'Montserrat';position: relative;" id="mp3_{{ forloop.counter0 }}_current">Current: {{ music.get_music_file_name}}</p>                          
 
                 <div style="width: 100%; box-sizing: border-box; height: fit-content; padding: 16px 24px; border-radius: 8px; border: 1px dashed #19191980; display: flex; align-items: center; position: relative; font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center; gap: 14px;">
                     <svg id="svg{{ forloop.counter0 }}" class="svgIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
