@@ -54,16 +54,7 @@
                     </div>
                 </div>
             </div>
-            <script>
-                // Select the div
-                var div = document.getElementById("div-{{ forloop.counter }}");
             
-                // Get the current counter
-                var counter = parseInt(div.getAttribute('data-counter'));
-            
-                // Update the id by adding 1 to counter
-                div.setAttribute('id', "div-" + (counter + 1));
-              </script>
             {% endfor %}
 
         </div>
