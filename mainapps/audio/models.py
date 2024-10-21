@@ -24,7 +24,9 @@ class BackgroundMusic(models.Model):
     bg_level = models.DecimalField(null=True,blank=True,max_digits=12,decimal_places=9,default=0.1)
     
     # video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='background_music')
-
+    def get_music_file_name(self):
+        filename= self.music.name.split('/')[-1]
+        
     def __str__(self):
         return f'{self.text_file} {self.start_time}-{self.end_time}'
 

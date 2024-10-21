@@ -247,8 +247,8 @@ def process_background_music(request, textfile_id):
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-
-    return render(request,'vlc/add_music.html',{'textfile_id':textfile_id,'textfile':textfile,'musics':musics})
+    n_musics=len(musics)
+    return render(request,'vlc/add_music.html',{'textfile_id':textfile_id,'textfile':textfile,'musics':musics, 'n_musics':n_musics})
 
 
 def clean_progress_file(text_file_id):
