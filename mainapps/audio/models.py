@@ -9,11 +9,13 @@ from mainapps.vidoe_text.models import TextFile
 # def bg_music_file_upload_path(instance, filename):
 #     """Generate a unique file path for each uploaded text file."""
 #     ext = filename.split('.')[-1]
-#     filename = f'{uuid.uuid4()}{instance.text_file.id}.{ext}'  # Use UUID to ensure unique file names
+#     unique_name = f'{uuid.uuid4()}{instance.text_file.id}.{ext}'  # Use UUID to ensure unique file names
 #     return os.path.join('background', filename)
 def bg_music_file_upload_path(instance, filename):
     """Generate a unique file path for each uploaded text file."""
-    return os.path.join('text_clip', str(instance.text_file.id), filename)
+    unique_name = f'{uuid.uuid4()}'  # Use UUID to ensure unique file names
+
+    return os.path.join('text_clip', str(instance.text_file.id),unique_name, filename)
 
 class BackgroundMusic(models.Model):
     text_file=models.ForeignKey(TextFile, on_delete=models.CASCADE, related_name='background_musics')
