@@ -304,11 +304,11 @@ def process_background_music(request, textfile_id):
                 
                 music.music.delete(save=False)
                 music.music=music_files_dict.get(f'bg_music_{i}')
-            music.start_time=start_times[i-1]
-            music.end_time=end_times[i-1]
+            music.start_time=convert_to_seconds(start_times_str[f'bg_music_{i}'])
+            music.end_time=convert_to_seconds(end_times_str[f'bg_music_{i}'])
             music.bg_level=bg_levels[f"bg_music_{i}"]
             music.save()
-            
+
 
         
         if n_musics< no_of_mp3:
