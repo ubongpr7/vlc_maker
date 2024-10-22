@@ -15,7 +15,7 @@ from django.conf import settings
 from .models import TextFile, TextLineVideoClip
 from threading import Timer
 from django.urls import reverse
-
+import logging
 from django.http import StreamingHttpResponse, Http404
 import os
 from wsgiref.util import FileWrapper
@@ -310,9 +310,8 @@ def process_background_music(request, textfile_id):
         bg_musics=[]
         
         for i in range(n_musics+1,no_of_mp3+1):
-            print('This is i: ',i)
+            logging.info(f'This is i: {i}')
             if music_files_dict.get(f'bg_music_{i}'):
-                print('this is file: ', music_files_dict.get(f'bg_music_{i}'))
                 bg_music=BackgroundMusic(
                         text_file=textfile,
                         music=music_files_dict.get(f'bg_music_{i}'),
@@ -333,6 +332,7 @@ def process_background_music(request, textfile_id):
 
         lines = []
         all_bg_musics=BackgroundMusic.objects.filter(text_file=textfile)
+
         for bg_music in all_bg_musics:
             start_time_str = bg_music.start_time
             end_time_str = bg_music.end_time
