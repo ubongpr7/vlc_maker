@@ -297,7 +297,7 @@ def process_background_music(request, textfile_id):
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
         bg_musics=[]
         
-        for i in range(n_musics+1,no_of_mp3+1):
+        for i in range(n_musics,no_of_mp3+1):
             logging.info(f'This is i: {i}')
             if music_files_dict.get(f'bg_music_{i}'):
                 bg_music=BackgroundMusic(
