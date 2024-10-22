@@ -192,7 +192,7 @@ class Command(BaseCommand):
             with open(watermark_temp_path.name, 'wb') as png_file:
                     png_file.write(content)   
         try:
-            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 1).set_opacity(0.7)
+            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 1.2).set_opacity(0.7)
 
         except Exception as e:
             logging.error(f"Error loading watermark image: {e}")

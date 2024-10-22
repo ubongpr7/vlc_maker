@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import List, Dict
 import os
 import re
-
+from threading import Timer
 from django.core.files import File
 from django.conf import settings
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -107,12 +107,18 @@ class TextFile(models.Model):
             return True
         except ValueError:
             return False
-    
-    def track_progress(self,increase):
-        
-        self.progress=str(increase)
-
+    def track_progress(self, increase):
+        self.progress = str(increase)
         self.save()
+
+        # If progress is 100, reset to 0 after 2 seconds
+        if increase == 100:
+            def reset_progress():
+                self.progress = '0'
+                self.save()
+
+            # Start a timer that will call reset_progress after 2 seconds
+            Timer(2.0, reset_progress).start()
     def process_text_file(self):
         """Process the uploaded text file and return lines stripped of extra spaces."""
         if not self.text_file:
