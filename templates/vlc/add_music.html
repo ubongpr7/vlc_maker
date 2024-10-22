@@ -230,14 +230,14 @@ function inputHander(c_number){
     const uploadText = document.getElementById(`uploadText${c_number}`);
     const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${c_number}`);
     const endTimeInput = document.getElementById(`to_when_{{textfile_id}}_${c_number}`);
-    currentFileP=document.getElementById(`mp3_${c_number}_current`)
+    const currentFileP=document.getElementById(`mp3_${c_number}_current`)
     fileInput.addEventListener('change', function() {
             if (fileInput.files.length > 0) {
                 uploadText.textContent = fileInput.files[0].name.slice(0,15);
-                startTimeInput.required=true 
-                endTimeInput.required=true 
+                startTimeInput.required=true;
+                endTimeInput.required=true;
                 if (currentFileP){
-                    currentFileP.remove()
+                    currentFileP.remove();
                 };
                 
             } else {
@@ -247,6 +247,7 @@ function inputHander(c_number){
             }
         });
 };
+
 function saveInput(inputElement) {
             if (inputElement.type === 'file') {
                 // For file inputs, save the file name
