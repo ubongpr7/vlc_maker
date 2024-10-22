@@ -296,7 +296,6 @@ def process_background_music(request, textfile_id):
         start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
 
-        bg_musics=[]
         for i, music in enumerate(musics,start=1):
             if music_files_dict.get(f'bg_music_{i}'):
                 
@@ -308,10 +307,13 @@ def process_background_music(request, textfile_id):
             music.save()
             
 
+        bg_musics=[]
         
-        if n_musics< no_of_mp3:
+        if n_musics < no_of_mp3:
             # for i, music_file in enumerate(music_files, start=n_musics):
             for i, (key, music_file) in enumerate(music_files_dict.items(), start=n_musics):
+                if i>no_of_mp3:
+                    break
                 # if music_files_dict.get(f'bg_music_{i}'):
                 if music_file:
                     bg_music=BackgroundMusic(
