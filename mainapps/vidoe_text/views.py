@@ -311,7 +311,7 @@ def process_background_music(request, textfile_id):
         
         if n_musics< no_of_mp3:
             for i, music_file in enumerate(music_files, start=n_musics):
-                if music_file:
+                if music_files_dict.get(f'bg_music_{i}'):
                     bg_music=BackgroundMusic(
                             text_file=textfile,
                             music=music_files_dict.get(f'bg_music_{i}'),
