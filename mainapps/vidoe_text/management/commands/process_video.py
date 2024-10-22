@@ -1188,7 +1188,7 @@ class Command(BaseCommand):
             except Exception as e:
                 logging.error(f"Error generating watermarked video: {e}")
                 return False
-    
+
     def add_static_watermark_to_instance(self, video):
         """
         Add a static watermark to the video from text_file_instance and save the result.
@@ -1205,7 +1205,7 @@ class Command(BaseCommand):
         
         try:
             # Load the watermark image and resize it to 80% of the video width
-            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.8).set_opacity(0.7)
+            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.8).set_opacity(0.5)
         except Exception as e:
             logging.error(f"Error loading watermark image: {e}")
             return False
