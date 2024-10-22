@@ -1223,7 +1223,7 @@ class Command(BaseCommand):
             with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
                 watermarked.write_videofile(
                     temp_output_video.name,
-                    codec='h264_nvenc',
+                    codec='libx264',
                     preset="ultrafast",
                     audio_codec="aac",
                     ffmpeg_params=["-crf",'17 ']
