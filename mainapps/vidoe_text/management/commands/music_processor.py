@@ -151,7 +151,6 @@ class Command(BaseCommand):
                 codec='libx264',
                 preset="ultrafast",
                 audio_codec="aac",    
-                threads=8,  
                 ffmpeg_params=["-movflags", "+faststart"]
             )
             
@@ -193,7 +192,7 @@ class Command(BaseCommand):
             with open(watermark_temp_path.name, 'wb') as png_file:
                     png_file.write(content)   
         try:
-            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.8).set_opacity(0.5)
+            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.8).set_opacity(0.7)
 
         except Exception as e:
             logging.error(f"Error loading watermark image: {e}")
@@ -224,7 +223,6 @@ class Command(BaseCommand):
                     codec='libx264',
                     preset="ultrafast",
                     audio_codec="aac",   
-                    threads=8,  
                     ffmpeg_params=["-movflags", "+faststart"]
                 )
                 self.text_file_instance.track_progress(95)
@@ -287,7 +285,6 @@ class Command(BaseCommand):
                     codec='libx264',
                     preset="ultrafast",
                     audio_codec="aac",
-                    threads=8,
                     ffmpeg_params=["-movflags", "+faststart"]
                 )
                 self.text_file_instance.track_progress(95)
@@ -313,76 +310,6 @@ class Command(BaseCommand):
             logging.error(f"Error generating watermarked video: {e}")
             return False
 
-
-    # def add_static_watermark_to_instance(self, video):
-    #     """
-    #     Add a single 'SAMPLE' text across the main diagonal of the video and save the result.
-    #     """
-    #     text_file_instance = self.text_file_instance
-
-    #     try:
-    #         # Function to create "SAMPLE" TextClip for the diagonal, adjusted to the video diagonal size
-    #         def create_sample_textclip(video):
-    #             # Calculate diagonal length of the video using Pythagoras theorem
-    #             diagonal_length = int((video.w ** 2 + video.h ** 2) ** 0.5)
-                
-    #             # Set the font size to cover a significant portion of the diagonal
-    #             font_size = int(diagonal_length * 0.1)  # Adjust this ratio to control the size
-                
-    #             return TextClip(
-    #                 "Sample",
-    #                 fontsize=font_size,  # Font size based on diagonal length
-    #                 color='white',
-    #                 font="Montserrat",
-    #                 stroke_color='black',
-    #                 stroke_width=2
-    #             ).set_opacity(0.5).set_position("center").set_duration(video.duration).rotate(45)  # Positioned at the center, rotated diagonally
-
-    #         # Create the watermark text for the diagonal
-    #         text_watermark = create_sample_textclip(video)
-
-    #         self.text_file_instance.track_progress(82)
-
-    #         # Overlay the static text watermark on the video
-    #         watermarked = CompositeVideoClip([video, text_watermark], size=video.size)
-    #         watermarked.set_duration(video.duration)
-    #         self.text_file_instance.track_progress(83)
-
-    #         # Save the output to a temporary file
-    #         try:
-    #             with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-    #                 watermarked.write_videofile(
-    #                     temp_output_video.name,
-    #                     codec='libx264',
-    #                     preset="ultrafast",
-    #                     audio_codec="aac",
-    #                     threads=8,  
-    #                     ffmpeg_params=["-movflags", "+faststart"]
-    #                 )
-    #                 self.text_file_instance.track_progress(94)
-
-    #                 # Save the watermarked video to the model field
-    #                 if text_file_instance.generated_final_bgmw_video:
-    #                     text_file_instance.generated_final_bgmw_video.delete(save=False)
-    #                     self.text_file_instance.track_progress(97)
-
-    #                 with open(temp_output_video.name, 'rb') as temp_file:
-    #                     text_file_instance.generated_final_bgmw_video.save(
-    #                         f"watermarked_output_{text_file_instance.id}.mp4",
-    #                         ContentFile(temp_file.read())
-    #                     )
-    #                     self.text_file_instance.track_progress(100)
-
-    #             logging.info("Watermarked video generated successfully.")
-    #             return True
-
-    #         except Exception as e:
-    #             logging.error(f"Error generating watermarked video: {e}")
-    #             return False
-
-    #     except Exception as e:
-    #         logging.error(f"Error in adding watermark to video: {e}")
-    #         return False
 
     def load_video_from_instance(self, text_file_instance, file_field) -> VideoFileClip:
         """
