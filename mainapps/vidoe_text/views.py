@@ -175,7 +175,7 @@ def process_background_music(request, textfile_id):
         try:
             # Fetch the TextFile instance
             if textfile.user != request.user:
-                messages.error(request,'You Do Not have access to the Resources You Requested ')
+                messages.error(request,'You Do Not Have Access To The Resources You Requested ')
 
                 return render(request,'permission_denied.html')
         except TextFile.DoesNotExist:
@@ -312,7 +312,6 @@ def process_background_music(request, textfile_id):
                     )
                 try:
                     bg_music.save()  # Save each object individually
-                    messages.info(request, 'New background music created')
                 except Exception as e:
                     logging.error(f"Error saving background music {i}: {e}")
                     return JsonResponse({"error": f"Error saving background music {i}: {str(e)}"}, status=500)
