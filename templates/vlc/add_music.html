@@ -106,6 +106,8 @@
                 </div>
                 
             </div>
+
+        
             {% if textfile.background_musics.all %}
             {% include 'vlc/frontend/update_music.html' %}
 
@@ -114,9 +116,7 @@
             {% endif %}
         
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <script>
+<script>
 
     window.onload = function() {
         // Get all inputs on the page
@@ -219,6 +219,7 @@
         }
     });
 });
+
 function deleteButton(c_number) {
     // Target the div by the id
     const container = document.getElementById(`uploadmp3-${c_number}`);
@@ -266,12 +267,6 @@ function saveInput(inputElement) {
                 sessionStorage.setItem(inputElement.id, inputElement.value);
             }
         }
-addInputValidation(1)
-addInputValidation(2)
-inputHander(1)
-inputHander(2)
-handleSlider(1)
-handleSlider(2)
 // handleSlider('main')
 function addInputValidation(number) {
     const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${number}`);
@@ -380,6 +375,7 @@ function handleSlider(c_number){
 }
     
 </script>
+
 
 </body>
 </html>
