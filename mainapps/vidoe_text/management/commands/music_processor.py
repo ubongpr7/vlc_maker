@@ -264,7 +264,7 @@ class Command(BaseCommand):
         
         try:
             # Load the watermark image and resize it to 80% of the video width
-            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 1).set_opacity(0.5)
+            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 1).set_opacity(0.7)
         except Exception as e:
             logging.error(f"Error loading watermark image: {e}")
             return False
