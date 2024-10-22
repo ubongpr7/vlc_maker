@@ -211,7 +211,7 @@ def welcome(request,id):
         }
 
     send_html_email2(
-        subject="Welcome to CreativeMaker.io – Let’s Create Some Amazing Creatives!",
+        subject="Welcome to VideoCrafter.io – Let’s Create Some Amazing Creatives!",
         message=None,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_email=user.email,
