@@ -314,11 +314,11 @@ def process_background_music(request, textfile_id):
             for i, (key, music_file) in enumerate(music_files_dict.items(), start=n_musics):
                 if i>no_of_mp3:
                     break
-                # if music_files_dict.get(f'bg_music_{i}'):
-                if music_file:
+                if music_files_dict.get(f'bg_music_{i}'):
+                # if music_file:
                     bg_music=BackgroundMusic(
                             text_file=textfile,
-                            music=music_file,
+                            music=music_files_dict.get(f'bg_music_{i}'),
                             start_time=start_times[i-1],
                             end_time=end_times[i-1],
                             bg_level=bg_levels[f"bg_music_{i}"]
