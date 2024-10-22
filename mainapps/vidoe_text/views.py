@@ -308,15 +308,18 @@ def process_background_music(request, textfile_id):
                         bg_level=bg_levels[f"bg_music_{i}"]
 
                     )
+                try:
+                    bg_music.save()  # Save each object individually
+                    messages.info(request, 'New background music created')
+                except Exception as e:
+                    logging.error(f"Error saving background music {i}: {e}")
+                    return JsonResponse({"error": f"Error saving background music {i}: {str(e)}"}, status=500)
                 
-                bg_musics.append(bg_music)
-            messages.info(request, 'New bg appended')
-
-                # Perform bulk creation
-        if bg_musics:
+               
+        # if bg_musics:
             
-            BackgroundMusic.objects.bulk_create(bg_musics)
-            messages.info(request, 'New bg created')
+        #     BackgroundMusic.objects.bulk_create(bg_musics)
+        #     messages.info(request, 'New bg created')
 
         for i, music in enumerate(musics,start=1):
             if music_files_dict.get(f'bg_music_{i}'):
@@ -359,6 +362,7 @@ def process_background_music(request, textfile_id):
         # except Exception as e:
         #     return JsonResponse({'error': str(e)}, status=500)
         return redirect(f'/text/process-background-music/{textfile_id}')
+    
     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id,'textfile':textfile,'musics':musics, 'n_musics':n_musics})
 
 
