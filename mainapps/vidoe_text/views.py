@@ -282,13 +282,11 @@ def process_background_music(request, textfile_id):
 
             # Get start time and check if it's not None before adding to the dictionary
             start_time = request.POST.get(f'from_when_{i}')
-            if start_time is not None:
-                start_times_str[f'bg_music_{i}'] = start_time
+            start_times_str[f'bg_music_{i}'] = start_time
 
             # Get background level and check if it's not None before adding to the dictionary
             bg_level = request.POST.get(f'bg_level_{i}')
-            if bg_level is not None:
-                bg_levels[f'bg_music_{i}'] = float(bg_level) / 1000.0
+            bg_levels[f'bg_music_{i}'] = float(bg_level) / 1000.0
 
             # Get end time and check if it's not None before adding to the dictionary
             end_time = request.POST.get(f'to_when_{i}')
@@ -304,11 +302,11 @@ def process_background_music(request, textfile_id):
                 
                 music.music.delete(save=False)
                 music.music=music_files_dict.get(f'bg_music_{i}')
-            music.start_time=convert_to_seconds(start_times_str[f'bg_music_{i}'])
-            music.end_time=convert_to_seconds(end_times_str[f'bg_music_{i}'])
+            music.start_time=start_times[i-1]
+            music.end_time=end_times[i-1]
             music.bg_level=bg_levels[f"bg_music_{i}"]
             music.save()
-
+            
 
         
         if n_musics< no_of_mp3:
