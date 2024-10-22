@@ -375,7 +375,33 @@ function handleSlider(c_number){
 }
     
 </script>
+{% if textfile.background_musics.all %}
+<script>
 
+const loopLength = "{{ n_lines }}";
+const textfileId = "{{ textfile_id }}";
+for (let i = 0; i < loopLength; i++) {
+    addInputValidation(i+1)
+    inputHander(i+1)
+    handleSlider(i+1)
+    handleSlider(i+1)
+
+}
+
+</script>
+
+{% else %}
+
+<script>
+    addInputValidation(1)
+    addInputValidation(2)
+    inputHander(1)
+    inputHander(2)
+    handleSlider(1)
+    handleSlider(2)
+    
+    </script>
+{% endif %}
 
 </body>
 </html>
