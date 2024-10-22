@@ -295,18 +295,6 @@ def process_background_music(request, textfile_id):
 
         start_times = [convert_to_seconds(time_str) for time_str in start_times_str.values()]
         end_times = [convert_to_seconds(time_str) for time_str in end_times_str.values()]
-
-        for i, music in enumerate(musics,start=1):
-            if music_files_dict.get(f'bg_music_{i}'):
-                
-                music.music.delete(save=False)
-                music.music=music_files_dict.get(f'bg_music_{i}')
-            music.start_time=start_times[i-1]
-            music.end_time=end_times[i-1]
-            music.bg_level=bg_levels[f"bg_music_{i}"]
-            music.save()
-            
-
         bg_musics=[]
         
         for i in range(n_musics+1,no_of_mp3+1):
@@ -329,6 +317,18 @@ def process_background_music(request, textfile_id):
             
             BackgroundMusic.objects.bulk_create(bg_musics)
             messages.info(request, 'New bg created')
+
+        for i, music in enumerate(musics,start=1):
+            if music_files_dict.get(f'bg_music_{i}'):
+                
+                music.music.delete(save=False)
+                music.music=music_files_dict.get(f'bg_music_{i}')
+            music.start_time=start_times[i-1]
+            music.end_time=end_times[i-1]
+            music.bg_level=bg_levels[f"bg_music_{i}"]
+            music.save()
+            
+
 
         lines = []
         all_bg_musics=BackgroundMusic.objects.filter(text_file=textfile)
