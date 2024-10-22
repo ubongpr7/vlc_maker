@@ -309,24 +309,26 @@ def process_background_music(request, textfile_id):
 
         bg_musics=[]
         
-        if n_musics < no_of_mp3:
-            # for i, music_file in enumerate(music_files, start=n_musics):
-            for i in range(n_musics+1,no_of_mp3+1):
-                if music_files_dict.get(f'bg_music_{i}'):
-                # if music_file:
-                    bg_music=BackgroundMusic(
-                            text_file=textfile,
-                            music=music_files_dict.get(f'bg_music_{i}'),
-                            start_time=start_times[i-1],
-                            end_time=end_times[i-1],
-                            bg_level=bg_levels[f"bg_music_{i}"]
+        # if n_musics < no_of_mp3:
+        for i in range(n_musics+1,no_of_mp3+1):
+            if music_files_dict.get(f'bg_music_{i}'):
+                bg_music=BackgroundMusic(
+                        text_file=textfile,
+                        music=music_files_dict.get(f'bg_music_{i}'),
+                        start_time=start_times[i-1],
+                        end_time=end_times[i-1],
+                        bg_level=bg_levels[f"bg_music_{i}"]
 
-                        )
-                    
-                    bg_musics.append(bg_music)
-                    # Perform bulk creation
-            if bg_musics:
-                BackgroundMusic.objects.bulk_create(bg_musics)
+                    )
+                
+                bg_musics.append(bg_music)
+            messages.info(request, 'New bg appended')
+
+                # Perform bulk creation
+        if bg_musics:
+            
+            BackgroundMusic.objects.bulk_create(bg_musics)
+            messages.info(request, 'New bg created')
 
         lines = []
         all_bg_musics=BackgroundMusic.objects.filter(text_file=textfile)
@@ -345,17 +347,17 @@ def process_background_music(request, textfile_id):
         # textfile.bg_level=float(request.POST.get('bg_level'))/100.0
         textfile.save()
 
-        try:
-            # call_command('music_processor', textfile_id)
-            # # Start the background process/
-            thread = threading.Thread(target=run_process_command, args=(textfile_id,))
-            thread.start()
-            return redirect(f'/text/progress_page/bg_music/{textfile_id}')
+        # try:
+        #     # call_command('music_processor', textfile_id)
+        #     # # Start the background process/
+        #     thread = threading.Thread(target=run_process_command, args=(textfile_id,))
+        #     thread.start()
+        #     return redirect(f'/text/progress_page/bg_music/{textfile_id}')
 
 
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-        
+        # except Exception as e:
+        #     return JsonResponse({'error': str(e)}, status=500)
+        return redirect(f'/text/process-backbackground-music/{textfile_id}')
     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id,'textfile':textfile,'musics':musics, 'n_musics':n_musics})
 
 
