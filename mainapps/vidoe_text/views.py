@@ -316,10 +316,6 @@ def process_background_music(request, textfile_id):
                     return JsonResponse({"error": f"Error saving background music {i}: {str(e)}"}, status=500)
                 
                
-        # if bg_musics:
-            
-        #     BackgroundMusic.objects.bulk_create(bg_musics)
-        #     messages.info(request, 'New bg created')
 
         for i, music in enumerate(musics,start=1):
             if music_files_dict.get(f'bg_music_{i}'):
@@ -351,17 +347,16 @@ def process_background_music(request, textfile_id):
         # textfile.bg_level=float(request.POST.get('bg_level'))/100.0
         textfile.save()
 
-        # try:
-        #     # call_command('music_processor', textfile_id)
-        #     # # Start the background process/
-        #     thread = threading.Thread(target=run_process_command, args=(textfile_id,))
-        #     thread.start()
-        #     return redirect(f'/text/progress_page/bg_music/{textfile_id}')
+        try:
+            # call_command('music_processor', textfile_id)
+            # # Start the background process/
+            thread = threading.Thread(target=run_process_command, args=(textfile_id,))
+            thread.start()
+            return redirect(f'/text/progress_page/bg_music/{textfile_id}')
 
 
-        # except Exception as e:
-        #     return JsonResponse({'error': str(e)}, status=500)
-        return redirect(f'/text/process-background-music/{textfile_id}')
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     
     return render(request,'vlc/add_music.html',{'textfile_id':textfile_id,'textfile':textfile,'musics':musics, 'n_musics':n_musics})
 
