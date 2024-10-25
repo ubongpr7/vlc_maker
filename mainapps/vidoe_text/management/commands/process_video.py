@@ -388,7 +388,7 @@ class Command(BaseCommand):
         ]
         watermarks=[]
         for i in positions:
-            txt = TextClip("Sample", fontsize=100, color='white', font="Arial-Bold")
+            txt = TextClip("Sample", fontsize=100, color='white', font="Montserrat")
             txt = txt.set_duration(video_duration)
             txt = txt.rotate(45).set_opacity(0.5)
             txt=txt.set_position(i)
