@@ -1180,11 +1180,11 @@ class Command(BaseCommand):
                 with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
                     watermarked.write_videofile(
                         temp_output_video.name,
-                        codec='libx264',
-                        preset="ultrafast",
-                        audio_codec="aac", 
-                        fps=30,
-                        ffmpeg_params=["-movflags", "+faststart"]
+                        # codec='libx264',
+                        # preset="ultrafast",
+                        # audio_codec="aac", 
+                        # fps=30,
+                        # ffmpeg_params=["-movflags", "+faststart"]
                     )
                     self.text_file_instance.track_progress(94)
 
