@@ -1215,40 +1215,40 @@ class Command(BaseCommand):
         text_file_instance = self.text_file_instance
 
         # # Get the watermark from the S3 path
-        # watermark_s3_path = LogoModel.objects.first().logo.name
+        watermark_s3_path = LogoModel.objects.first().logo.name
 
-        # with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
-        #     content = download_from_s3(watermark_s3_path, watermark_temp_path.name)
-        #     with open(watermark_temp_path.name, 'wb') as png_file:
-        #         png_file.write(content)
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
+            content = download_from_s3(watermark_s3_path, watermark_temp_path.name)
+            with open(watermark_temp_path.name, 'wb') as png_file:
+                png_file.write(content)
         
-        # try:
-        #     # Load the watermark image and resize it to 80% of the video width
-        #     watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 1).set_opacity(0.7)
-        # except Exception as e:
-        #     logging.error(f"Error loading watermark image: {e}")
-        #     return False
+        try:
+            # Load the watermark image and resize it to 80% of the video width
+            watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 1).set_opacity(0.7)
+        except Exception as e:
+            logging.error(f"Error loading watermark image: {e}")
+            return False
 
-        # # Position the watermark in the center of the video
-        # watermark = watermark.set_position(("center", "center")).set_duration(video.duration)
+        # Position the watermark in the center of the video
+        watermark = watermark.set_position(("center", "center")).set_duration(video.duration)
 
-        # # Overlay the static watermark on the video
-        # watermarked = CompositeVideoClip([video, watermark], size=video.size)
-        # watermarked.set_duration(video.duration)
-        watermarks=self.create_watermark(video.duration)
-        watermaked_video = CompositeVideoClip([video] + watermarks)
+        # Overlay the static watermark on the video
+        watermarked = CompositeVideoClip([video, watermark], size=video.size)
+        watermarked.set_duration(video.duration)
+        # watermarks=self.create_watermark(video.duration)
+        # watermaked_video = CompositeVideoClip([video] + watermarks)
 
         self.text_file_instance.track_progress(88)
         # Save the output to a temporary file
         try:
             with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-                watermaked_video.write_videofile(
+                watermarked.write_videofile(
                     temp_output_video.name,
-                    codec='libx264',
-                    preset="ultrafast",
-                    audio_codec="aac",
-                    fps=30,
-                    ffmpeg_params=["-movflags", "+faststart"]
+                    # codec='libx264',
+                    # preset="ultrafast",
+                    # audio_codec="aac",
+                    # fps=30,
+                    # ffmpeg_params=["-movflags", "+faststart"]
                 )
                 self.text_file_instance.track_progress(95)
 
