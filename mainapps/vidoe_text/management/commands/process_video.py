@@ -286,7 +286,8 @@ class Command(BaseCommand):
                 temp_output_video.name,
                 codec='libx264',
                 preset="ultrafast",
-                audio_codec="aac",      
+                audio_codec="aac", 
+                 fps=30,
                 ffmpeg_params=["-movflags", "+faststart"]
             )
             self.text_file_instance.track_progress(70)
@@ -590,7 +591,7 @@ class Command(BaseCommand):
 
                 # Write the final video to the temporary output file
                 
-                final_video.write_videofile(temp_output_video.name, fps=24,)
+                final_video.write_videofile(temp_output_video.name, fps=30,)
 
                 # Save the final video to the `text_file_instance`
                 if text_file_instance.generated_blank_video:
@@ -1164,7 +1165,8 @@ class Command(BaseCommand):
                         temp_output_video.name,
                         codec='libx264',
                         preset="ultrafast",
-                        audio_codec="aac",      
+                        audio_codec="aac", 
+                        fps=30,
                         ffmpeg_params=["-movflags", "+faststart"]
                     )
                     self.text_file_instance.track_progress(94)
@@ -1226,6 +1228,7 @@ class Command(BaseCommand):
                     codec='libx264',
                     preset="ultrafast",
                     audio_codec="aac",
+                    fps=30,
                     ffmpeg_params=["-movflags", "+faststart"]
                 )
                 self.text_file_instance.track_progress(95)
