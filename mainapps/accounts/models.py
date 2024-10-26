@@ -2,7 +2,7 @@
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-from djstripe.models import Product
+# from djstripe.models import Product
 from django.utils.timezone import now
 from datetime import timedelta
 from django.conf import settings
