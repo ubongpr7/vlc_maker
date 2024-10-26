@@ -12,10 +12,10 @@ services:
     environment:
       - DEBUG=1
         python3.10 manage.py makemigrations &&
+        python3.10 manage.py migrate &&
         rm -rf /usr/local/lib/python3.10/site-packages/djstripe/migrations/000*.py &&
       rm -rf /usr/local/lib/python3.10/site-packages/djstripe/migrations/00*.py &&
     command: python manage.py runserver 0.0.0.0:8000
-        python3.10 manage.py migrate &&
 
 db:
 image: postgres
