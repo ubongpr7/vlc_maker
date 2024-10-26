@@ -268,7 +268,7 @@ class Command(BaseCommand):
 
         logging.info('generated_final_video successful')
         final_video=self.save_final_video(final_video_speeded_up_clip)
-        watermarked= self.add_static_watermark_to_instance(final_video_speeded_up_clip)
+        watermarked= self.add_static_watermark_to_instance()
         self.text_file_instance.track_progress(100)
             
 
@@ -1141,7 +1141,6 @@ class Command(BaseCommand):
         watermark_s3_path=LogoModel.objects.first().logo.name
 
         text_file_instance = self.text_file_instance
-
         # Define the path where the logo will be temporarily stored
         # logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
@@ -1208,11 +1207,12 @@ class Command(BaseCommand):
                 logging.error(f"Error generating watermarked video: {e}")
                 return False
     
-    def add_static_watermark_to_instance(self, video):
+    def add_static_watermark_to_instance(self, ):
         """
         Add a static watermark to the video from text_file_instance and save the result.
         """
         text_file_instance = self.text_file_instance
+        video=self.load_video_from_file_field(text_file_instance.generated_final_video.name)
 
         # # Get the watermark from the S3 path
         watermark_s3_path = LogoModel.objects.first().logo.name
