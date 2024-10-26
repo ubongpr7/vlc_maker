@@ -166,7 +166,7 @@ class Command(BaseCommand):
             self.text_file_instance.track_progress(80)
             
 
-        self.add_static_watermark_to_instance(video_clip)
+        self.add_static_watermark_to_instance()
 
         self.stdout.write(self.style.SUCCESS(f'Processing complete for {text_file_id}.'))
     
@@ -249,12 +249,54 @@ class Command(BaseCommand):
         except Exception as e:
             logging.error(f"Error generating watermarked video: {e}")
             return False
+    def load_video_from_file_field(self,file_field) -> VideoFileClip:
+        """
+        Load a video from a file field, downloading it from S3,
+        and return it as a MoviePy VideoFileClip.
 
-    def add_static_watermark_to_instance(self, video):
+        Args:
+            file_field: The FileField containing the S3 path for the video file.
+
+        Returns:
+            VideoFileClip: The loaded video clip.
+
+        Raises:
+            ValueError: If the file field is empty or not a valid video file.
+        """
+        try:
+            # Ensure that the file field is valid
+            if not file_field or not file_field.name:
+                raise ValueError("File field is empty or invalid.")
+
+            # Create a temporary file to store the downloaded video
+            with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_video:
+                # Download the video file from S3 and save it to the temporary file
+                video_content = download_from_s3(file_field.name, temp_video.name)
+
+                if not video_content:
+                    raise ValueError("Failed to download the video from S3.")
+
+                # Write the video content to the temp file
+                with open(temp_video.name, 'wb') as video_file:
+                    video_file.write(video_content)
+
+                # Load the video using MoviePy
+                video_clip = VideoFileClip(os.path.normpath(temp_video.name))
+
+                # Return the video clip
+                return video_clip
+
+        except Exception as e:
+            logging.error(f"Error loading video from file field: {e}")
+            raise
+
+
+    def add_static_watermark_to_instance(self):
         """
         Add a static watermark to the video from text_file_instance and save the result.
         """
         text_file_instance = self.text_file_instance
+        video=self.load_video_from_file_field(text_file_instance.generated_final_bgm_video)
 
         # Get the watermark from the S3 path
         watermark_s3_path = LogoModel.objects.first().logo.name
