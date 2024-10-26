@@ -111,13 +111,13 @@ class TextFile(models.Model):
         self.progress = str(increase)
         self.save()
 
-        if increase == 100:
-            def reset_progress():
-                self.progress = '0'
-                self.save()
+        # if increase == 100:
+        #     def reset_progress():
+        #         self.progress = '0'
+        #         self.save()
 
-            # Start a timer that will call reset_progress after 2 seconds
-            Timer(5.0, reset_progress).start()
+        #     # Start a timer that will call reset_progress after 2 seconds
+        #     Timer(5.0, reset_progress).start()
     def process_text_file(self):
         """Process the uploaded text file and return lines stripped of extra spaces."""
         if not self.text_file:

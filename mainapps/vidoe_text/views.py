@@ -164,7 +164,8 @@ def process_background_music(request, textfile_id):
     
     
     textfile = TextFile.objects.get(pk=textfile_id)
-
+    textfile.progress='0'
+    textfile.save()
     musics=textfile.background_musics.all()
     n_musics=len(musics)
 

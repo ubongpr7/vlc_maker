@@ -197,6 +197,8 @@ def upload_video_folder(request):
 @login_required
 def add_video_clips(request, textfile_id):
     text_file = get_object_or_404(TextFile, id=textfile_id)
+    text_file.progress='0'
+    text_file.save()
     key=LogoModel.objects.get(id=2).logo.name
     existing_clips = TextLineVideoClip.objects.filter(text_file=text_file)
     if text_file.user != request.user:
