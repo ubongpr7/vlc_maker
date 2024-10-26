@@ -12,6 +12,9 @@ services:
     environment:
       - DEBUG=1
     command: python manage.py runserver 0.0.0.0:8000
+        python3.10 manage.py makemigrations &&
+        python3.10 manage.py migrate &&
+
 db:
 image: postgres
 environment:
