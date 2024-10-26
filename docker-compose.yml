@@ -9,8 +9,6 @@ services:
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
     command: >
       sh -c "
-      rm -rf /usr/local/lib/python3.10/site-packages/djstripe/migrations/000*.py &&
-      rm -rf /usr/local/lib/python3.10/site-packages/djstripe/migrations/00*.py &&
         yes | python3.10 manage.py makemigrations &&
         python3.10 manage.py migrate &&
         python3.10 manage.py runserver 0.0.0.0:8000
