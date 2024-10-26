@@ -12,7 +12,7 @@ urlpatterns = [
     path('', include('mainapps.home.urls',namespace='home')),
     path('video/', include('mainapps.video.urls',namespace='video')),
     path('text/', include('mainapps.vidoe_text.urls',namespace='video_text')),
-    path("stripe/", include("djstripe.urls", namespace="djstripe")),
+    # path("stripe/", include("djstripe.urls", namespace="djstripe")),
     path('auth/password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
 
      path(
