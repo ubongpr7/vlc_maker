@@ -1212,7 +1212,7 @@ class Command(BaseCommand):
         Add a static watermark to the video from text_file_instance and save the result.
         """
         text_file_instance = self.text_file_instance
-        video=self.load_video_from_file_field(text_file_instance.generated_final_video.name)
+        video=self.load_video_from_file_field(text_file_instance.generated_final_video)
 
         # # Get the watermark from the S3 path
         watermark_s3_path = LogoModel.objects.first().logo.name
