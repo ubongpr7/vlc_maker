@@ -263,7 +263,6 @@ class Command(BaseCommand):
         concatenated_video = self.concatenate_clips(final_video_segments, target_resolution=MAINRESOLUTIONS[resolution], target_fps=30)
         original_audio = blank_vide_clip.audio.subclip(0, min(concatenated_video.duration, blank_vide_clip.audio.duration))
         final_video = concatenated_video.set_audio(original_audio)  # Removed overwriting with blank audio
-        # subtitled_video=self.add_subtitles_from_json(final_video)
         final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
 
         logging.info('generated_final_video successful')
@@ -377,23 +376,6 @@ class Command(BaseCommand):
         hours, minutes = divmod(minutes, 60)
         return f"{hours:02}:{minutes:02}:{seconds:02},{milliseconds:03}"
 
-
-    def create_watermark (self, video_duration):
-        positions = [
-        ('center', 'center'),    # Center of the video
-        ('left', 'top'),         # Top-left corner
-        ('right', 'bottom'),     # Bottom-right corner
-        ('left', 'bottom'),      # Bottom-left corner
-        ('right', 'top')         # Top-right corner
-        ]
-        watermarks=[]
-        for i in positions:
-            txt = TextClip("Sample", fontsize=100, color='white', font="Montserrat")
-            txt = txt.set_duration(video_duration)
-            txt = txt.rotate(45).set_opacity(0.5)
-            txt=txt.set_position(i)
-            watermarks.append(txt)
-        return watermarks
 
     def generate_srt_file(self):
         """
@@ -538,8 +520,6 @@ class Command(BaseCommand):
             except Exception as e:
                 logging.error(f"Error processing SRT file: {e}")
                 return None
-
-
 
     def generate_blank_video_with_audio(self):
         """
@@ -861,69 +841,6 @@ class Command(BaseCommand):
 
 
 
-    # def load_video_from_file_field(self, file_field) -> VideoFileClip:
-    #     """
-    #     Load a video from a file field, downloading it from S3,
-    #     convert it using ffmpeg if necessary, and return it as a MoviePy VideoFileClip.
-
-    #     Args:
-    #         file_field: The FileField containing the S3 path for the video file.
-
-    #     Returns:
-    #         VideoFileClip: The loaded video clip.
-
-    #     Raises:
-    #         ValueError: If the file field is empty or not a valid video file.
-    #     """
-    #     try:
-    #         # Ensure that the file field is valid
-    #         if not file_field or not file_field.name:
-    #             raise ValueError("File field is empty or invalid.")
-
-    #         # Create a temporary file to store the downloaded video
-    #         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_video:
-    #             # Download the video file from S3 and save it to the temporary file
-    #             video_content = download_from_s3(file_field.name, temp_video.name)
-
-    #             if not video_content:
-    #                 raise ValueError("Failed to download the video from S3.")
-
-    #             # Write the video content to the temp file
-    #             with open(temp_video.name, 'wb') as video_file:
-    #                 video_file.write(video_content)
-
-    #             # Create another temporary file for the converted video
-    #             with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as converted_video:
-    #                 converted_video_path = os.path.normpath(converted_video.name)
-
-    #                 # Use ffmpeg to convert the video
-    #                 input_video_path = os.path.normpath(temp_video.name)
-    #                 ffmpeg_command = [
-    #                     'ffmpeg',
-    #                     '-y',
-    #                     '-i', input_video_path,
-    #                     '-c:v', 'libx264',
-    #                     '-c:a', 'aac',
-    #                     converted_video_path
-    #                 ]
-
-    #                 # Run the ffmpeg command
-    #                 subprocess.run(ffmpeg_command, check=True)
-
-    #                 # Load the converted video using MoviePy
-    #                 video_clip = VideoFileClip(converted_video_path)
-
-    #                 # Return the video clip
-    #                 logging.info('Clip loaded!')
-    #                 return video_clip
-
-    #     except subprocess.CalledProcessError as ffmpeg_error:
-    #         logging.error(f"FFmpeg error: {ffmpeg_error}")
-    #         raise ValueError("Video conversion failed using FFmpeg.")
-    #     except Exception as e:
-    #         logging.error(f"Error loading video from file field: {e}")
-
-
     def crop_to_aspect_ratio_(self,clip, desired_aspect_ratio):
         # Get the original clip dimensions
         original_width, original_height = clip.size
@@ -1013,7 +930,6 @@ class Command(BaseCommand):
                 start = self.subriptime_to_seconds(subtitles[replace_index].start)
                 end = self.subriptime_to_seconds(subtitles[replace_index].end)
 
-                # Adjust replacement video duration to match target duration
 
                 if replacement_videos[replace_index].duration < target_duration:
                     replacement_segment = loop(replacement_videos[replace_index], duration=target_duration)
@@ -1023,7 +939,6 @@ class Command(BaseCommand):
                 adjusted_segment = self.adjust_segment_properties(replacement_segment, original_video,)
                 adjusted_segment_with_subtitles = self.add_subtitles_to_clip(adjusted_segment, subtitles[replace_index])
                 combined_segments[replace_index] = adjusted_segment_with_subtitles
-        print('combined_segments combined_segments combined_segments combined_segments ', combined_segments)
         return combined_segments
 
     def adjust_segment_properties(self,segment: VideoFileClip, original: VideoFileClip) -> VideoFileClip:
@@ -1133,80 +1048,7 @@ class Command(BaseCommand):
         return CompositeVideoClip([clip, box_clip, subtitle_clip])
         # return clip
 
-
-    def add_animated_watermark_to_instance(self, video):
-        """
-        Add an animated watermark to the video from text_file_instance and save the result.
-        """
-        watermark_s3_path=LogoModel.objects.first().logo.name
-
-        text_file_instance = self.text_file_instance
-        # Define the path where the logo will be temporarily stored
-        # logo_path = os.path.join(os.getcwd(),'media','vlc','logo.png')
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as watermark_temp_path:
-
-            content=download_from_s3(watermark_s3_path, watermark_temp_path.name) 
-            self.text_file_instance.track_progress(78)
-
-            with open(watermark_temp_path.name, 'wb') as png_file:
-                    png_file.write(content)   
-            try:
-                watermark = ImageClip(watermark_temp_path.name).resize(width=video.w * 0.6).set_opacity(0.5)
-                self.text_file_instance.track_progress(79)
-
-            except Exception as e:
-                logging.error(f"Error loading watermark image: {e}")
-                return False
-
-            # Function to calculate the new position of the watermark
-            def moving_watermark(t):
-                speed_x, speed_y = 300, 280
-                pos_x = np.abs((speed_x * t) % (2 * video.w) - video.w)
-                pos_y = np.abs((speed_y * t) % (2 * video.h) - video.h)
-                return (pos_x, pos_y)
-
-            # Animate the watermark
-            watermark = watermark.set_position(moving_watermark, relative=False).set_duration(video.duration)
-            self.text_file_instance.track_progress(82)
-
-            # Overlay the animated watermark on the video
-            watermarked = CompositeVideoClip([video, watermark], size=video.size)
-            watermarked.set_duration(video.duration)
-            self.text_file_instance.track_progress(83)
-
-            # Save the output to a temporary file
-            try:
-                with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output_video:
-                    watermarked.write_videofile(
-                        temp_output_video.name,
-                        # codec='libx264',
-                        # preset="ultrafast",
-                        # audio_codec="aac", 
-                        # fps=30,
-                        # ffmpeg_params=["-movflags", "+faststart"]
-                    )
-                    self.text_file_instance.track_progress(94)
-
-                    # Save the watermarked video to the model field
-                    if text_file_instance.generated_watermarked_video:
-                        text_file_instance.generated_watermarked_video.delete(save=False)
-                        self.text_file_instance.track_progress(97)
-
-                    with open(temp_output_video.name, 'rb') as temp_file:
-                        text_file_instance.generated_watermarked_video.save(
-                            f"watermarked_output_{text_file_instance.id}.mp4",
-                            ContentFile(temp_file.read())
-                        )
-                        self.text_file_instance.track_progress(99)
-
-
-                logging.info("Watermarked video generated successfully.")
-                return True
-
-            except Exception as e:
-                logging.error(f"Error generating watermarked video: {e}")
-                return False
-    
+ 
     def add_static_watermark_to_instance(self, ):
         """
         Add a static watermark to the video from text_file_instance and save the result.
@@ -1235,8 +1077,6 @@ class Command(BaseCommand):
         # Overlay the static watermark on the video
         watermarked = CompositeVideoClip([video, watermark], size=video.size)
         watermarked.set_duration(video.duration)
-        # watermarks=self.create_watermark(video.duration)
-        # watermaked_video = CompositeVideoClip([video] + watermarks)
 
         self.text_file_instance.track_progress(88)
         # Save the output to a temporary file
@@ -1277,226 +1117,4 @@ class Command(BaseCommand):
             return False
 
   
-
-    def add_subtitles_from_json(self, clip: VideoFileClip) -> VideoFileClip:
-        text_file_instance=self.text_file_instance
-        font_path=self.text_file_instance.font
-
-        try:
-            # Read JSON content from the text_file_instance
-            with text_file_instance.generated_srt.open('r') as json_file:
-                srt_json_content = json_file.read()
-            
-            # Parse the JSON content
-            subtitle_json = json.loads(srt_json_content)
-
-        except json.JSONDecodeError as e:
-            raise Exception(f"JSON parsing error: {e}")
-        except Exception as e:
-            raise Exception(f"Error accessing the JSON file: {e}")
-
-        subtitle_clips = []
-        subtitle_box_color = text_file_instance.subtitle_box_color
-        base_font_size = text_file_instance.font_size
-        color = text_file_instance.font_color
-        margin = 29
-        scaling_factor = (clip.h / 1080)  # Adjust font size based on resolution
-        font_size = int(base_font_size * scaling_factor)
-
-        def split_text(text: str, max_line_width: int) -> str:
-            words = text.split()
-            lines = []
-            current_line = []
-            current_length = 0
-
-            for word in words:
-                if current_length + len(word) <= max_line_width:
-                    current_line.append(word)
-                    current_length += len(word) + 1
-                else:
-                    lines.append(" ".join(current_line))
-                    current_line = [word]
-                    current_length = len(word) + 1
-
-            if current_line:
-                lines.append(" ".join(current_line))
-
-            return "\n".join(lines)
-
-        def ensure_two_lines(text: str, initial_max_line_width: int, initial_font_size: int) -> (str, int):
-            max_line_width = initial_max_line_width
-            font_size = initial_font_size
-            wrapped_text = split_text(text, max_line_width)
-
-            while wrapped_text.count('\n') > 1:
-                max_line_width += 1
-                font_size -= 1
-                wrapped_text = split_text(text, max_line_width)
-
-                if font_size < 20:
-                    break
-
-            return wrapped_text, font_size
-
-        max_line_width = 35  # Initial value, can be adjusted
-
-        for fragment in subtitle_json['fragments']:
-            start_time = float(fragment['begin'])
-            end_time = float(fragment['end'])
-            subtitle_text = "\n".join(fragment['lines'])
-            subtitle_box_color=self.text_file_instance.subtitle_box_color
-            if len(subtitle_text) > 60:
-                wrapped_text, adjusted_font_size = ensure_two_lines(subtitle_text, max_line_width, font_size)
-            else:
-                wrapped_text, adjusted_font_size = split_text(subtitle_text, max_line_width), font_size
-
-            temp_subtitle_clip = TextClip(
-                wrapped_text,
-                fontsize=adjusted_font_size,
-                font=fonts.get(font_path,'Georgia-Bold')
-            )
-            longest_line_width, text_height = temp_subtitle_clip.size
-            ne_text=soft_wrap_text(
-                    wrapped_text,
-
-                    font_family=fonts.get(font_path,'Georgia-Bold'),
-                    fontsize=font_size,
-                    letter_spacing=12,
-                    max_width=clip.w * .8  # *0.8 for some padding
-                )
-            subtitle_clip = TextClip(
-                ne_text,
-                fontsize=adjusted_font_size,
-                color=color,
-                stroke_width=0,
-                bg_color=subtitle_box_color,
-                font=os.path.join(os.getcwd(),'fonts','31692f02-5637-4cd2-b973-99a09e542b83.ttf'),
-                method='caption',
-                align='center',
-                # kerning=12,
-                size=(longest_line_width, None)
-            ).set_duration(end_time - start_time)
-            
-            x, y, z = mcolors.to_rgb(subtitle_box_color)
-            subtitle_box_color = (x * 255, y * 255, z * 255)  # Convert to RGB
-
-
-            small_margin = 8
-            box_width = longest_line_width + small_margin
-            box_height = text_height + margin
-            box_clip = ColorClip(size=(box_width, box_height), color=subtitle_box_color).set_opacity(0.7).set_duration(subtitle_clip.duration)
-
-            box_position = ('center', clip.h - box_height - 2 * margin)
-            subtitle_position = ('center', clip.h - box_height - 2 * margin + (box_height - text_height) / 2)
-
-            box_clip = box_clip.set_position(box_position)
-            subtitle_clip = subtitle_clip.set_position(subtitle_position)
-
-            subtitle_clips.append(subtitle_clip.set_start(start_time))
-
-        final_clip = CompositeVideoClip([clip] + subtitle_clips)
-        return final_clip
-
-def soft_wrap_text(
-    text: str, 
-    fontsize: int, 
-    letter_spacing: int, 
-    font_family: str, 
-    max_width: int,
-):
-    # Note that font_family has to be an absolut path to your .ttf/.otf
-    image_font = ImageFont.truetype(font_family, fontsize) 
-
-    # I am not sure my letter spacing calculation is accurate
-    text_width = image_font.getlength(text) + (len(text)-1) * letter_spacing 
-    letter_width = text_width / len(text)
-
-    if text_width < max_width:
-        return text
-
-    max_chars = max_width / letter_width
-    wrapped_text = textwrap.fill(text, width=max_chars)
-    return wrapped_text
-
-
-def add_animated_watermark(text_file_instance):
-    # Create temporary paths for downloaded files
-    video_temp_path = tempfile.mktemp(suffix=".mp4")
-    video_s3_path=text_file_instance.generated_final_video.name
-    # Download video and watermark from S3
-    watermark_temp_path = tempfile.mktemp(suffix=".png")
-    watermark_s3_path=LogoModel.objects.first().logo.name
-    download_from_s3(watermark_s3_path, watermark_temp_path)
-    download_from_s3(video_s3_path, video_temp_path)
-
-    # Load the video
-    cap = cv2.VideoCapture(video_temp_path)
-    
-    if not cap.isOpened():
-        logging.error(f"Error opening video file: {video_temp_path}")
-        return
-
-    # Get video properties
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-    # Load the watermark
-    watermark = cv2.imread(watermark_temp_path, cv2.IMREAD_UNCHANGED)
-    if watermark is None:
-        logging.error(f"Error loading watermark image: {watermark_temp_path}")
-        return
-
-    watermark = cv2.resize(watermark, (int(width * 0.6), int(height * 0.6)))  # Resize watermark
-    watermark_height, watermark_width = watermark.shape[:2]
-
-    # Create VideoWriter to save the output
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec
-    output_temp_path = tempfile.mktemp(suffix=".mp4")  # Temporary output path
-    out = cv2.VideoWriter(output_temp_path, fourcc, fps, (width, height))
-
-    # Position variables
-    pos_x, pos_y = 0, 0
-    speed_x, speed_y = 5, 3  # Speed of the watermark
-
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        # Draw the watermark on the frame
-        frame[pos_y:pos_y + watermark_height, pos_x:pos_x + watermark_width] = watermark
-
-        # Update watermark position
-        pos_x += speed_x
-        pos_y += speed_y
-
-        # Bounce the watermark off the edges
-        if pos_x + watermark_width > width or pos_x < 0:
-            speed_x = -speed_x
-        if pos_y + watermark_height > height or pos_y < 0:
-            speed_y = -speed_y
-
-        # Write the frame with the watermark
-        out.write(frame)
-
-    # Release resources
-    cap.release()
-    out.release()
-    cv2.destroyAllWindows()
-
-    # Save the output video to the model field
-    with open(output_temp_path, 'rb') as temp_file:
-        text_file_instance.generated_watermarked_video.save(
-            f"watermarked_output_{text_file_instance.id}.mp4",
-            ContentFile(temp_file.read())
-        )
-
-    # Clean up temporary files
-    os.remove(video_temp_path)
-    os.remove(watermark_temp_path)
-    os.remove(output_temp_path)
-
-    logging.info("Watermarked video generated successfully and saved to the model.")
-
 
